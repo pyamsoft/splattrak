@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.splatnet.data
+package com.pyamsoft.splattrak.lobby.screen.list
 
-import com.pyamsoft.splattrak.splatnet.api.SplatBattle
-import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
+import android.view.ViewGroup
+import androidx.annotation.CheckResult
+import dagger.BindsInstance
+import dagger.Subcomponent
 
-internal data class SplatScheduleImpl internal constructor(
-    private val battles: List<SplatBattle>,
-) : SplatSchedule {
+@Subcomponent
+interface LobbyItemComponent {
 
-    override fun battles(): List<SplatBattle> {
-        return battles
+    fun inject(holder: LobbyItemViewHolder)
+
+    @Subcomponent.Factory
+    interface Factory {
+
+        @CheckResult
+        fun create(@BindsInstance parent: ViewGroup): LobbyItemComponent
     }
 }

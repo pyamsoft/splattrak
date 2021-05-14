@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.splatnet.data
+package com.pyamsoft.splattrak.lobby.dialog
 
-import com.pyamsoft.splattrak.splatnet.api.SplatBattle
-import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
+import android.view.ViewGroup
+import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.splattrak.lobby.BackgroundContainer
+import javax.inject.Inject
 
-internal data class SplatScheduleImpl internal constructor(
-    private val battles: List<SplatBattle>,
-) : SplatSchedule {
-
-    override fun battles(): List<SplatBattle> {
-        return battles
-    }
-}
+class DrilldownBackgroundContainer @Inject internal constructor(
+    imageLoader: ImageLoader,
+    parent: ViewGroup,
+) : BackgroundContainer<DrilldownViewState, DrilldownViewEvent>(imageLoader, parent)

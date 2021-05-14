@@ -22,7 +22,9 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.splattrak.lobby.LobbyComponent
-import com.pyamsoft.splattrak.lobby.screen.LobbyItemComponent
+import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemComponent
+import com.pyamsoft.splattrak.lobby.drilldown.DrilldownComponent
+import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemComponent
 import com.pyamsoft.splattrak.main.MainComponent
 import com.pyamsoft.splattrak.setting.SettingsComponent
 import com.pyamsoft.splattrak.splatnet.SplatnetModule
@@ -51,11 +53,21 @@ internal interface SplatComponent {
     @Suppress("FunctionName")
     fun `$$daggerRequiredLobbyItemComponent`(): LobbyItemComponent.Factory
 
+    /**
+     * Not actually used, just here so graph can compile
+     */
+    @CheckResult
+    @Suppress("FunctionName")
+    fun `$$daggerRequiredDrilldownItemComponent`(): DrilldownItemComponent.Factory
+
     @CheckResult
     fun plusMainComponent(): MainComponent.Factory
 
     @CheckResult
     fun plusLobbyComponent(): LobbyComponent.Factory
+
+    @CheckResult
+    fun plusDrilldownComponent(): DrilldownComponent.Factory
 
     @CheckResult
     fun plusSettingsComponent(): SettingsComponent.Factory

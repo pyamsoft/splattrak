@@ -16,6 +16,7 @@
 
 package com.pyamsoft.splattrak.splatnet
 
+import androidx.annotation.CheckResult
 import com.pyamsoft.cachify.MemoryCacheStorage
 import com.pyamsoft.cachify.cachify
 import com.pyamsoft.pydroid.core.Enforcer
@@ -23,28 +24,47 @@ import com.pyamsoft.splattrak.splatnet.api.*
 import com.pyamsoft.splattrak.splatnet.data.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
+import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class SplatnetInteractorImpl @Inject internal constructor(
-    @InternalApi private val interactor: SplatnetInteractor
+    @InternalApi private val interactor: SplatnetInteractor,
 ) : SplatnetInteractor {
 
-    private val scheduleCache = cachify<SplatSchedule, Boolean>(storage = {
+    private val scheduleCache = cachify<SplatSchedule>(storage = {
         listOf(MemoryCacheStorage.create(24, TimeUnit.HOURS))
-    }) { force -> interactor.schedule(force) }
+    }) { interactor.schedule() }
 
-    override suspend fun schedule(force: Boolean): SplatSchedule =
-        withContext(context = Dispatchers.IO) {
-            Enforcer.assertOffMainThread()
+    override suspend fun schedule(): SplatSchedule = withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
 
-            if (force) {
-                scheduleCache.clear()
-            }
-
-            return@withContext scheduleCache.call(force)
+        val schedule = scheduleCache.call()
+        val now = LocalDateTime.now()
+        val validRotations = schedule.battles().map { entry ->
+            SplatBattleImpl(
+                mode = entry.mode(),
+                rotation = entry.rotation()
+                    .asSequence()
+                    .filter { filterPastMatches(it, now) }
+                    .sortedWith(SORTER)
+                    .toList()
+            )
         }
+
+        return@withContext SplatScheduleImpl(validRotations)
+    }
+
+    companion object {
+
+        private val SORTER = Comparator<SplatMatch> { o1, o2 -> o1.start().compareTo(o2.start()) }
+
+        @CheckResult
+        private fun filterPastMatches(match: SplatMatch, now: LocalDateTime): Boolean {
+            val time = match.end()
+            return time.isAfter(now) || time.isEqual(now)
+        }
+    }
 }

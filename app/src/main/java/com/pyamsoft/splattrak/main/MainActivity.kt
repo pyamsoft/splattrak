@@ -86,7 +86,6 @@ internal class MainActivity : ChangeLogActivity(),
 
     private var capturedAppBar: AppBarLayout? = null
 
-
     @JvmField
     @Inject
     internal var factory: MainViewModel.Factory? = null

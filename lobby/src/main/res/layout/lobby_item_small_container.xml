@@ -20,9 +20,6 @@
         android:id="@+id/lobby_item_small_container"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-    </LinearLayout>
+        android:orientation="vertical" />
 
 </merge>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright 2021 Peter Kenji Yamanaka
   ~
@@ -16,19 +15,7 @@
   ~ limitations under the License.
   -->
 
-<merge>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main_bottom_navigation_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:visibility="gone"
-        app:backgroundTint="@color/colorPrimarySeeThrough"
-        app:itemIconTint="@color/navigation_item_tint"
-        app:itemTextColor="@color/navigation_item_tint"
-        app:menu="@menu/navigation_menu" />
-
-</merge>
-
+<resources>
+    <string name="settings">Settings</string>
+    <string name="lobby">Lobby</string>
+</resources>

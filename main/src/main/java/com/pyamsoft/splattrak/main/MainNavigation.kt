@@ -23,7 +23,10 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewPropertyAnimatorCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.doOnLayout
+import androidx.core.view.marginBottom
+import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -58,16 +61,14 @@ class MainNavigation @Inject internal constructor(
         }
 
         doOnInflate {
-            layoutRoot.doOnApplyWindowInsets(owner) { view, insets, _ ->
-                view.updatePadding(
-                    bottom = insets.systemWindowInsetBottom,
-                    left = 0,
-                    right = 0,
-                    top = 0
-                )
+            layoutRoot.doOnLayout { view ->
+                val initialBottomMargin = view.marginBottom
+                view.doOnApplyWindowInsets(owner) { v, insets, _ ->
+                    v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                        this.bottomMargin = initialBottomMargin + insets.systemWindowInsetBottom
+                    }
+                    v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
 
-                // Make sure we are laid out before grabbing the height
-                view.doOnLayout { v ->
                     // Publish the measured height
                     publish(MainViewEvent.BottomBarMeasured(v.height))
                 }
@@ -109,10 +110,8 @@ class MainNavigation @Inject internal constructor(
         val cornerSize = 16.asDp(layoutRoot.context).toFloat()
 
         val shapeModel = ShapeAppearanceModel.Builder().apply {
-            setTopLeftCorner(RoundedCornerTreatment())
-            setTopRightCorner(RoundedCornerTreatment())
-            setTopLeftCornerSize(cornerSize)
-            setTopRightCornerSize(cornerSize)
+            setAllCorners(RoundedCornerTreatment())
+            setAllCornerSizes(cornerSize)
         }.build()
 
         // Create background

@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby
+package com.pyamsoft.splattrak.lobby.drilldown
 
-import android.app.Activity
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
-import com.pyamsoft.pydroid.ui.app.ToolbarActivity
-import com.pyamsoft.splattrak.ui.appbar.ThemeProviderModule
 import com.pyamsoft.splattrak.core.ViewModelFactoryModule
-import com.pyamsoft.splattrak.lobby.screen.LobbyViewModel
-import com.pyamsoft.splattrak.ui.appbar.AppBarActivity
+import com.pyamsoft.splattrak.lobby.dialog.DrilldownViewModel
+import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Module
@@ -35,26 +31,22 @@ import dagger.multibindings.IntoMap
 
 @Subcomponent(
     modules = [
-        LobbyComponent.ComponentModule::class,
+        DrilldownComponent.ComponentModule::class,
         ViewModelFactoryModule::class,
-        ThemeProviderModule::class,
     ]
 )
-internal interface LobbyComponent {
+internal interface DrilldownComponent {
 
-    fun inject(fragment: LobbyFragment)
+    fun inject(fragment: DrilldownDialog)
 
     @Subcomponent.Factory
     interface Factory {
 
         @CheckResult
         fun create(
-            @BindsInstance appBarActivity: AppBarActivity,
-            @BindsInstance toolbarActivity: ToolbarActivity,
-            @BindsInstance activity: Activity,
-            @BindsInstance owner: LifecycleOwner,
             @BindsInstance parent: ViewGroup,
-        ): LobbyComponent
+            @BindsInstance mode: SplatGameMode.Mode,
+        ): DrilldownComponent
     }
 
     @Module
@@ -62,7 +54,7 @@ internal interface LobbyComponent {
 
         @Binds
         @IntoMap
-        @ClassKey(LobbyViewModel::class)
-        internal abstract fun bindViewModel(impl: LobbyViewModel): ViewModel
+        @ClassKey(DrilldownViewModel::class)
+        internal abstract fun bindViewModel(impl: DrilldownViewModel): ViewModel
     }
 }

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.splatnet.data
+package com.pyamsoft.splattrak.lobby.screen
 
-import com.pyamsoft.splattrak.splatnet.api.SplatBattle
-import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
+import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.splattrak.ui.appbar.AppBarActivity
+import com.pyamsoft.splattrak.ui.appbar.UiAppBarSpacer
+import javax.inject.Inject
 
-internal data class SplatScheduleImpl internal constructor(
-    private val battles: List<SplatBattle>,
-) : SplatSchedule {
-
-    override fun battles(): List<SplatBattle> {
-        return battles
-    }
-}
+class LobbyAppBarSpacer @Inject internal constructor(
+    parent: ViewGroup,
+    owner: LifecycleOwner,
+    appBarActivity: AppBarActivity,
+) : UiAppBarSpacer<LobbyViewState, LobbyViewEvent>(parent, owner, appBarActivity)

@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.splatnet.data
+package com.pyamsoft.splattrak.lobby.screen.list
 
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
-import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
+import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 
-internal data class SplatScheduleImpl internal constructor(
-    private val battles: List<SplatBattle>,
-) : SplatSchedule {
+data class LobbyItemViewState internal constructor(
+    val currentMatch: SplatMatch,
+    val nextMatch: SplatMatch,
+    val battle: SplatBattle,
+) : UiViewState
 
-    override fun battles(): List<SplatBattle> {
-        return battles
-    }
+sealed class LobbyItemViewEvent : UiViewEvent {
+
+    object OnClick : LobbyItemViewEvent()
+
 }

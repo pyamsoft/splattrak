@@ -34,17 +34,18 @@ internal class SplatnetNetworkInteractor @Inject internal constructor(
     @InternalApi private val splatnet: Splatnet,
 ) : SplatnetInteractor {
 
-    override suspend fun schedule(force: Boolean): SplatSchedule =
-        withContext(context = Dispatchers.IO) {
-            Enforcer.assertOffMainThread()
-            val networkSchedule = splatnet.lobbySchedule()
+    override suspend fun schedule(): SplatSchedule = withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+        val networkSchedule = splatnet.lobbySchedule()
 
-            return@withContext SplatScheduleImpl(
-                regular = assembleBattles(SplatGameMode.Mode.REGULAR, networkSchedule.regular),
-                league = assembleBattles(SplatGameMode.Mode.LEAGUE, networkSchedule.league),
-                ranked = assembleBattles(SplatGameMode.Mode.RANKED, networkSchedule.ranked)
+        return@withContext SplatScheduleImpl(
+            listOf(
+                assembleBattles(SplatGameMode.Mode.REGULAR, networkSchedule.regular),
+                assembleBattles(SplatGameMode.Mode.LEAGUE, networkSchedule.league),
+                assembleBattles(SplatGameMode.Mode.RANKED, networkSchedule.ranked)
             )
-        }
+        )
+    }
 
     companion object {
 

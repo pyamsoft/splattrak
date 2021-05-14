@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.splatnet.data
+package com.pyamsoft.splattrak.lobby.screen.list
 
-import com.pyamsoft.splattrak.splatnet.api.SplatBattle
-import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
+import android.view.ViewGroup
+import androidx.core.view.updateLayoutParams
+import com.pyamsoft.pydroid.util.asDp
+import com.pyamsoft.splattrak.lobby.item.LobbyItemContainer
+import javax.inject.Inject
 
-internal data class SplatScheduleImpl internal constructor(
-    private val battles: List<SplatBattle>,
-) : SplatSchedule {
+class LobbyItemNextContainer @Inject internal constructor(
+    parent: ViewGroup,
+) : LobbyItemContainer<LobbyItemViewState>(parent) {
 
-    override fun battles(): List<SplatBattle> {
-        return battles
+    init {
+        doOnInflate {
+            layoutRoot.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                this.topMargin = 16.asDp(layoutRoot.context.applicationContext)
+            }
+        }
     }
+
 }

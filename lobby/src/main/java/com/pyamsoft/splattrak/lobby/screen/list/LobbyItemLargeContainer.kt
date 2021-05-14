@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.splatnet.data
+package com.pyamsoft.splattrak.lobby.screen.list
 
-import com.pyamsoft.splattrak.splatnet.api.SplatBattle
-import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
+import android.view.ViewGroup
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.splattrak.lobby.databinding.LobbyItemLargeContainerBinding
+import javax.inject.Inject
 
-internal data class SplatScheduleImpl internal constructor(
-    private val battles: List<SplatBattle>,
-) : SplatSchedule {
+class LobbyItemLargeContainer @Inject internal constructor(
+    parent: ViewGroup,
+) : BaseUiView<LobbyItemViewState, Nothing, LobbyItemLargeContainerBinding>(parent) {
 
-    override fun battles(): List<SplatBattle> {
-        return battles
-    }
+    override val viewBinding = LobbyItemLargeContainerBinding::inflate
+
+    override val layoutRoot by boundView { lobbyItemLargeContainer }
+
 }

@@ -21,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
@@ -31,14 +30,21 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutCoordinatorBinding
+import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.core.SplatViewModelFactory
-import com.pyamsoft.splattrak.ui.appbar.SnackbarContainer
+import com.pyamsoft.splattrak.lobby.drilldown.DrilldownDialog
+import com.pyamsoft.splattrak.lobby.screen.LobbyAppBarSpacer
+import com.pyamsoft.splattrak.lobby.screen.LobbyContainer
+import com.pyamsoft.splattrak.lobby.screen.LobbyControllerEvent
+import com.pyamsoft.splattrak.lobby.screen.LobbyList
+import com.pyamsoft.splattrak.lobby.screen.LobbyViewEvent
+import com.pyamsoft.splattrak.lobby.screen.LobbyViewModel
 import com.pyamsoft.splattrak.ui.appbar.requireAppBarActivity
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class LobbyFragment : Fragment(), SnackbarContainer, UiController<LobbyControllerEvent> {
+internal class LobbyFragment : Fragment(), UiController<LobbyControllerEvent> {
 
     @JvmField
     @Inject
@@ -78,17 +84,16 @@ internal class LobbyFragment : Fragment(), SnackbarContainer, UiController<Lobby
         super.onViewCreated(view, savedInstanceState)
 
         val binding = LayoutCoordinatorBinding.bind(view)
-        Injector.obtainFromApplication<SplatComponent>(view.context).also { injector ->
-            injector.plusLobbyComponent()
-                .create(
-                    requireAppBarActivity(),
-                    requireToolbarActivity(),
-                    requireActivity(),
-                    viewLifecycleOwner,
-                    binding.layoutCoordinator
-                )
-                .inject(this)
-        }
+        Injector.obtainFromApplication<SplatComponent>(view.context)
+            .plusLobbyComponent()
+            .create(
+                requireAppBarActivity(),
+                requireToolbarActivity(),
+                requireActivity(),
+                viewLifecycleOwner,
+                binding.layoutCoordinator
+            )
+            .inject(this)
 
         val container = requireNotNull(container)
         val nestedList = requireNotNull(nestedList)
@@ -111,12 +116,12 @@ internal class LobbyFragment : Fragment(), SnackbarContainer, UiController<Lobby
 
     override fun onControllerEvent(event: LobbyControllerEvent) {
         return when (event) {
-            is LobbyControllerEvent.OpenBattleRotation -> Timber.d("Open battle rotation: ${event.battle}")
+            is LobbyControllerEvent.OpenBattleRotation ->
+                DrilldownDialog.newInstance(event.battle.mode()).show(
+                    requireActivity(),
+                    DrilldownDialog.TAG
+                )
         }
-    }
-
-    override fun container(): CoordinatorLayout? {
-        return null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

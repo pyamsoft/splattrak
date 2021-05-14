@@ -14,19 +14,7 @@
   ~ limitations under the License.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item
-        android:id="@+id/menu_item_nav_lobby"
-        android:icon="@drawable/ic_gift_24dp"
-        android:title="@string/lobby"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/menu_item_nav_settings"
-        android:icon="@drawable/ic_settings_24dp"
-        android:title="@string/settings"
-        app:showAsAction="ifRoom" />
-
-</menu>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drilldown_list_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />

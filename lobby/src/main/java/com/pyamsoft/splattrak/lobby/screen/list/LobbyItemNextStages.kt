@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.splatnet.data
+package com.pyamsoft.splattrak.lobby.screen.list
 
-import com.pyamsoft.splattrak.splatnet.api.SplatBattle
-import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
+import android.view.ViewGroup
+import com.pyamsoft.pydroid.loader.ImageLoader
+import javax.inject.Inject
 
-internal data class SplatScheduleImpl internal constructor(
-    private val battles: List<SplatBattle>,
-) : SplatSchedule {
-
-    override fun battles(): List<SplatBattle> {
-        return battles
-    }
-}
+class LobbyItemNextStages @Inject internal constructor(
+    imageLoader: ImageLoader,
+    parent: ViewGroup,
+) : GenericLobbyItemStages(
+    imageLoader,
+    parent,
+    isLarge = false,
+    matchResolver = { 1 }
+)

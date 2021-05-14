@@ -18,9 +18,10 @@ package com.pyamsoft.splattrak.splatnet
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
+import java.time.LocalDateTime
 
 interface SplatnetInteractor {
 
     @CheckResult
-    suspend fun schedule(force: Boolean): SplatSchedule
+    suspend fun schedule(): SplatSchedule
 }
