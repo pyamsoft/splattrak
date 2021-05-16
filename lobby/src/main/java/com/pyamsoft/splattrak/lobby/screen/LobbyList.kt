@@ -130,6 +130,10 @@ class LobbyList @Inject internal constructor(
         publish(LobbyViewEvent.ForceRefresh)
     }
 
+    override fun onCountdown(index: Int) {
+        publish(LobbyViewEvent.ForceRefresh)
+    }
+
     override fun onClick(index: Int) {
         publish(LobbyViewEvent.ViewBattleRotation(index))
     }

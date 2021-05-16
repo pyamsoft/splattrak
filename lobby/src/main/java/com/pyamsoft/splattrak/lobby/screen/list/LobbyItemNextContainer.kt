@@ -17,21 +17,9 @@
 package com.pyamsoft.splattrak.lobby.screen.list
 
 import android.view.ViewGroup
-import androidx.core.view.updateLayoutParams
-import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.splattrak.lobby.item.LobbyItemContainer
 import javax.inject.Inject
 
 class LobbyItemNextContainer @Inject internal constructor(
     parent: ViewGroup,
-) : LobbyItemContainer<LobbyItemViewState>(parent) {
-
-    init {
-        doOnInflate {
-            layoutRoot.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                this.topMargin = 16.asDp(layoutRoot.context.applicationContext)
-            }
-        }
-    }
-
-}
+) : LobbyItemContainer<LobbyItemViewState>(parent)

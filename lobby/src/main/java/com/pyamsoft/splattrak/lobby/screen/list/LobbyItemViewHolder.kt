@@ -63,6 +63,10 @@ class LobbyItemViewHolder internal constructor(
 
     @Inject
     @JvmField
+    internal var nextCountdown: LobbyItemNextCountdown? = null
+
+    @Inject
+    @JvmField
     internal var nextInfo: LobbyItemNextInfo? = null
 
     @Inject
@@ -84,6 +88,7 @@ class LobbyItemViewHolder internal constructor(
         backgroundContainer.nest(
             requireNotNull(name),
             currentContainer,
+            requireNotNull(nextCountdown),
             nextContainer
         )
 
@@ -94,6 +99,7 @@ class LobbyItemViewHolder internal constructor(
         ) {
             return@createViewBinder when (it) {
                 is LobbyItemViewEvent.OnClick -> callback.onClick(bindingAdapterPosition)
+                is LobbyItemViewEvent.OnCountdown -> callback.onCountdown(bindingAdapterPosition)
             }
         }
     }

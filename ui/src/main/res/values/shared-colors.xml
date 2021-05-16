@@ -30,4 +30,9 @@
     <color name="statusBarColor">@color/transparent</color>
 
     <color name="disabledColor">#BBCACACA</color>
+
+    <color name="splatNext">#460FC8</color>
+    <color name="splatRegular">#19D719</color>
+    <color name="splatLeague">#F02D7D</color>
+    <color name="splatRanked">#F54910</color>
 </resources>

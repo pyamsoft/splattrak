@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.splattrak.lobby.databinding.LobbyItemSmallContainerBinding
 import javax.inject.Inject
 
-open class LobbyItemContainer<S : UiViewState> @Inject internal constructor(
+abstract class LobbyItemContainer<S : UiViewState> protected constructor(
     parent: ViewGroup,
 ) : BaseUiView<S, Nothing, LobbyItemSmallContainerBinding>(parent) {
 

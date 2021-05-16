@@ -31,4 +31,6 @@ sealed class LobbyItemViewEvent : UiViewEvent {
 
     object OnClick : LobbyItemViewEvent()
 
+    object OnCountdown : LobbyItemViewEvent()
+
 }

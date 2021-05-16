@@ -66,6 +66,8 @@ class LobbyListAdapter internal constructor(
 
         fun onClick(index: Int)
 
+        fun onCountdown(index: Int)
+
     }
 
     companion object {

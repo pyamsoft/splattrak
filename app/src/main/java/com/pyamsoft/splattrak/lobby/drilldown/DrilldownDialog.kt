@@ -16,7 +16,6 @@
 
 package com.pyamsoft.splattrak.lobby.drilldown
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +40,7 @@ import com.pyamsoft.splattrak.lobby.dialog.DrilldownViewModel
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 import timber.log.Timber
 import javax.inject.Inject
+import com.pyamsoft.splattrak.ui.R as R2
 
 internal class DrilldownDialog : AppCompatDialogFragment(), UiController<Nothing> {
 
@@ -104,13 +104,13 @@ internal class DrilldownDialog : AppCompatDialogFragment(), UiController<Nothing
     }
 
     private fun handleBackground(view: View, mode: SplatGameMode.Mode) {
-        view.setBackgroundColor(Color.parseColor(
+        view.setBackgroundResource(
             when (mode) {
-                SplatGameMode.Mode.REGULAR -> "#19D719"
-                SplatGameMode.Mode.LEAGUE -> "#F02D7D"
-                SplatGameMode.Mode.RANKED -> "#F54910"
+                SplatGameMode.Mode.REGULAR -> R2.color.splatRegular
+                SplatGameMode.Mode.LEAGUE -> R2.color.splatLeague
+                SplatGameMode.Mode.RANKED -> R2.color.splatRanked
             }
-        ))
+        )
     }
 
     override fun onControllerEvent(event: Nothing) {

@@ -16,10 +16,10 @@
 
 package com.pyamsoft.splattrak.lobby.screen.list
 
-import android.graphics.Color
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
+import com.pyamsoft.splattrak.lobby.R
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 import javax.inject.Inject
 
@@ -41,12 +41,12 @@ class LobbyItemBackground @Inject internal constructor(
     }
 
     private fun handleBackground(mode: SplatGameMode) {
-        parent.setBackgroundColor(Color.parseColor(
+        parent.setBackgroundResource(
             when (mode.mode()) {
-                SplatGameMode.Mode.REGULAR -> "#19D719"
-                SplatGameMode.Mode.LEAGUE -> "#F02D7D"
-                SplatGameMode.Mode.RANKED -> "#F54910"
+                SplatGameMode.Mode.REGULAR -> R.color.splatRegular
+                SplatGameMode.Mode.LEAGUE -> R.color.splatLeague
+                SplatGameMode.Mode.RANKED -> R.color.splatRanked
             }
-        ))
+        )
     }
 }
