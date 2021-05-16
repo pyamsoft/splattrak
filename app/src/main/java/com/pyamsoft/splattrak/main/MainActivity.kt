@@ -31,8 +31,10 @@ import com.pyamsoft.pydroid.arch.createSavedStateViewModelFactory
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.changelog.buildChangeLog
 import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
+import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.util.commitNow
 import com.pyamsoft.pydroid.ui.util.layout
 import com.pyamsoft.pydroid.util.doOnStart
@@ -57,10 +59,9 @@ internal class MainActivity : ChangeLogActivity(),
 
     override val applicationIcon = R.mipmap.ic_launcher
 
-    override val versionName = BuildConfig.VERSION_NAME
+    override val changelog: ChangeLogBuilder = buildChangeLog {  }
 
-    override val changelog = buildChangeLog {
-    }
+    override val versionName = BuildConfig.VERSION_NAME
 
     override val fragmentContainerId: Int
         get() = requireNotNull(container).id()
