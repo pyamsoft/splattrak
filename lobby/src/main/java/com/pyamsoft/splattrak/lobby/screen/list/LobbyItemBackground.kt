@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 class LobbyItemBackground @Inject internal constructor(
     private val parent: ViewGroup,
-) : UiView<LobbyItemViewState, LobbyItemViewEvent>() {
+) : UiView<LobbyItemViewState.Data, LobbyItemViewEvent>() {
 
     init {
         doOnTeardown {
@@ -33,7 +33,7 @@ class LobbyItemBackground @Inject internal constructor(
         }
     }
 
-    override fun render(state: UiRender<LobbyItemViewState>) {
+    override fun render(state: UiRender<LobbyItemViewState.Data>) {
         state
             .mapChanged { it.battle }
             .mapChanged { it.mode() }

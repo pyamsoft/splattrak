@@ -26,6 +26,8 @@ interface LobbyItemComponent {
 
     fun inject(holder: LobbyItemViewHolder)
 
+    fun inject(holder: LobbyDisclaimerViewHolder)
+
     @Subcomponent.Factory
     interface Factory {
 

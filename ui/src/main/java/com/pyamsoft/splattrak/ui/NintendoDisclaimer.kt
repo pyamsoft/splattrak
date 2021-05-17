@@ -14,12 +14,29 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby.screen.list
+package com.pyamsoft.splattrak.ui
 
 import android.view.ViewGroup
-import com.pyamsoft.splattrak.lobby.item.LobbyItemContainer
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UnitViewState
+import com.pyamsoft.splattrak.ui.databinding.UiDisclaimerBinding
 import javax.inject.Inject
 
-class LobbyItemNextContainer @Inject internal constructor(
+class NintendoDisclaimer @Inject internal constructor(
     parent: ViewGroup,
-) : LobbyItemContainer<LobbyItemViewState.Data>(parent)
+) : BaseUiView<UnitViewState, Nothing, UiDisclaimerBinding>(parent) {
+
+    override val layoutRoot by boundView { nintendoDisclaimerRoot }
+
+    override val viewBinding = UiDisclaimerBinding::inflate
+
+    init {
+        doOnInflate {
+            binding.nintendoDisclaimer.setText(R.string.nintendo_disclaimer)
+        }
+
+        doOnTeardown {
+            binding.nintendoDisclaimer.text = ""
+        }
+    }
+}

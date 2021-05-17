@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 class LobbyItemLargeContainer @Inject internal constructor(
     parent: ViewGroup,
-) : BaseUiView<LobbyItemViewState, Nothing, LobbyItemLargeContainerBinding>(parent) {
+) : BaseUiView<LobbyItemViewState.Data, Nothing, LobbyItemLargeContainerBinding>(parent) {
 
     override val viewBinding = LobbyItemLargeContainerBinding::inflate
 

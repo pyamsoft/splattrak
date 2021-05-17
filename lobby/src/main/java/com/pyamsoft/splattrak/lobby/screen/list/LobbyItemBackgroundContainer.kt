@@ -24,4 +24,4 @@ import javax.inject.Inject
 class LobbyItemBackgroundContainer @Inject internal constructor(
     imageLoader: ImageLoader,
     parent: ViewGroup,
-) : BackgroundContainer<LobbyItemViewState, LobbyItemViewEvent>(imageLoader, parent)
+) : BackgroundContainer<LobbyItemViewState.Data, LobbyItemViewEvent>(imageLoader, parent)

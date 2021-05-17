@@ -19,12 +19,14 @@ package com.pyamsoft.splattrak.setting
 import android.content.Context
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.preference.PreferenceViewHolder
 import com.pyamsoft.pydroid.ui.preference.PreferenceCompat
+import com.pyamsoft.splattrak.setting.databinding.PreferenceSpacerBinding
 
 internal class PreferenceBottomSpace internal constructor(
     private val height: Int,
-    context: Context
+    context: Context,
 ) : PreferenceCompat(context) {
 
     init {
@@ -34,9 +36,13 @@ internal class PreferenceBottomSpace internal constructor(
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         height.let { h ->
+            val view = holder.itemView
+            val binding = PreferenceSpacerBinding.bind(view)
+            binding.nintendoDisclaimer.setText(R.string.nintendo_disclaimer)
             if (h > 0) {
-                holder.itemView.updateLayoutParams<ViewGroup.LayoutParams> {
-                    height = h
+                view.updatePadding(bottom = h)
+                binding.nintendoDisclaimer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    this.bottomMargin = h
                 }
             }
         }

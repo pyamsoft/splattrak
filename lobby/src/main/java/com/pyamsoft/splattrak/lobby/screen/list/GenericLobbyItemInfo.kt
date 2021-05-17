@@ -24,13 +24,13 @@ abstract class GenericLobbyItemInfo protected constructor(
     parent: ViewGroup,
     private val isLarge: Boolean,
     private val matchResolver: () -> Int,
-) : BaseLobbyInfo<LobbyItemViewState>(parent) {
+) : BaseLobbyInfo<LobbyItemViewState.Data>(parent) {
 
     final override fun isLarge(): Boolean {
         return isLarge
     }
 
-    final override fun getMatch(state: LobbyItemViewState): SplatMatch {
+    final override fun getMatch(state: LobbyItemViewState.Data): SplatMatch {
         val index = matchResolver()
         val battles = state.battle.rotation()
         return battles[index]

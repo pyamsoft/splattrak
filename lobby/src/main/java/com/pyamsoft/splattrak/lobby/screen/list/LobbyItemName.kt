@@ -23,9 +23,9 @@ import javax.inject.Inject
 
 class LobbyItemName @Inject internal constructor(
     parent: ViewGroup,
-) : BaseLobbyName<LobbyItemViewState>(parent) {
+) : BaseLobbyName<LobbyItemViewState.Data>(parent) {
 
-    override fun getBattle(state: LobbyItemViewState): SplatBattle {
+    override fun getBattle(state: LobbyItemViewState.Data): SplatBattle {
         return state.battle
     }
 

@@ -29,7 +29,6 @@ import com.pyamsoft.splattrak.lobby.databinding.LobbyListBinding
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemComponent
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemViewState
 import io.cabriole.decorator.LinearMarginDecoration
-import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -60,14 +59,6 @@ class LobbyList @Inject internal constructor(
         doOnInflate {
             modelAdapter = LobbyListAdapter(factory, callback = this)
             binding.lobbyList.adapter = modelAdapter
-        }
-
-        doOnInflate {
-            // Fast Scroll
-            FastScrollerBuilder(binding.lobbyList)
-                .useMd2Style()
-                .setPopupTextProvider(usingAdapter())
-                .build()
         }
 
         doOnInflate {
@@ -144,9 +135,16 @@ class LobbyList @Inject internal constructor(
     }
 
     private fun setList(groupings: List<LobbyViewState.ScheduleGroupings>) {
-        val data = groupings.map { LobbyItemViewState(it.currentMatch, it.nextMatch, it.battle) }
+        val data = groupings.map {
+            LobbyItemViewState(isDisclaimer = false,
+                data = LobbyItemViewState.Data(
+                    currentMatch = it.currentMatch,
+                    nextMatch = it.nextMatch,
+                    battle = it.battle)
+            )
+        }
         Timber.d("Submit data list: $data")
-        usingAdapter().submitList(data)
+        usingAdapter().submitList(data + LobbyItemViewState(isDisclaimer = true, data = null))
     }
 
     private fun clearList() {

@@ -22,10 +22,16 @@ import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 
 data class LobbyItemViewState internal constructor(
-    val currentMatch: SplatMatch,
-    val nextMatch: SplatMatch,
-    val battle: SplatBattle,
-) : UiViewState
+    val isDisclaimer: Boolean,
+    val data: Data?,
+) : UiViewState {
+
+    data class Data internal constructor(
+        val currentMatch: SplatMatch,
+        val nextMatch: SplatMatch,
+        val battle: SplatBattle,
+    ) : UiViewState
+}
 
 sealed class LobbyItemViewEvent : UiViewEvent {
 

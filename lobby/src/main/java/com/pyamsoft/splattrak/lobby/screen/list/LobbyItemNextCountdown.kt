@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 class LobbyItemNextCountdown @Inject internal constructor(
     parent: ViewGroup,
-) : BaseUiView<LobbyItemViewState, LobbyItemViewEvent, LobbyItemCountdownBinding>(
+) : BaseUiView<LobbyItemViewState.Data, LobbyItemViewEvent, LobbyItemCountdownBinding>(
     parent,
 ) {
 
@@ -45,7 +45,7 @@ class LobbyItemNextCountdown @Inject internal constructor(
         }
     }
 
-    override fun onRender(state: UiRender<LobbyItemViewState>) {
+    override fun onRender(state: UiRender<LobbyItemViewState.Data>) {
         state
             .mapChanged { it.nextMatch }
             .mapChanged { it.start() }

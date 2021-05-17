@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class LobbyItemClickHandler @Inject internal constructor(
     private val parent: ViewGroup,
-) : UiView<LobbyItemViewState, LobbyItemViewEvent>() {
+) : UiView<LobbyItemViewState.Data, LobbyItemViewEvent>() {
 
     init {
         doOnInflate {
@@ -38,7 +38,7 @@ class LobbyItemClickHandler @Inject internal constructor(
         }
     }
 
-    override fun render(state: UiRender<LobbyItemViewState>) {
+    override fun render(state: UiRender<LobbyItemViewState.Data>) {
     }
 
 }

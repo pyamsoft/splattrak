@@ -21,38 +21,46 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.pyamsoft.pydroid.ui.databinding.ListitemFrameBinding
 import com.pyamsoft.pydroid.ui.util.teardownAdapter
 import com.pyamsoft.splattrak.lobby.databinding.LobbyListItemHolderBinding
+import com.pyamsoft.splattrak.lobby.screen.list.BaseLobbyViewHolder
+import com.pyamsoft.splattrak.lobby.screen.list.LobbyDisclaimerViewHolder
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemComponent
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemViewHolder
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemViewState
-import me.zhanghai.android.fastscroll.PopupTextProvider
 
 class LobbyListAdapter internal constructor(
     private val factory: LobbyItemComponent.Factory,
-    private val callback: Callback
-) : ListAdapter<LobbyItemViewState, LobbyItemViewHolder>(DIFFER), PopupTextProvider {
+    private val callback: Callback,
+) : ListAdapter<LobbyItemViewState, BaseLobbyViewHolder>(DIFFER) {
 
     init {
         setHasStableIds(true)
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return if (getItem(position).isDisclaimer) VIEW_TYPE_DISCLAIMER else VIEW_TYPE_ITEM
+    }
+
     override fun getItemId(position: Int): Long {
-        return getItem(position).battle.mode().key().hashCode().toLong()
-    }
-
-    override fun getPopupText(position: Int): String {
         val item = getItem(position)
-        return item.battle.mode().name()
+        return if (item.isDisclaimer) 0 else requireNotNull(item.data)
+            .battle.mode().key().hashCode().toLong()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LobbyItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseLobbyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = LobbyListItemHolderBinding.inflate(inflater, parent, false)
-        return LobbyItemViewHolder(binding, factory, callback)
+        return if (viewType == VIEW_TYPE_ITEM) {
+            val binding = LobbyListItemHolderBinding.inflate(inflater, parent, false)
+            LobbyItemViewHolder(binding, factory, callback)
+        } else {
+            val binding = ListitemFrameBinding.inflate(inflater, parent, false)
+            LobbyDisclaimerViewHolder(binding, factory)
+        }
     }
 
-    override fun onBindViewHolder(holder: LobbyItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseLobbyViewHolder, position: Int) {
         val item = getItem(position)
         holder.bindState(item)
     }
@@ -72,18 +80,31 @@ class LobbyListAdapter internal constructor(
 
     companion object {
 
+        private const val VIEW_TYPE_ITEM = 0
+        private const val VIEW_TYPE_DISCLAIMER = 1
+
         private val DIFFER = object : DiffUtil.ItemCallback<LobbyItemViewState>() {
 
             override fun areItemsTheSame(
                 oldItem: LobbyItemViewState,
-                newItem: LobbyItemViewState
+                newItem: LobbyItemViewState,
             ): Boolean {
-                return oldItem.battle.mode().key() == newItem.battle.mode().key()
+                if (oldItem.isDisclaimer == newItem.isDisclaimer) {
+                    return true
+                }
+
+                if (!oldItem.isDisclaimer != newItem.isDisclaimer) {
+                    return false
+                }
+
+                val oldKey = requireNotNull(oldItem.data).battle.mode().key()
+                val newKey = requireNotNull(newItem.data).battle.mode().key()
+                return oldKey == newKey
             }
 
             override fun areContentsTheSame(
                 oldItem: LobbyItemViewState,
-                newItem: LobbyItemViewState
+                newItem: LobbyItemViewState,
             ): Boolean {
                 return oldItem == newItem
             }

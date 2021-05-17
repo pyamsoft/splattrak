@@ -16,10 +16,10 @@
 
 package com.pyamsoft.splattrak.lobby.screen.list
 
-import android.view.ViewGroup
-import com.pyamsoft.splattrak.lobby.item.LobbyItemContainer
-import javax.inject.Inject
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
+import com.pyamsoft.pydroid.arch.ViewBinder
 
-class LobbyItemNextContainer @Inject internal constructor(
-    parent: ViewGroup,
-) : LobbyItemContainer<LobbyItemViewState.Data>(parent)
+abstract class BaseLobbyViewHolder protected constructor(
+    itemView: View,
+) : RecyclerView.ViewHolder(itemView), ViewBinder<LobbyItemViewState>

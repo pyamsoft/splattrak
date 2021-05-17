@@ -16,7 +16,6 @@
 
 package com.pyamsoft.splattrak.lobby.screen.list
 
-import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
 import com.pyamsoft.splattrak.lobby.databinding.LobbyListItemHolderBinding
@@ -27,7 +26,7 @@ class LobbyItemViewHolder internal constructor(
     binding: LobbyListItemHolderBinding,
     factory: LobbyItemComponent.Factory,
     callback: LobbyListAdapter.Callback,
-) : RecyclerView.ViewHolder(binding.root), ViewBinder<LobbyItemViewState> {
+) : BaseLobbyViewHolder(binding.root), ViewBinder<LobbyItemViewState> {
 
     @Inject
     @JvmField
@@ -73,7 +72,7 @@ class LobbyItemViewHolder internal constructor(
     @JvmField
     internal var nextStages: LobbyItemNextStages? = null
 
-    private val viewBinder: ViewBinder<LobbyItemViewState>
+    private val viewBinder: ViewBinder<LobbyItemViewState.Data>
 
     init {
         factory.create(binding.lobbyListItem).inject(this)
@@ -105,7 +104,7 @@ class LobbyItemViewHolder internal constructor(
     }
 
     override fun bindState(state: LobbyItemViewState) {
-        viewBinder.bindState(state)
+        state.data?.also { viewBinder.bindState(it) }
     }
 
     override fun teardown() {
