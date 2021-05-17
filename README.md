@@ -18,7 +18,7 @@ https://github.com/pyamsoft/splattrak
 ```
 If you know a few things about Android programming and are wanting to help
 out with development you can do so by creating issue tickets to squash bugs,
-and propose feature requests for future inclusion.`
+and propose feature requests for future inclusion.
 
 # Issues or Questions
 
