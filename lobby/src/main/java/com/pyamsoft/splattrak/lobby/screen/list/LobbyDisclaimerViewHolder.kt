@@ -26,7 +26,7 @@ import javax.inject.Inject
 class LobbyDisclaimerViewHolder internal constructor(
     binding: ListitemFrameBinding,
     factory: LobbyItemComponent.Factory,
-) : BaseLobbyViewHolder(binding.root), ViewBinder<LobbyItemViewState> {
+) : BaseLobbyViewHolder(binding.root) {
 
     @Inject
     @JvmField

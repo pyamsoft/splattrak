@@ -103,7 +103,6 @@ class DrilldownList @Inject internal constructor(
         }
 
         doOnTeardown {
-            clearList()
             binding.lobbyList.adapter = null
 
             binding.lobbySwipeRefresh.setOnRefreshListener(null)

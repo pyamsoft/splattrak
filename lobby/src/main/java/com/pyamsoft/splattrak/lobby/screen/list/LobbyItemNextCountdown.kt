@@ -16,12 +16,11 @@
 
 package com.pyamsoft.splattrak.lobby.screen.list
 
-import android.os.CountDownTimer
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.splattrak.lobby.databinding.LobbyItemCountdownBinding
-import java.time.Duration
+import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
@@ -36,7 +35,7 @@ class LobbyItemNextCountdown @Inject internal constructor(
 
     override val viewBinding = LobbyItemCountdownBinding::inflate
 
-    private var timer: CountDownTimer? = null
+    private var timer: SplatCountdownTimer? = null
 
     init {
         doOnTeardown {
@@ -54,22 +53,11 @@ class LobbyItemNextCountdown @Inject internal constructor(
 
     private fun handleNextStartTime(time: LocalDateTime) {
         val now = LocalDateTime.now()
-        val timeUntilStart = now.until(time, ChronoUnit.MILLIS);
+        val timeUntilStart = now.until(time, ChronoUnit.SECONDS)
         timer?.cancel()
-        timer = object : CountDownTimer(timeUntilStart, 1000L) {
-
-            override fun onTick(millisUntilFinished: Long) {
-                val timeTo = Duration.ofMillis(millisUntilFinished)
-                val totalSeconds = timeTo.seconds
-                val hours = totalSeconds / 3600
-                val minutes = (totalSeconds % 3600) / 60
-                val seconds = totalSeconds % 60
-                val formattedString = "%d:%02d:%02d".format(hours, minutes, seconds)
-                binding.lobbyItemNextCountdownText.text = "in $formattedString"
-            }
-
-            override fun onFinish() {
-                binding.lobbyItemNextCountdownText.text = "Starting Now!"
+        timer = SplatCountdownTimer(viewScope, timeUntilStart) { display, isComplete ->
+            binding.lobbyItemNextCountdownText.text = display
+            if (isComplete) {
                 publish(LobbyItemViewEvent.OnCountdown)
             }
         }.apply {

@@ -102,7 +102,6 @@ class LobbyList @Inject internal constructor(
         }
 
         doOnTeardown {
-            clearList()
             binding.lobbyList.adapter = null
 
             binding.lobbySwipeRefresh.setOnRefreshListener(null)

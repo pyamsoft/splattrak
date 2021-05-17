@@ -20,13 +20,14 @@ import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
 import com.pyamsoft.splattrak.lobby.databinding.LobbyListItemHolderBinding
 import com.pyamsoft.splattrak.lobby.screen.LobbyListAdapter
+import timber.log.Timber
 import javax.inject.Inject
 
 class LobbyItemViewHolder internal constructor(
     binding: LobbyListItemHolderBinding,
     factory: LobbyItemComponent.Factory,
     callback: LobbyListAdapter.Callback,
-) : BaseLobbyViewHolder(binding.root), ViewBinder<LobbyItemViewState> {
+) : BaseLobbyViewHolder(binding.root) {
 
     @Inject
     @JvmField
@@ -117,6 +118,7 @@ class LobbyItemViewHolder internal constructor(
         currentInfo = null
         currentStages = null
 
+        nextCountdown = null
         nextContainer = null
         nextInfo = null
         nextStages = null
