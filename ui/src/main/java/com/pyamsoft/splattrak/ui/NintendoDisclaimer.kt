@@ -16,6 +16,7 @@
 
 package com.pyamsoft.splattrak.ui
 
+import android.text.method.LinkMovementMethod
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UnitViewState
@@ -33,10 +34,12 @@ class NintendoDisclaimer @Inject internal constructor(
     init {
         doOnInflate {
             binding.nintendoDisclaimer.setText(R.string.nintendo_disclaimer)
+            binding.nintendoDisclaimer.movementMethod = LinkMovementMethod.getInstance()
         }
 
         doOnTeardown {
             binding.nintendoDisclaimer.text = ""
+            binding.nintendoDisclaimer.movementMethod = null
         }
     }
 }

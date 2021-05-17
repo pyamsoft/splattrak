@@ -17,5 +17,7 @@
 <resources>
     <string name="nintendo_disclaimer">
       This Application is not affiliated with Nintendo. All product names, logos, and brands are property of their respective owners.
+        \n\n
+        Map rotation data provided by <a href="https://splatoon2.ink">Splatoon2.ink</a>
     </string>
 </resources>

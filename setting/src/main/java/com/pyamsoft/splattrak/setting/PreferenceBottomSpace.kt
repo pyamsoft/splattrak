@@ -17,6 +17,7 @@
 package com.pyamsoft.splattrak.setting
 
 import android.content.Context
+import android.text.method.LinkMovementMethod
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
@@ -38,7 +39,11 @@ internal class PreferenceBottomSpace internal constructor(
         height.let { h ->
             val view = holder.itemView
             val binding = PreferenceSpacerBinding.bind(view)
-            binding.nintendoDisclaimer.setText(R.string.nintendo_disclaimer)
+
+            // Set disclaimer
+            binding.nintendoDisclaimer.setText(com.pyamsoft.splattrak.ui.R.string.nintendo_disclaimer)
+            binding.nintendoDisclaimer.movementMethod = LinkMovementMethod.getInstance()
+
             if (h > 0) {
                 view.updatePadding(bottom = h)
                 binding.nintendoDisclaimer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
