@@ -31,6 +31,8 @@
 
     <color name="disabledColor">#BBCACACA</color>
 
+    <color name="splashBackground">#BA6AE1</color>
+
     <color name="splatPurple">#9400DB</color>
     <color name="splatYellow">#FECC0A</color>
     <color name="splatNext">#460FC8</color>

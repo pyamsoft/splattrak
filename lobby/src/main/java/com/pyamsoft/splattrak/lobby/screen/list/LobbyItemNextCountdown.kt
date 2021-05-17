@@ -39,7 +39,7 @@ class LobbyItemNextCountdown @Inject internal constructor(
     private var timer: CountDownTimer? = null
 
     init {
-        doOnInflate {
+        doOnTeardown {
             timer?.cancel()
             timer = null
         }
