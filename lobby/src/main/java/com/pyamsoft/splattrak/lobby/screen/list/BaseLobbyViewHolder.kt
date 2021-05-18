@@ -20,6 +20,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 
-abstract class BaseLobbyViewHolder protected constructor(
+abstract class BaseLobbyViewHolder
+protected constructor(
     itemView: View,
 ) : RecyclerView.ViewHolder(itemView), ViewBinder<LobbyItemViewState>

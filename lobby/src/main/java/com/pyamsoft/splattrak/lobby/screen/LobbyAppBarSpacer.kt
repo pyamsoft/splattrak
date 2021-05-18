@@ -22,7 +22,9 @@ import com.pyamsoft.splattrak.ui.appbar.AppBarActivity
 import com.pyamsoft.splattrak.ui.appbar.UiAppBarSpacer
 import javax.inject.Inject
 
-class LobbyAppBarSpacer @Inject internal constructor(
+class LobbyAppBarSpacer
+@Inject
+internal constructor(
     parent: ViewGroup,
     owner: LifecycleOwner,
     appBarActivity: AppBarActivity,

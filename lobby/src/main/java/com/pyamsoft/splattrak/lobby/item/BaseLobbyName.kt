@@ -24,32 +24,27 @@ import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.splattrak.lobby.databinding.LobbyItemNameBinding
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 
-abstract class BaseLobbyName<S : UiViewState> protected constructor(
+abstract class BaseLobbyName<S : UiViewState>
+protected constructor(
     parent: ViewGroup,
 ) : BaseUiView<S, Nothing, LobbyItemNameBinding>(parent) {
 
-    final override val layoutRoot by boundView { lobbyItemNameRoot }
+  final override val layoutRoot by boundView { lobbyItemNameRoot }
 
-    final override val viewBinding = LobbyItemNameBinding::inflate
+  final override val viewBinding = LobbyItemNameBinding::inflate
 
-    init {
-        doOnTeardown {
-            binding.lobbyItemName.text = ""
-        }
-    }
+  init {
+    doOnTeardown { binding.lobbyItemName.text = "" }
+  }
 
-    @CheckResult
-    protected abstract fun getBattle(state: S): SplatBattle
+  @CheckResult protected abstract fun getBattle(state: S): SplatBattle
 
-    final override fun onRender(state: UiRender<S>) {
-        state
-            .mapChanged { getBattle(it) }
-            .mapChanged { it.mode() }
-            .mapChanged { it.name() }
-            .render(viewScope) { handleName(it) }
-    }
+  final override fun onRender(state: UiRender<S>) {
+    state.mapChanged { getBattle(it) }.mapChanged { it.mode() }.mapChanged { it.name() }.render(
+        viewScope) { handleName(it) }
+  }
 
-    private fun handleName(name: String) {
-        binding.lobbyItemName.text = name
-    }
+  private fun handleName(name: String) {
+    binding.lobbyItemName.text = name
+  }
 }

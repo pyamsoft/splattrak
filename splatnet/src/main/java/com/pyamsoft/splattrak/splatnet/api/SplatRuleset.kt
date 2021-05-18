@@ -20,10 +20,7 @@ import androidx.annotation.CheckResult
 
 interface SplatRuleset {
 
-    @CheckResult
-    fun key(): String
+  @CheckResult fun key(): String
 
-    @CheckResult
-    fun name(): String
-
+  @CheckResult fun name(): String
 }

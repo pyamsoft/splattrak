@@ -21,15 +21,17 @@ import com.pyamsoft.splattrak.lobby.item.BaseLobbyInfo
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import javax.inject.Inject
 
-class DrilldownItemInfo @Inject internal constructor(
+class DrilldownItemInfo
+@Inject
+internal constructor(
     parent: ViewGroup,
 ) : BaseLobbyInfo<DrilldownItemViewState>(parent) {
 
-    override fun isLarge(): Boolean {
-        return false
-    }
+  override fun isLarge(): Boolean {
+    return false
+  }
 
-    override fun getMatch(state: DrilldownItemViewState): SplatMatch {
-        return state.match
-    }
+  override fun getMatch(state: DrilldownItemViewState): SplatMatch {
+    return state.match
+  }
 }

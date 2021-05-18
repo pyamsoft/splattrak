@@ -23,23 +23,25 @@ import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.splattrak.ui.databinding.UiDisclaimerBinding
 import javax.inject.Inject
 
-class NintendoDisclaimer @Inject internal constructor(
+class NintendoDisclaimer
+@Inject
+internal constructor(
     parent: ViewGroup,
 ) : BaseUiView<UnitViewState, Nothing, UiDisclaimerBinding>(parent) {
 
-    override val layoutRoot by boundView { nintendoDisclaimerRoot }
+  override val layoutRoot by boundView { nintendoDisclaimerRoot }
 
-    override val viewBinding = UiDisclaimerBinding::inflate
+  override val viewBinding = UiDisclaimerBinding::inflate
 
-    init {
-        doOnInflate {
-            binding.nintendoDisclaimer.setText(R.string.nintendo_disclaimer)
-            binding.nintendoDisclaimer.movementMethod = LinkMovementMethod.getInstance()
-        }
-
-        doOnTeardown {
-            binding.nintendoDisclaimer.text = ""
-            binding.nintendoDisclaimer.movementMethod = null
-        }
+  init {
+    doOnInflate {
+      binding.nintendoDisclaimer.setText(R.string.nintendo_disclaimer)
+      binding.nintendoDisclaimer.movementMethod = LinkMovementMethod.getInstance()
     }
+
+    doOnTeardown {
+      binding.nintendoDisclaimer.text = ""
+      binding.nintendoDisclaimer.movementMethod = null
+    }
+  }
 }

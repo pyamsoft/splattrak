@@ -21,12 +21,13 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.splattrak.lobby.databinding.LobbyItemLargeContainerBinding
 import javax.inject.Inject
 
-class LobbyItemLargeContainer @Inject internal constructor(
+class LobbyItemLargeContainer
+@Inject
+internal constructor(
     parent: ViewGroup,
 ) : BaseUiView<LobbyItemViewState.Data, Nothing, LobbyItemLargeContainerBinding>(parent) {
 
-    override val viewBinding = LobbyItemLargeContainerBinding::inflate
+  override val viewBinding = LobbyItemLargeContainerBinding::inflate
 
-    override val layoutRoot by boundView { lobbyItemLargeContainer }
-
+  override val layoutRoot by boundView { lobbyItemLargeContainer }
 }

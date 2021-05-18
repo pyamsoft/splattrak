@@ -24,12 +24,11 @@ import dagger.Subcomponent
 @Subcomponent
 interface DrilldownItemComponent {
 
-    fun inject(holder: DrilldownItemViewHolder)
+  fun inject(holder: DrilldownItemViewHolder)
 
-    @Subcomponent.Factory
-    interface Factory {
+  @Subcomponent.Factory
+  interface Factory {
 
-        @CheckResult
-        fun create(@BindsInstance parent: ViewGroup): DrilldownItemComponent
-    }
+    @CheckResult fun create(@BindsInstance parent: ViewGroup): DrilldownItemComponent
+  }
 }

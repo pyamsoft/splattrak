@@ -31,123 +31,121 @@ import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemViewState
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import io.cabriole.decorator.LinearMarginDecoration
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
-class DrilldownList @Inject internal constructor(
+class DrilldownList
+@Inject
+internal constructor(
     private val factory: DrilldownItemComponent.Factory,
     parent: ViewGroup,
-) : BaseUiView<DrilldownViewState, DrilldownViewEvent, LobbyListBinding>(parent),
+) :
+    BaseUiView<DrilldownViewState, DrilldownViewEvent, LobbyListBinding>(parent),
     SwipeRefreshLayout.OnRefreshListener {
 
-    override val viewBinding = LobbyListBinding::inflate
+  override val viewBinding = LobbyListBinding::inflate
 
-    override val layoutRoot by boundView { lobbyListRoot }
+  override val layoutRoot by boundView { lobbyListRoot }
 
-    private var modelAdapter: DrilldownListAdapter? = null
+  private var modelAdapter: DrilldownListAdapter? = null
 
-    private var lastScrollPosition = 0
+  private var lastScrollPosition = 0
 
-    init {
-        doOnInflate {
-            binding.lobbyList.layoutManager =
-                LinearLayoutManager(binding.lobbyList.context).apply {
-                    isItemPrefetchEnabled = true
-                    initialPrefetchItemCount = 3
-                }
-        }
-
-        doOnInflate {
-            modelAdapter = DrilldownListAdapter(factory)
-            binding.lobbyList.adapter = modelAdapter
-        }
-
-        doOnInflate {
-            binding.lobbySwipeRefresh.setOnRefreshListener(this)
-        }
-
-        doOnInflate { savedInstanceState ->
-            val position = savedInstanceState.get(LAST_SCROLL_POSITION) ?: -1
-            if (position >= 0) {
-                Timber.d("Last scroll position saved at: $position")
-                lastScrollPosition = position
-            }
-        }
-
-        doOnSaveState { outState ->
-            val manager = binding.lobbyList.layoutManager
-            if (manager is GridLayoutManager) {
-                val position = manager.findFirstVisibleItemPosition()
-                if (position > 0) {
-                    outState.put(LAST_SCROLL_POSITION, position)
-                    return@doOnSaveState
-                }
-            }
-
-            outState.remove<Nothing>(LAST_SCROLL_POSITION)
-        }
-
-        doOnInflate {
-            val margin = 16.asDp(binding.lobbyList.context)
-
-            // Standard margin on all items
-            // For some reason, the margin registers only half as large as it needs to
-            // be, so we must double it.
-            LinearMarginDecoration.create(margin = margin).apply {
-                binding.lobbyList.addItemDecoration(this)
-            }
-        }
-
-        doOnTeardown {
-            binding.lobbyList.removeAllItemDecorations()
-        }
-
-        doOnTeardown {
-            binding.lobbyList.adapter = null
-
-            binding.lobbySwipeRefresh.setOnRefreshListener(null)
-
-            modelAdapter = null
-        }
+  init {
+    doOnInflate {
+      binding.lobbyList.layoutManager =
+          LinearLayoutManager(binding.lobbyList.context).apply {
+            isItemPrefetchEnabled = true
+            initialPrefetchItemCount = 3
+          }
     }
 
-    @CheckResult
-    private fun usingAdapter(): DrilldownListAdapter {
-        return requireNotNull(modelAdapter)
+    doOnInflate {
+      modelAdapter = DrilldownListAdapter(factory)
+      binding.lobbyList.adapter = modelAdapter
     }
 
-    override fun onRefresh() {
-        publish(DrilldownViewEvent.ForceRefresh)
+    doOnInflate { binding.lobbySwipeRefresh.setOnRefreshListener(this) }
+
+    doOnInflate { savedInstanceState ->
+      val position = savedInstanceState.get(LAST_SCROLL_POSITION) ?: -1
+      if (position >= 0) {
+        Timber.d("Last scroll position saved at: $position")
+        lastScrollPosition = position
+      }
     }
 
-    override fun onRender(state: UiRender<DrilldownViewState>) {
-        state.mapChanged { it.battle }.render(viewScope) { handleList(it) }
-        state.mapChanged { it.loading }.render(viewScope) { handleLoading(it) }
-    }
-
-    private fun setList(matches: List<SplatMatch>) {
-        val data = matches.map { DrilldownItemViewState(it) }
-        usingAdapter().submitList(data)
-    }
-
-    private fun clearList() {
-        usingAdapter().submitList(null)
-    }
-
-    private fun handleLoading(loading: Boolean) {
-        binding.lobbySwipeRefresh.isRefreshing = loading
-    }
-
-    private fun handleList(battle: SplatBattle?) {
-        if (battle == null) {
-            clearList()
-        } else {
-            setList(battle.rotation())
+    doOnSaveState { outState ->
+      val manager = binding.lobbyList.layoutManager
+      if (manager is GridLayoutManager) {
+        val position = manager.findFirstVisibleItemPosition()
+        if (position > 0) {
+          outState.put(LAST_SCROLL_POSITION, position)
+          return@doOnSaveState
         }
+      }
+
+      outState.remove<Nothing>(LAST_SCROLL_POSITION)
     }
 
-    companion object {
-        private const val LAST_SCROLL_POSITION = "drilldown_last_scroll_position"
+    doOnInflate {
+      val margin = 16.asDp(binding.lobbyList.context)
+
+      // Standard margin on all items
+      // For some reason, the margin registers only half as large as it needs to
+      // be, so we must double it.
+      LinearMarginDecoration.create(margin = margin).apply {
+        binding.lobbyList.addItemDecoration(this)
+      }
     }
 
+    doOnTeardown { binding.lobbyList.removeAllItemDecorations() }
+
+    doOnTeardown {
+      binding.lobbyList.adapter = null
+
+      binding.lobbySwipeRefresh.setOnRefreshListener(null)
+
+      modelAdapter = null
+    }
+  }
+
+  @CheckResult
+  private fun usingAdapter(): DrilldownListAdapter {
+    return requireNotNull(modelAdapter)
+  }
+
+  override fun onRefresh() {
+    publish(DrilldownViewEvent.ForceRefresh)
+  }
+
+  override fun onRender(state: UiRender<DrilldownViewState>) {
+    state.mapChanged { it.battle }.render(viewScope) { handleList(it) }
+    state.mapChanged { it.loading }.render(viewScope) { handleLoading(it) }
+  }
+
+  private fun setList(matches: List<SplatMatch>) {
+    val data = matches.map { DrilldownItemViewState(it) }
+    usingAdapter().submitList(data)
+  }
+
+  private fun clearList() {
+    usingAdapter().submitList(null)
+  }
+
+  private fun handleLoading(loading: Boolean) {
+    binding.lobbySwipeRefresh.isRefreshing = loading
+  }
+
+  private fun handleList(battle: SplatBattle?) {
+    if (battle == null) {
+      clearList()
+    } else {
+      setList(battle.rotation())
+    }
+  }
+
+  companion object {
+    private const val LAST_SCROLL_POSITION = "drilldown_last_scroll_position"
+  }
 }

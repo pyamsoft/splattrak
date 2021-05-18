@@ -32,71 +32,65 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-abstract class BaseLobbyInfo<S : UiViewState> protected constructor(
+abstract class BaseLobbyInfo<S : UiViewState>
+protected constructor(
     parent: ViewGroup,
 ) : BaseUiView<S, Nothing, LobbyItemInfoBinding>(parent) {
 
-    private val formatter12 by lazy(LazyThreadSafetyMode.NONE) {
-        DateTimeFormatter.ofPattern("hh:mm a")
+  private val formatter12 by lazy(LazyThreadSafetyMode.NONE) {
+    DateTimeFormatter.ofPattern("hh:mm a")
+  }
+
+  private val formatter24 by lazy(LazyThreadSafetyMode.NONE) {
+    DateTimeFormatter.ofPattern("kk:mm")
+  }
+
+  final override val layoutRoot by boundView { lobbyItemCurrentInfo }
+
+  final override val viewBinding = LobbyItemInfoBinding::inflate
+
+  init {
+    doOnTeardown {
+      binding.lobbyItemCurrentGameType.text = ""
+      binding.lobbyItemCurrentGameStart.text = ""
+      binding.lobbyItemCurrentGameEnd.text = ""
     }
 
-    private val formatter24 by lazy(LazyThreadSafetyMode.NONE) {
-        DateTimeFormatter.ofPattern("kk:mm")
+    doOnInflate {
+      val size = 8.asDp(layoutRoot.context.applicationContext)
+      layoutRoot.updatePadding(bottom = if (isLarge()) size * 2 else size)
+    }
+  }
+
+  @CheckResult protected abstract fun isLarge(): Boolean
+
+  @CheckResult protected abstract fun getMatch(state: S): SplatMatch
+
+  @CheckResult
+  private fun getDateFormatter(): DateTimeFormatter {
+    val ctx = layoutRoot.context.applicationContext
+    return if (DateFormat.is24HourFormat(ctx)) formatter24 else formatter12
+  }
+
+  final override fun onRender(state: UiRender<S>) {
+    state.mapChanged { getMatch(it) }.mapChanged { it.rules() }.render(viewScope) {
+      handleRuleset(it)
     }
 
-    final override val layoutRoot by boundView { lobbyItemCurrentInfo }
-
-    final override val viewBinding = LobbyItemInfoBinding::inflate
-
-    init {
-        doOnTeardown {
-            binding.lobbyItemCurrentGameType.text = ""
-            binding.lobbyItemCurrentGameStart.text = ""
-            binding.lobbyItemCurrentGameEnd.text = ""
-        }
-
-        doOnInflate {
-            val size = 8.asDp(layoutRoot.context.applicationContext)
-            layoutRoot.updatePadding(
-                bottom = if (isLarge()) size * 2 else size
-            )
-        }
+    state.mapChanged { getMatch(it) }.mapChanged { it.start() }.render(viewScope) {
+      handleTime(it, binding.lobbyItemCurrentGameStart)
     }
 
-    @CheckResult
-    protected abstract fun isLarge(): Boolean
-
-    @CheckResult
-    protected abstract fun getMatch(state: S): SplatMatch
-
-    @CheckResult
-    private fun getDateFormatter(): DateTimeFormatter {
-        val ctx = layoutRoot.context.applicationContext
-        return if (DateFormat.is24HourFormat(ctx)) formatter24 else formatter12
+    state.mapChanged { getMatch(it) }.mapChanged { it.end() }.render(viewScope) {
+      handleTime(it, binding.lobbyItemCurrentGameEnd)
     }
+  }
 
-    final override fun onRender(state: UiRender<S>) {
-        state
-            .mapChanged { getMatch(it) }
-            .mapChanged { it.rules() }
-            .render(viewScope) { handleRuleset(it) }
+  private fun handleTime(time: LocalDateTime, textView: TextView) {
+    textView.text = time.format(getDateFormatter()).toLowerCase(Locale.getDefault())
+  }
 
-        state
-            .mapChanged { getMatch(it) }
-            .mapChanged { it.start() }
-            .render(viewScope) { handleTime(it, binding.lobbyItemCurrentGameStart) }
-
-        state
-            .mapChanged { getMatch(it) }
-            .mapChanged { it.end() }
-            .render(viewScope) { handleTime(it, binding.lobbyItemCurrentGameEnd) }
-    }
-
-    private fun handleTime(time: LocalDateTime, textView: TextView) {
-        textView.text = time.format(getDateFormatter()).toLowerCase(Locale.getDefault())
-    }
-
-    private fun handleRuleset(rules: SplatRuleset) {
-        binding.lobbyItemCurrentGameType.text = rules.name()
-    }
+  private fun handleRuleset(rules: SplatRuleset) {
+    binding.lobbyItemCurrentGameType.text = rules.name()
+  }
 }

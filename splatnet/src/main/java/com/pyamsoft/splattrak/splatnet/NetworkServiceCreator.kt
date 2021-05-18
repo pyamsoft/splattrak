@@ -21,6 +21,5 @@ import kotlin.reflect.KClass
 
 internal interface NetworkServiceCreator {
 
-    @CheckResult
-    fun <T : Any> create(target: KClass<T>): T
+  @CheckResult fun <T : Any> create(target: KClass<T>): T
 }

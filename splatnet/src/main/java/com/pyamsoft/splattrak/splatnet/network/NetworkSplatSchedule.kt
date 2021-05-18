@@ -20,11 +20,9 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class NetworkSplatSchedule internal constructor(
+data class NetworkSplatSchedule
+internal constructor(
     internal val regular: List<NetworkSplatMatch>,
-
     internal val league: List<NetworkSplatMatch>,
-
-    @Json(name = "gachi")
-    internal val ranked: List<NetworkSplatMatch>
+    @Json(name = "gachi") internal val ranked: List<NetworkSplatMatch>
 )

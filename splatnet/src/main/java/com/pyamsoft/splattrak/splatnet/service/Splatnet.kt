@@ -22,7 +22,5 @@ import retrofit2.http.GET
 
 internal interface Splatnet {
 
-    @CheckResult
-    @GET("data/schedules.json")
-    suspend fun lobbySchedule(): NetworkSplatSchedule
+  @CheckResult @GET("data/schedules.json") suspend fun lobbySchedule(): NetworkSplatSchedule
 }

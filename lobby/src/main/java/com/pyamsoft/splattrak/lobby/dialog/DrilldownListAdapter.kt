@@ -23,57 +23,57 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.ui.util.teardownAdapter
 import com.pyamsoft.splattrak.lobby.databinding.DrilldownListItemHolderBinding
-import com.pyamsoft.splattrak.lobby.databinding.LobbyListItemHolderBinding
 import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemComponent
 import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemViewHolder
 import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemViewState
 
-class DrilldownListAdapter internal constructor(
+class DrilldownListAdapter
+internal constructor(
     private val factory: DrilldownItemComponent.Factory,
 ) : ListAdapter<DrilldownItemViewState, DrilldownItemViewHolder>(DIFFER) {
 
-    init {
-        setHasStableIds(true)
-    }
+  init {
+    setHasStableIds(true)
+  }
 
-    override fun getItemId(position: Int): Long {
-        return getItem(position).match.id()
-    }
+  override fun getItemId(position: Int): Long {
+    return getItem(position).match.id()
+  }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DrilldownItemViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = DrilldownListItemHolderBinding.inflate(inflater, parent, false)
-        return DrilldownItemViewHolder(binding, factory)
-    }
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DrilldownItemViewHolder {
+    val inflater = LayoutInflater.from(parent.context)
+    val binding = DrilldownListItemHolderBinding.inflate(inflater, parent, false)
+    return DrilldownItemViewHolder(binding, factory)
+  }
 
-    override fun onBindViewHolder(holder: DrilldownItemViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.bindState(item)
-    }
+  override fun onBindViewHolder(holder: DrilldownItemViewHolder, position: Int) {
+    val item = getItem(position)
+    holder.bindState(item)
+  }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
-        teardownAdapter(recyclerView)
-    }
+  override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+    super.onDetachedFromRecyclerView(recyclerView)
+    teardownAdapter(recyclerView)
+  }
 
-    companion object {
+  companion object {
 
-        private val DIFFER = object : DiffUtil.ItemCallback<DrilldownItemViewState>() {
+    private val DIFFER =
+        object : DiffUtil.ItemCallback<DrilldownItemViewState>() {
 
-            override fun areItemsTheSame(
-                oldItem: DrilldownItemViewState,
-                newItem: DrilldownItemViewState,
-            ): Boolean {
-                return oldItem.match.id() == newItem.match.id()
-            }
+          override fun areItemsTheSame(
+              oldItem: DrilldownItemViewState,
+              newItem: DrilldownItemViewState,
+          ): Boolean {
+            return oldItem.match.id() == newItem.match.id()
+          }
 
-            override fun areContentsTheSame(
-                oldItem: DrilldownItemViewState,
-                newItem: DrilldownItemViewState,
-            ): Boolean {
-                return oldItem == newItem
-            }
+          override fun areContentsTheSame(
+              oldItem: DrilldownItemViewState,
+              newItem: DrilldownItemViewState,
+          ): Boolean {
+            return oldItem == newItem
+          }
         }
-    }
-
+  }
 }

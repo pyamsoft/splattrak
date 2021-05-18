@@ -16,138 +16,138 @@
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext {
-        kotlin_version = '1.5.0'
-        desugar = "1.0.9"
+  ext {
+    kotlin_version = '1.5.0'
+    desugar = "1.0.9"
+  }
+
+  repositories {
+    mavenLocal()
+    google()
+    mavenCentral()
+
+    maven {
+      url "https://jitpack.io"
     }
 
-    repositories {
-        mavenLocal()
-        google()
-        mavenCentral()
-
-        maven {
-            url "https://jitpack.io"
-        }
-
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+    maven {
+      url "https://plugins.gradle.org/m2/"
     }
+  }
 
-    ext {
-        minSdk = 23
-        maxSdk = 30
+  ext {
+    minSdk = 23
+    maxSdk = 30
 
-        // Us
-        pydroid = "23.0.4"
-        cachify = "0.0.23"
-        highlander = "0.0.18"
+    // Us
+    pydroid = "23.0.5"
+    cachify = "0.0.23"
+    highlander = "0.0.18"
 
-        // Leak Canary
-        leakCanary = "2.7"
+    // Leak Canary
+    leakCanary = "2.7"
 
-        // Logging
-        timber = "4.7.1"
+    // Logging
+    timber = "4.7.1"
 
-        // Dagger
-        dagger = "2.35.1"
+    // Dagger
+    dagger = "2.35.1"
 
-        moshi = "1.12.0"
-        retrofit = "2.9.0"
-        okhttp = "4.9.1"
+    moshi = "1.12.0"
+    retrofit = "2.9.0"
+    okhttp = "4.9.1"
 
-        // AndroidX
-        core = "1.3.2"
-        constraintLayout = "2.0.4"
-        preference = "1.1.1"
-        recyclerView = "1.2.0"
-        fragment = "1.3.3"
-        swipeRefresh = "1.1.0"
+    // AndroidX
+    core = "1.3.2"
+    constraintLayout = "2.0.4"
+    preference = "1.1.1"
+    recyclerView = "1.2.0"
+    fragment = "1.3.3"
+    swipeRefresh = "1.1.0"
 
-        // Material Design
-        materialDesign = "1.3.0"
+    // Material Design
+    materialDesign = "1.3.0"
 
-        // Recyclerview
-        decorator = "1.3.0"
-        fastscroll = "1.1.5"
-    }
+    // Recyclerview
+    decorator = "1.3.0"
+    fastscroll = "1.1.5"
+  }
 
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.1'
+  dependencies {
+    classpath 'com.android.tools.build:gradle:4.2.1'
 
-        // Gradle version checker
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.38.0'
+    // Gradle version checker
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.38.0'
 
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
-        // Spotless
-        classpath "com.diffplug.spotless:spotless-plugin-gradle:5.12.5"
+    // Spotless
+    classpath "com.diffplug.spotless:spotless-plugin-gradle:5.12.5"
 
-        //        classpath 'com.google.gms:google-services:4.3.2'
-    }
+    //        classpath 'com.google.gms:google-services:4.3.2'
+  }
 }
 
 allprojects {
-    apply plugin: "com.github.ben-manes.versions"
-    apply plugin: "com.diffplug.spotless"
+  apply plugin: "com.github.ben-manes.versions"
+  apply plugin: "com.diffplug.spotless"
 
-    spotless {
-        java {
-            target "src/**/*.java"
+  spotless {
+    java {
+      target "src/**/*.java"
 
-            removeUnusedImports()
-            trimTrailingWhitespace()
-            endWithNewline()
-            indentWithSpaces(2)
-        }
-        kotlin {
-            target "src/**/*.kt"
-            ktlint()
+      removeUnusedImports()
+      trimTrailingWhitespace()
+      endWithNewline()
+      indentWithSpaces(2)
+    }
+    kotlin {
+      target "src/**/*.kt"
+      ktfmt()
 
-            trimTrailingWhitespace()
-            endWithNewline()
-            indentWithSpaces(2)
-        }
-        groovyGradle {
-            target "*.gradle"
-            greclipse()
+      trimTrailingWhitespace()
+      endWithNewline()
+      indentWithSpaces(2)
+    }
+    groovyGradle {
+      target "*.gradle"
+      greclipse()
 
-            trimTrailingWhitespace()
-            endWithNewline()
-            indentWithSpaces(2)
-        }
+      trimTrailingWhitespace()
+      endWithNewline()
+      indentWithSpaces(2)
+    }
+  }
+
+  // Ignore non-release libraries
+  def isNonStable = { String version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { version.toUpperCase().contains(it) }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
+  }
+
+  tasks.named("dependencyUpdates").configure {
+    rejectVersionIf {
+      isNonStable(it.candidate.version)
+    }
+  }
+
+  repositories {
+    mavenLocal()
+    google()
+    mavenCentral()
+
+    maven {
+      url "https://jitpack.io"
     }
 
-    // Ignore non-release libraries
-    def isNonStable = { String version ->
-        def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { version.toUpperCase().contains(it) }
-        def regex = /^[0-9,.v-]+(-r)?$/
-        return !stableKeyword && !(version ==~ regex)
+    maven {
+      url "https://plugins.gradle.org/m2/"
     }
+  }
 
-    tasks.named("dependencyUpdates").configure {
-        rejectVersionIf {
-            isNonStable(it.candidate.version)
-        }
-    }
-
-    repositories {
-        mavenLocal()
-        google()
-        mavenCentral()
-
-        maven {
-            url "https://jitpack.io"
-        }
-
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
-        options.deprecation = true
-    }
+  tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+    options.deprecation = true
+  }
 }

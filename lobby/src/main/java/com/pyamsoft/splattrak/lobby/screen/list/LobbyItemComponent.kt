@@ -24,14 +24,13 @@ import dagger.Subcomponent
 @Subcomponent
 interface LobbyItemComponent {
 
-    fun inject(holder: LobbyItemViewHolder)
+  fun inject(holder: LobbyItemViewHolder)
 
-    fun inject(holder: LobbyDisclaimerViewHolder)
+  fun inject(holder: LobbyDisclaimerViewHolder)
 
-    @Subcomponent.Factory
-    interface Factory {
+  @Subcomponent.Factory
+  interface Factory {
 
-        @CheckResult
-        fun create(@BindsInstance parent: ViewGroup): LobbyItemComponent
-    }
+    @CheckResult fun create(@BindsInstance parent: ViewGroup): LobbyItemComponent
+  }
 }

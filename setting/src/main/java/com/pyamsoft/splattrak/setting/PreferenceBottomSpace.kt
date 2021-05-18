@@ -25,31 +25,32 @@ import androidx.preference.PreferenceViewHolder
 import com.pyamsoft.pydroid.ui.preference.PreferenceCompat
 import com.pyamsoft.splattrak.setting.databinding.PreferenceSpacerBinding
 
-internal class PreferenceBottomSpace internal constructor(
+internal class PreferenceBottomSpace
+internal constructor(
     private val height: Int,
     context: Context,
 ) : PreferenceCompat(context) {
 
-    init {
-        layoutResource = R.layout.preference_spacer
-    }
+  init {
+    layoutResource = R.layout.preference_spacer
+  }
 
-    override fun onBindViewHolder(holder: PreferenceViewHolder) {
-        super.onBindViewHolder(holder)
-        height.let { h ->
-            val view = holder.itemView
-            val binding = PreferenceSpacerBinding.bind(view)
+  override fun onBindViewHolder(holder: PreferenceViewHolder) {
+    super.onBindViewHolder(holder)
+    height.let { h ->
+      val view = holder.itemView
+      val binding = PreferenceSpacerBinding.bind(view)
 
-            // Set disclaimer
-            binding.nintendoDisclaimer.setText(com.pyamsoft.splattrak.ui.R.string.nintendo_disclaimer)
-            binding.nintendoDisclaimer.movementMethod = LinkMovementMethod.getInstance()
+      // Set disclaimer
+      binding.nintendoDisclaimer.setText(com.pyamsoft.splattrak.ui.R.string.nintendo_disclaimer)
+      binding.nintendoDisclaimer.movementMethod = LinkMovementMethod.getInstance()
 
-            if (h > 0) {
-                view.updatePadding(bottom = h)
-                binding.nintendoDisclaimer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    this.bottomMargin = h
-                }
-            }
+      if (h > 0) {
+        view.updatePadding(bottom = h)
+        binding.nintendoDisclaimer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+          this.bottomMargin = h
         }
+      }
     }
+  }
 }

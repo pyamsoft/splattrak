@@ -26,74 +26,78 @@ import com.pyamsoft.splattrak.ui.appbar.BottomOffset
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import javax.inject.Named
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Named
 
-class MainViewModel @AssistedInject internal constructor(
+class MainViewModel
+@AssistedInject
+internal constructor(
     @Assisted savedState: UiSavedState,
     @Named("app_name") appNameRes: Int,
     private val bottomOffsetBus: EventBus<BottomOffset>,
-) : UiSavedStateViewModel<MainViewState, MainControllerEvent>(
-    savedState,
-    MainViewState(
-        page = null,
-        appNameRes = appNameRes,
-    )
-) {
+) :
+    UiSavedStateViewModel<MainViewState, MainControllerEvent>(
+        savedState,
+        MainViewState(
+            page = null,
+            appNameRes = appNameRes,
+        )) {
 
-    fun handleLoadDefaultPage() {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            val page = restoreSavedState(KEY_PAGE) { MainPage.Lobby.asString() }.asPage()
-            Timber.d("Loading initial page: $page")
-            handleSelectPage(page, force = true)
-        }
+  fun handleLoadDefaultPage() {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      val page = restoreSavedState(KEY_PAGE) { MainPage.Lobby.asString() }.asPage()
+      Timber.d("Loading initial page: $page")
+      handleSelectPage(page, force = true)
     }
+  }
 
-    fun handleSelectPage(page: MainPage, force: Boolean) {
-        val oldPage = state.page
-        setState(stateChange = { copy(page = page) }, andThen = { newState ->
-            publishNewSelection(requireNotNull(newState.page), oldPage, force)
+  fun handleSelectPage(page: MainPage, force: Boolean) {
+    val oldPage = state.page
+    setState(
+        stateChange = { copy(page = page) },
+        andThen = { newState ->
+          publishNewSelection(requireNotNull(newState.page), oldPage, force)
         })
+  }
+
+  fun handleConsumeBottomBarHeight(height: Int) {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      bottomOffsetBus.send(BottomOffset(height))
+    }
+  }
+
+  private suspend inline fun publishNewSelection(
+      newPage: MainPage,
+      oldPage: MainPage?,
+      force: Boolean,
+  ) {
+    Timber.d("Publish selection: $oldPage -> $newPage")
+    putSavedState(KEY_PAGE, newPage.asString())
+    publish(MainControllerEvent.PushPage(newPage, oldPage, force))
+  }
+
+  companion object {
+
+    @CheckResult
+    private fun MainPage.asString(): String {
+      return this::class.java.name
     }
 
-    fun handleConsumeBottomBarHeight(height: Int) {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            bottomOffsetBus.send(BottomOffset(height))
+    @CheckResult
+    private fun String.asPage(): MainPage =
+        when (this) {
+          MainPage.Lobby::class.java.name -> MainPage.Lobby
+          MainPage.Settings::class.java.name -> MainPage.Settings
+          else -> throw IllegalStateException("Cannot convert to MainPage: $this")
         }
-    }
 
-    private suspend inline fun publishNewSelection(
-        newPage: MainPage,
-        oldPage: MainPage?,
-        force: Boolean,
-    ) {
-        Timber.d("Publish selection: $oldPage -> $newPage")
-        putSavedState(KEY_PAGE, newPage.asString())
-        publish(MainControllerEvent.PushPage(newPage, oldPage, force))
-    }
+    private const val KEY_PAGE = "page"
+  }
 
-    companion object {
-
-        @CheckResult
-        private fun MainPage.asString(): String {
-            return this::class.java.name
-        }
-
-        @CheckResult
-        private fun String.asPage(): MainPage = when (this) {
-            MainPage.Lobby::class.java.name -> MainPage.Lobby
-            MainPage.Settings::class.java.name -> MainPage.Settings
-            else -> throw IllegalStateException("Cannot convert to MainPage: $this")
-        }
-
-        private const val KEY_PAGE = "page"
-    }
-
-    @AssistedFactory
-    interface Factory : UiSavedStateViewModelProvider<MainViewModel> {
-        override fun create(savedState: UiSavedState): MainViewModel
-    }
-
+  @AssistedFactory
+  interface Factory : UiSavedStateViewModelProvider<MainViewModel> {
+    override fun create(savedState: UiSavedState): MainViewModel
+  }
 }

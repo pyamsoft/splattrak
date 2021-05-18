@@ -22,56 +22,59 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.splattrak.splatnet.SplatnetInteractor
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
-class DrilldownViewModel @Inject internal constructor(
+class DrilldownViewModel
+@Inject
+internal constructor(
     splatnetInteractor: SplatnetInteractor,
     expectedMode: SplatGameMode.Mode,
-) : UiViewModel<DrilldownViewState, Nothing>(
-    DrilldownViewState(
-        battle = null,
-        loading = false,
-        error = null,
-    )
-) {
+) :
+    UiViewModel<DrilldownViewState, Nothing>(
+        DrilldownViewState(
+            battle = null,
+            loading = false,
+            error = null,
+        )) {
 
-    private val scheduleRunner = highlander<Unit> {
-        setState(stateChange = { copy(loading = true) }, andThen = {
-            try {
+  private val scheduleRunner =
+      highlander<Unit> {
+        setState(
+            stateChange = { copy(loading = true) },
+            andThen = {
+              try {
                 val schedule = splatnetInteractor.schedule()
                 for (entry in schedule.battles()) {
-                    if (entry.mode().mode() == expectedMode) {
-                        return@setState setState { copy(battle = entry, loading = false) }
-                    }
+                  if (entry.mode().mode() == expectedMode) {
+                    return@setState setState { copy(battle = entry, loading = false) }
+                  }
                 }
 
                 val missingBattleError =
                     IllegalStateException("Missing battle: ${expectedMode.name}")
                 Timber.e(missingBattleError, "Failed to find battle")
                 setState { copy(error = missingBattleError, loading = false) }
-            } catch (error: Throwable) {
+              } catch (error: Throwable) {
                 error.onActualError { e ->
-                    Timber.e(e, "Failed to load Splatoon2.ink lobby list")
-                    setState { copy(error = e, loading = false) }
+                  Timber.e(e, "Failed to load Splatoon2.ink lobby list")
+                  setState { copy(error = e, loading = false) }
                 }
-            }
-        })
-    }
+              }
+            })
+      }
 
-    init {
-        performRefresh()
-    }
+  init {
+    performRefresh()
+  }
 
-    fun handleRefresh() {
-        performRefresh()
-    }
+  fun handleRefresh() {
+    performRefresh()
+  }
 
-    private fun performRefresh() {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            scheduleRunner.call()
-        }
-    }
+  private fun performRefresh() {
+    viewModelScope.launch(context = Dispatchers.Default) { scheduleRunner.call() }
+  }
 }

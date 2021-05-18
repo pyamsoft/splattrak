@@ -28,27 +28,25 @@ import javax.inject.Provider
 
 interface SplatViewModelFactory {
 
-    @CheckResult
-    fun create(owner: SavedStateRegistryOwner): ViewModelProvider.Factory
-
+  @CheckResult fun create(owner: SavedStateRegistryOwner): ViewModelProvider.Factory
 }
 
 @Reusable
-internal class SplatViewModelFactoryImpl @Inject internal constructor(
+internal class SplatViewModelFactoryImpl
+@Inject
+internal constructor(
     private val viewModels: Map<Class<*>, @JvmSuppressWildcards Provider<ViewModel>>,
 ) : SplatViewModelFactory {
 
-    override fun create(owner: SavedStateRegistryOwner): ViewModelProvider.Factory {
-        return object : SavedStateViewModelFactory(owner, defaultArgs = null) {
+  override fun create(owner: SavedStateRegistryOwner): ViewModelProvider.Factory {
+    return object : SavedStateViewModelFactory(owner, defaultArgs = null) {
 
-            override fun <T : ViewModel> createViewModel(
-                modelClass: Class<T>,
-                savedState: UiSavedState
-            ): ViewModel {
-                return viewModels[modelClass]?.get() ?: fail(modelClass)
-            }
-        }
+      override fun <T : ViewModel> createViewModel(
+          modelClass: Class<T>,
+          savedState: UiSavedState
+      ): ViewModel {
+        return viewModels[modelClass]?.get() ?: fail(modelClass)
+      }
     }
-
-
+  }
 }

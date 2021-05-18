@@ -16,7 +16,6 @@
 
 package com.pyamsoft.splattrak.core
 
-const val PRIVACY_POLICY_URL =
-    "https://pyamsoft.blogspot.com/p/splattrak-privacy-policy.html"
+const val PRIVACY_POLICY_URL = "https://pyamsoft.blogspot.com/p/splattrak-privacy-policy.html"
 const val TERMS_CONDITIONS_URL =
     "https://pyamsoft.blogspot.com/p/splattrak-terms-and-conditions.html"

@@ -37,71 +37,57 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-@Component(
-    modules = [
-        SplatComponent.SplatProvider::class,
-        SplatnetModule::class,
-        UiModule::class
-    ]
-)
+@Component(modules = [SplatComponent.SplatProvider::class, SplatnetModule::class, UiModule::class])
 internal interface SplatComponent {
 
-    /**
-     * Not actually used, just here so graph can compile
-     */
-    @CheckResult
-    @Suppress("FunctionName")
-    fun `$$daggerRequiredLobbyItemComponent`(): LobbyItemComponent.Factory
+  /** Not actually used, just here so graph can compile */
+  @CheckResult
+  @Suppress("FunctionName")
+  fun `$$daggerRequiredLobbyItemComponent`(): LobbyItemComponent.Factory
 
-    /**
-     * Not actually used, just here so graph can compile
-     */
-    @CheckResult
-    @Suppress("FunctionName")
-    fun `$$daggerRequiredDrilldownItemComponent`(): DrilldownItemComponent.Factory
+  /** Not actually used, just here so graph can compile */
+  @CheckResult
+  @Suppress("FunctionName")
+  fun `$$daggerRequiredDrilldownItemComponent`(): DrilldownItemComponent.Factory
 
-    @CheckResult
-    fun plusMainComponent(): MainComponent.Factory
+  @CheckResult fun plusMainComponent(): MainComponent.Factory
 
-    @CheckResult
-    fun plusLobbyComponent(): LobbyComponent.Factory
+  @CheckResult fun plusLobbyComponent(): LobbyComponent.Factory
 
-    @CheckResult
-    fun plusDrilldownComponent(): DrilldownComponent.Factory
+  @CheckResult fun plusDrilldownComponent(): DrilldownComponent.Factory
+
+  @CheckResult fun plusSettingsComponent(): SettingsComponent.Factory
+
+  @Component.Factory
+  interface Factory {
 
     @CheckResult
-    fun plusSettingsComponent(): SettingsComponent.Factory
+    fun create(
+        @BindsInstance application: Application,
+        @Named("debug") @BindsInstance debug: Boolean,
+        @BindsInstance theming: Theming,
+        @BindsInstance imageLoader: ImageLoader,
+    ): SplatComponent
+  }
 
-    @Component.Factory
-    interface Factory {
-
-        @CheckResult
-        fun create(
-            @BindsInstance application: Application,
-            @Named("debug") @BindsInstance debug: Boolean,
-            @BindsInstance theming: Theming,
-            @BindsInstance imageLoader: ImageLoader,
-        ): SplatComponent
-    }
+  @Module
+  abstract class SplatProvider {
 
     @Module
-    abstract class SplatProvider {
+    companion object {
 
-        @Module
-        companion object {
+      @Provides
+      @JvmStatic
+      internal fun provideContext(application: Application): Context {
+        return application
+      }
 
-            @Provides
-            @JvmStatic
-            internal fun provideContext(application: Application): Context {
-                return application
-            }
-
-            @Provides
-            @JvmStatic
-            @Named("app_name")
-            internal fun provideAppNameRes(): Int {
-                return R.string.app_name
-            }
-        }
+      @Provides
+      @JvmStatic
+      @Named("app_name")
+      internal fun provideAppNameRes(): Int {
+        return R.string.app_name
+      }
     }
+  }
 }

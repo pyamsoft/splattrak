@@ -18,21 +18,22 @@ package com.pyamsoft.splattrak.splatnet.data
 
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 
-internal data class SplatGameModeImpl internal constructor(
+internal data class SplatGameModeImpl
+internal constructor(
     private val key: String,
     private val name: String,
     private val mode: SplatGameMode.Mode,
 ) : SplatGameMode {
 
-    override fun key(): String {
-        return key
-    }
+  override fun key(): String {
+    return key
+  }
 
-    override fun name(): String {
-        return name
-    }
+  override fun name(): String {
+    return name
+  }
 
-    override fun mode(): SplatGameMode.Mode {
-        return mode
-    }
+  override fun mode(): SplatGameMode.Mode {
+    return mode
+  }
 }

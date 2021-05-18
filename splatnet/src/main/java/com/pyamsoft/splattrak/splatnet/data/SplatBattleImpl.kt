@@ -20,17 +20,15 @@ import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 
-internal data class SplatBattleImpl internal constructor(
-    private val mode: SplatGameMode,
-    private val rotation: List<SplatMatch>
-) : SplatBattle {
+internal data class SplatBattleImpl
+internal constructor(private val mode: SplatGameMode, private val rotation: List<SplatMatch>) :
+    SplatBattle {
 
-    override fun mode(): SplatGameMode {
-        return mode
-    }
+  override fun mode(): SplatGameMode {
+    return mode
+  }
 
-    override fun rotation(): List<SplatMatch> {
-        return rotation
-    }
-
+  override fun rotation(): List<SplatMatch> {
+    return rotation
+  }
 }

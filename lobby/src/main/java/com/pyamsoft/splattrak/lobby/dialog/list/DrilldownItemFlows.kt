@@ -19,6 +19,7 @@ package com.pyamsoft.splattrak.lobby.dialog.list
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 
-data class DrilldownItemViewState internal constructor(
+data class DrilldownItemViewState
+internal constructor(
     val match: SplatMatch,
 ) : UiViewState

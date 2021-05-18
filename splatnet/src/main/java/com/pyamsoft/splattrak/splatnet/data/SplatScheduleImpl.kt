@@ -19,11 +19,12 @@ package com.pyamsoft.splattrak.splatnet.data
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
 
-internal data class SplatScheduleImpl internal constructor(
+internal data class SplatScheduleImpl
+internal constructor(
     private val battles: List<SplatBattle>,
 ) : SplatSchedule {
 
-    override fun battles(): List<SplatBattle> {
-        return battles
-    }
+  override fun battles(): List<SplatBattle> {
+    return battles
+  }
 }

@@ -18,16 +18,17 @@ package com.pyamsoft.splattrak.splatnet.data
 
 import com.pyamsoft.splattrak.splatnet.api.SplatRuleset
 
-internal data class SplatRulesetImpl internal constructor(
+internal data class SplatRulesetImpl
+internal constructor(
     private val name: String,
     private val key: String,
 ) : SplatRuleset {
 
-    override fun key(): String {
-        return key
-    }
+  override fun key(): String {
+    return key
+  }
 
-    override fun name(): String {
-        return name
-    }
+  override fun name(): String {
+    return name
+  }
 }

@@ -19,10 +19,9 @@ package com.pyamsoft.splattrak.splatnet.network
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-internal data class NetworkSplatMap internal constructor(
+internal data class NetworkSplatMap
+internal constructor(
     internal val id: String,
-
     internal val name: String,
-
     internal val image: String,
 )

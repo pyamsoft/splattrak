@@ -18,6 +18,4 @@ package com.pyamsoft.splattrak.setting
 
 import com.pyamsoft.pydroid.arch.UiViewState
 
-data class SettingsViewState internal constructor(
-    val bottomOffset: Int
-) : UiViewState
+data class SettingsViewState internal constructor(val bottomOffset: Int) : UiViewState

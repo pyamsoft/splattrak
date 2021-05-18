@@ -21,21 +21,15 @@ import java.time.LocalDateTime
 
 interface SplatMatch {
 
-    @CheckResult
-    fun id(): Long
+  @CheckResult fun id(): Long
 
-    @CheckResult
-    fun start(): LocalDateTime
+  @CheckResult fun start(): LocalDateTime
 
-    @CheckResult
-    fun end(): LocalDateTime
+  @CheckResult fun end(): LocalDateTime
 
-    @CheckResult
-    fun stageA(): SplatMap
+  @CheckResult fun stageA(): SplatMap
 
-    @CheckResult
-    fun stageB(): SplatMap
+  @CheckResult fun stageB(): SplatMap
 
-    @CheckResult
-    fun rules(): SplatRuleset
+  @CheckResult fun rules(): SplatRuleset
 }

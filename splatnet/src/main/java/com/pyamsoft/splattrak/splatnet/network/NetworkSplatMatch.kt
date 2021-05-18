@@ -20,23 +20,13 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-internal data class NetworkSplatMatch internal constructor(
+internal data class NetworkSplatMatch
+internal constructor(
     internal val id: Long,
-
-    @Json(name = "start_time")
-    internal val startTime: Long,
-
-    @Json(name = "end_time")
-    internal val endTime: Long,
-
-    @Json(name = "stage_a")
-    internal val stageA: NetworkSplatMap,
-
-    @Json(name = "stage_b")
-    internal val stageB: NetworkSplatMap,
-
-    @Json(name = "game_mode")
-    internal val gameMode: NetworkSplatGameMode,
-
+    @Json(name = "start_time") internal val startTime: Long,
+    @Json(name = "end_time") internal val endTime: Long,
+    @Json(name = "stage_a") internal val stageA: NetworkSplatMap,
+    @Json(name = "stage_b") internal val stageB: NetworkSplatMap,
+    @Json(name = "game_mode") internal val gameMode: NetworkSplatGameMode,
     internal val rule: NetworkSplatRuleset,
 )

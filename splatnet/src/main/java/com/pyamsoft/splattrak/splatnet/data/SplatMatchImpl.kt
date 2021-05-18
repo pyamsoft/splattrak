@@ -22,7 +22,8 @@ import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.splatnet.api.SplatRuleset
 import java.time.LocalDateTime
 
-internal data class SplatMatchImpl internal constructor(
+internal data class SplatMatchImpl
+internal constructor(
     private val id: Long,
     private val startTime: LocalDateTime,
     private val endTime: LocalDateTime,
@@ -32,27 +33,27 @@ internal data class SplatMatchImpl internal constructor(
     private val rule: SplatRuleset,
 ) : SplatMatch {
 
-    override fun id(): Long {
-        return id
-    }
+  override fun id(): Long {
+    return id
+  }
 
-    override fun start(): LocalDateTime {
-        return startTime
-    }
+  override fun start(): LocalDateTime {
+    return startTime
+  }
 
-    override fun end(): LocalDateTime {
-        return endTime
-    }
+  override fun end(): LocalDateTime {
+    return endTime
+  }
 
-    override fun stageA(): SplatMap {
-        return stageA
-    }
+  override fun stageA(): SplatMap {
+    return stageA
+  }
 
-    override fun stageB(): SplatMap {
-        return stageB
-    }
+  override fun stageB(): SplatMap {
+    return stageB
+  }
 
-    override fun rules(): SplatRuleset {
-        return rule
-    }
+  override fun rules(): SplatRuleset {
+    return rule
+  }
 }

@@ -23,7 +23,8 @@ import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
 
-data class LobbyViewState internal constructor(
+data class LobbyViewState
+internal constructor(
     internal val rawSchedule: SplatSchedule?,
     val schedule: List<ScheduleGroupings>,
     val error: Throwable?,
@@ -31,26 +32,25 @@ data class LobbyViewState internal constructor(
     val bottomOffset: Int,
 ) : UiViewState {
 
-    data class ScheduleGroupings internal constructor(
-        val currentMatch: SplatMatch,
-        val nextMatch: SplatMatch,
-        val battle: SplatBattle,
-    )
+  data class ScheduleGroupings
+  internal constructor(
+      val currentMatch: SplatMatch,
+      val nextMatch: SplatMatch,
+      val battle: SplatBattle,
+  )
 }
 
 sealed class LobbyViewEvent : UiViewEvent {
 
-    data class ViewBattleRotation internal constructor(val index: Int) : LobbyViewEvent()
+  data class ViewBattleRotation internal constructor(val index: Int) : LobbyViewEvent()
 
-    object ForceRefresh : LobbyViewEvent()
-
+  object ForceRefresh : LobbyViewEvent()
 }
 
 sealed class LobbyControllerEvent : UiControllerEvent {
 
-    data class OpenBattleRotation internal constructor(
-        val battle: SplatBattle,
-    ) : LobbyControllerEvent()
-
+  data class OpenBattleRotation
+  internal constructor(
+      val battle: SplatBattle,
+  ) : LobbyControllerEvent()
 }
-

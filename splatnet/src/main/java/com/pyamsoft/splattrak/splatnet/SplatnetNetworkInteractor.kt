@@ -22,19 +22,22 @@ import com.pyamsoft.splattrak.splatnet.api.*
 import com.pyamsoft.splattrak.splatnet.data.*
 import com.pyamsoft.splattrak.splatnet.network.NetworkSplatMatch
 import com.pyamsoft.splattrak.splatnet.service.Splatnet
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-internal class SplatnetNetworkInteractor @Inject internal constructor(
+internal class SplatnetNetworkInteractor
+@Inject
+internal constructor(
     @InternalApi private val splatnet: Splatnet,
 ) : SplatnetInteractor {
 
-    override suspend fun schedule(): SplatSchedule = withContext(context = Dispatchers.IO) {
+  override suspend fun schedule(): SplatSchedule =
+      withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
         val networkSchedule = splatnet.lobbySchedule()
 
@@ -42,65 +45,50 @@ internal class SplatnetNetworkInteractor @Inject internal constructor(
             listOf(
                 assembleBattles(SplatGameMode.Mode.REGULAR, networkSchedule.regular),
                 assembleBattles(SplatGameMode.Mode.LEAGUE, networkSchedule.league),
-                assembleBattles(SplatGameMode.Mode.RANKED, networkSchedule.ranked)
-            )
-        )
+                assembleBattles(SplatGameMode.Mode.RANKED, networkSchedule.ranked)))
+      }
+
+  companion object {
+
+    @JvmStatic
+    @CheckResult
+    fun Long.toLocalDateTime(): LocalDateTime {
+      return LocalDateTime.ofInstant(Instant.ofEpochSecond(this), ZoneId.systemDefault())
+          .truncatedTo(ChronoUnit.MINUTES)
     }
 
-    companion object {
+    @JvmStatic
+    @CheckResult
+    private fun assembleBattles(
+        gameMode: SplatGameMode.Mode,
+        list: List<NetworkSplatMatch>,
+    ): SplatBattle {
+      val mode = list.first().gameMode
+      val battleMode = SplatGameModeImpl(key = mode.key, name = mode.name, mode = gameMode)
 
-        @JvmStatic
-        @CheckResult
-        fun Long.toLocalDateTime(): LocalDateTime {
-            return LocalDateTime.ofInstant(
-                Instant.ofEpochSecond(this),
-                ZoneId.systemDefault()
-            )
-                .truncatedTo(ChronoUnit.MINUTES)
-        }
-
-        @JvmStatic
-        @CheckResult
-        private fun assembleBattles(
-            gameMode: SplatGameMode.Mode,
-            list: List<NetworkSplatMatch>,
-        ): SplatBattle {
-            val mode = list.first().gameMode
-            val battleMode = SplatGameModeImpl(
-                key = mode.key,
-                name = mode.name,
-                mode = gameMode
-            )
-
-            return SplatBattleImpl(
-                mode = battleMode,
-                rotation = list.map { match ->
-                    SplatMatchImpl(
-                        id = match.id,
-                        startTime = match.startTime.toLocalDateTime(),
-                        endTime = match.endTime.toLocalDateTime(),
-                        stageA = SplatMapImpl(
+      return SplatBattleImpl(
+          mode = battleMode,
+          rotation =
+              list.map { match ->
+                SplatMatchImpl(
+                    id = match.id,
+                    startTime = match.startTime.toLocalDateTime(),
+                    endTime = match.endTime.toLocalDateTime(),
+                    stageA =
+                        SplatMapImpl(
                             id = match.stageA.id,
                             name = match.stageA.name,
-                            image = match.stageA.image
-                        ),
-                        stageB = SplatMapImpl(
+                            image = match.stageA.image),
+                    stageB =
+                        SplatMapImpl(
                             id = match.stageB.id,
                             name = match.stageB.name,
-                            image = match.stageB.image
-                        ),
-                        gameMode = SplatGameModeImpl(
-                            key = match.gameMode.key,
-                            name = match.gameMode.name,
-                            mode = gameMode
-                        ),
-                        rule = SplatRulesetImpl(
-                            key = match.rule.key,
-                            name = match.rule.name
-                        )
-                    )
-                }
-            )
-        }
+                            image = match.stageB.image),
+                    gameMode =
+                        SplatGameModeImpl(
+                            key = match.gameMode.key, name = match.gameMode.name, mode = gameMode),
+                    rule = SplatRulesetImpl(key = match.rule.key, name = match.rule.name))
+              })
     }
+  }
 }

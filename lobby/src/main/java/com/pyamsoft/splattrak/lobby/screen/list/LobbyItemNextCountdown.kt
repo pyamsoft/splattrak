@@ -20,49 +20,49 @@ import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.splattrak.lobby.databinding.LobbyItemCountdownBinding
-import timber.log.Timber
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
-class LobbyItemNextCountdown @Inject internal constructor(
+class LobbyItemNextCountdown
+@Inject
+internal constructor(
     parent: ViewGroup,
-) : BaseUiView<LobbyItemViewState.Data, LobbyItemViewEvent, LobbyItemCountdownBinding>(
-    parent,
-) {
+) :
+    BaseUiView<LobbyItemViewState.Data, LobbyItemViewEvent, LobbyItemCountdownBinding>(
+        parent,
+    ) {
 
-    override val layoutRoot by boundView { this.lobbyItemNextCountdown }
+  override val layoutRoot by boundView { this.lobbyItemNextCountdown }
 
-    override val viewBinding = LobbyItemCountdownBinding::inflate
+  override val viewBinding = LobbyItemCountdownBinding::inflate
 
-    private var timer: SplatCountdownTimer? = null
+  private var timer: SplatCountdownTimer? = null
 
-    init {
-        doOnTeardown {
-            timer?.cancel()
-            timer = null
+  init {
+    doOnTeardown {
+      timer?.cancel()
+      timer = null
+    }
+  }
+
+  override fun onRender(state: UiRender<LobbyItemViewState.Data>) {
+    state.mapChanged { it.nextMatch }.mapChanged { it.start() }.render(viewScope) {
+      handleNextStartTime(it)
+    }
+  }
+
+  private fun handleNextStartTime(time: LocalDateTime) {
+    val now = LocalDateTime.now()
+    val timeUntilStart = now.until(time, ChronoUnit.SECONDS)
+    timer?.cancel()
+    timer =
+        SplatCountdownTimer(viewScope, timeUntilStart) { display, isComplete ->
+          binding.lobbyItemNextCountdownText.text = display
+          if (isComplete) {
+            publish(LobbyItemViewEvent.OnCountdown)
+          }
         }
-    }
-
-    override fun onRender(state: UiRender<LobbyItemViewState.Data>) {
-        state
-            .mapChanged { it.nextMatch }
-            .mapChanged { it.start() }
-            .render(viewScope) { handleNextStartTime(it) }
-    }
-
-    private fun handleNextStartTime(time: LocalDateTime) {
-        val now = LocalDateTime.now()
-        val timeUntilStart = now.until(time, ChronoUnit.SECONDS)
-        timer?.cancel()
-        timer = SplatCountdownTimer(viewScope, timeUntilStart) { display, isComplete ->
-            binding.lobbyItemNextCountdownText.text = display
-            if (isComplete) {
-                publish(LobbyItemViewEvent.OnCountdown)
-            }
-        }.apply {
-            start()
-        }
-    }
-
+            .apply { start() }
+  }
 }

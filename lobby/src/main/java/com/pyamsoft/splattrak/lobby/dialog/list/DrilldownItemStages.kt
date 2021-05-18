@@ -22,18 +22,17 @@ import com.pyamsoft.splattrak.lobby.item.BaseLobbyStages
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import javax.inject.Inject
 
-class DrilldownItemStages @Inject internal constructor(
+class DrilldownItemStages
+@Inject
+internal constructor(
     imageLoader: ImageLoader,
     parent: ViewGroup,
-) : BaseLobbyStages<DrilldownItemViewState>(
-    imageLoader,
-    parent
-) {
-    override fun isLarge(): Boolean {
-        return false
-    }
+) : BaseLobbyStages<DrilldownItemViewState>(imageLoader, parent) {
+  override fun isLarge(): Boolean {
+    return false
+  }
 
-    override fun getMatch(state: DrilldownItemViewState): SplatMatch {
-        return state.match
-    }
+  override fun getMatch(state: DrilldownItemViewState): SplatMatch {
+    return state.match
+  }
 }

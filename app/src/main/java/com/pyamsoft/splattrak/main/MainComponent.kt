@@ -22,27 +22,27 @@ import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
-import com.pyamsoft.splattrak.ui.appbar.ThemeProviderModule
 import com.pyamsoft.splattrak.ui.appbar.AppBarActivityProvider
+import com.pyamsoft.splattrak.ui.appbar.ThemeProviderModule
 import dagger.BindsInstance
 import dagger.Subcomponent
 
 @Subcomponent(modules = [ThemeProviderModule::class])
 internal interface MainComponent {
 
-    fun inject(activity: MainActivity)
+  fun inject(activity: MainActivity)
 
-    @Subcomponent.Factory
-    interface Factory {
+  @Subcomponent.Factory
+  interface Factory {
 
-        @CheckResult
-        fun create(
-            @BindsInstance savedStateRegistryOwner: SavedStateRegistryOwner,
-            @BindsInstance activity: Activity,
-            @BindsInstance owner: LifecycleOwner,
-            @BindsInstance parent: ViewGroup,
-            @BindsInstance toolbarProvider: ToolbarActivityProvider,
-            @BindsInstance appBarProvider: AppBarActivityProvider,
-        ): MainComponent
-    }
+    @CheckResult
+    fun create(
+        @BindsInstance savedStateRegistryOwner: SavedStateRegistryOwner,
+        @BindsInstance activity: Activity,
+        @BindsInstance owner: LifecycleOwner,
+        @BindsInstance parent: ViewGroup,
+        @BindsInstance toolbarProvider: ToolbarActivityProvider,
+        @BindsInstance appBarProvider: AppBarActivityProvider,
+    ): MainComponent
+  }
 }

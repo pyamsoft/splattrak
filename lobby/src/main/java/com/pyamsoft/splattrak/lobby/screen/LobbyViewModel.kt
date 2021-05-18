@@ -23,76 +23,72 @@ import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.splattrak.splatnet.SplatnetInteractor
 import com.pyamsoft.splattrak.ui.appbar.BottomOffset
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
-class LobbyViewModel @Inject internal constructor(
+class LobbyViewModel
+@Inject
+internal constructor(
     splatnetInteractor: SplatnetInteractor,
     private val bottomOffsetBus: EventBus<BottomOffset>,
-) : UiViewModel<LobbyViewState, LobbyControllerEvent>(
-    LobbyViewState(
-        rawSchedule = null,
-        schedule = emptyList(),
-        loading = false,
-        error = null,
-        bottomOffset = 0
-    )
-) {
+) :
+    UiViewModel<LobbyViewState, LobbyControllerEvent>(
+        LobbyViewState(
+            rawSchedule = null,
+            schedule = emptyList(),
+            loading = false,
+            error = null,
+            bottomOffset = 0)) {
 
-    private val scheduleRunner = highlander<Unit> {
-        setState(stateChange = { copy(loading = true) }, andThen = {
-            try {
+  private val scheduleRunner =
+      highlander<Unit> {
+        setState(
+            stateChange = { copy(loading = true) },
+            andThen = {
+              try {
                 val schedule = splatnetInteractor.schedule()
                 val groupings = mutableListOf<LobbyViewState.ScheduleGroupings>()
                 for (entry in schedule.battles()) {
-                    val currentMatch = entry.rotation()[0]
-                    val nextMatch = entry.rotation()[1]
-                    groupings.add(
-                        LobbyViewState.ScheduleGroupings(
-                            currentMatch,
-                            nextMatch,
-                            entry
-                        )
-                    )
+                  val currentMatch = entry.rotation()[0]
+                  val nextMatch = entry.rotation()[1]
+                  groupings.add(LobbyViewState.ScheduleGroupings(currentMatch, nextMatch, entry))
                 }
                 setState { copy(schedule = groupings, rawSchedule = schedule, loading = false) }
-            } catch (error: Throwable) {
+              } catch (error: Throwable) {
                 error.onActualError { e ->
-                    Timber.e(e, "Failed to load Splatoon2.ink lobby list")
-                    setState { copy(error = e, loading = false) }
+                  Timber.e(e, "Failed to load Splatoon2.ink lobby list")
+                  setState { copy(error = e, loading = false) }
                 }
-            }
-        })
+              }
+            })
+      }
+
+  init {
+
+    viewModelScope.launch(context = Dispatchers.Default) {
+      bottomOffsetBus.onEvent { setState { copy(bottomOffset = it.height) } }
     }
 
-    init {
+    performRefresh()
+  }
 
-        viewModelScope.launch(context = Dispatchers.Default) {
-            bottomOffsetBus.onEvent { setState { copy(bottomOffset = it.height) } }
-        }
-
-        performRefresh()
+  fun handleOpenBattle(index: Int) {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      val schedule = state.schedule
+      if (schedule.isNotEmpty()) {
+        val entry = schedule[index]
+        publish(LobbyControllerEvent.OpenBattleRotation(entry.battle))
+      }
     }
+  }
 
-    fun handleOpenBattle(index: Int) {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            val schedule = state.schedule
-            if (schedule.isNotEmpty()) {
-                val entry = schedule[index]
-                publish(LobbyControllerEvent.OpenBattleRotation(entry.battle))
-            }
-        }
-    }
+  fun handleRefresh() {
+    performRefresh()
+  }
 
-    fun handleRefresh() {
-        performRefresh()
-    }
-
-    private fun performRefresh() {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            scheduleRunner.call()
-        }
-    }
+  private fun performRefresh() {
+    viewModelScope.launch(context = Dispatchers.Default) { scheduleRunner.call() }
+  }
 }

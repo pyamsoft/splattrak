@@ -20,14 +20,13 @@ import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.splattrak.lobby.databinding.LobbyItemSmallContainerBinding
-import javax.inject.Inject
 
-abstract class LobbyItemContainer<S : UiViewState> protected constructor(
+abstract class LobbyItemContainer<S : UiViewState>
+protected constructor(
     parent: ViewGroup,
 ) : BaseUiView<S, Nothing, LobbyItemSmallContainerBinding>(parent) {
 
-    final override val viewBinding = LobbyItemSmallContainerBinding::inflate
+  final override val viewBinding = LobbyItemSmallContainerBinding::inflate
 
-    final override val layoutRoot by boundView { lobbyItemSmallContainer }
-
+  final override val layoutRoot by boundView { lobbyItemSmallContainer }
 }

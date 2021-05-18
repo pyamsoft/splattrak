@@ -22,44 +22,38 @@ import com.pyamsoft.pydroid.arch.createViewBinder
 import com.pyamsoft.splattrak.lobby.databinding.DrilldownListItemHolderBinding
 import javax.inject.Inject
 
-class DrilldownItemViewHolder internal constructor(
+class DrilldownItemViewHolder
+internal constructor(
     binding: DrilldownListItemHolderBinding,
     factory: DrilldownItemComponent.Factory,
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<DrilldownItemViewState> {
 
-    @Inject
-    @JvmField
-    internal var container: DrilldownItemContainer? = null
+  @Inject @JvmField internal var container: DrilldownItemContainer? = null
 
-    @Inject
-    @JvmField
-    internal var info: DrilldownItemInfo? = null
+  @Inject @JvmField internal var info: DrilldownItemInfo? = null
 
-    @Inject
-    @JvmField
-    internal var stages: DrilldownItemStages? = null
+  @Inject @JvmField internal var stages: DrilldownItemStages? = null
 
-    private val viewBinder: ViewBinder<DrilldownItemViewState>
+  private val viewBinder: ViewBinder<DrilldownItemViewState>
 
-    init {
-        factory.create(binding.drilldownListItem).inject(this)
+  init {
+    factory.create(binding.drilldownListItem).inject(this)
 
-        val nextContainer = requireNotNull(container)
-        nextContainer.nest(requireNotNull(info), requireNotNull(stages))
+    val nextContainer = requireNotNull(container)
+    nextContainer.nest(requireNotNull(info), requireNotNull(stages))
 
-        viewBinder = createViewBinder(nextContainer) {}
-    }
+    viewBinder = createViewBinder(nextContainer) {}
+  }
 
-    override fun bindState(state: DrilldownItemViewState) {
-        viewBinder.bindState(state)
-    }
+  override fun bindState(state: DrilldownItemViewState) {
+    viewBinder.bindState(state)
+  }
 
-    override fun teardown() {
-        viewBinder.teardown()
+  override fun teardown() {
+    viewBinder.teardown()
 
-        container = null
-        info = null
-        stages = null
-    }
-
+    container = null
+    info = null
+    stages = null
+  }
 }

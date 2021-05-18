@@ -20,7 +20,5 @@ import androidx.annotation.CheckResult
 
 interface SplatSchedule {
 
-    @CheckResult
-    fun battles(): List<SplatBattle>
-
+  @CheckResult fun battles(): List<SplatBattle>
 }

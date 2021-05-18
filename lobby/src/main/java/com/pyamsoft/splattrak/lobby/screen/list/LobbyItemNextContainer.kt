@@ -20,6 +20,8 @@ import android.view.ViewGroup
 import com.pyamsoft.splattrak.lobby.item.LobbyItemContainer
 import javax.inject.Inject
 
-class LobbyItemNextContainer @Inject internal constructor(
+class LobbyItemNextContainer
+@Inject
+internal constructor(
     parent: ViewGroup,
 ) : LobbyItemContainer<LobbyItemViewState.Data>(parent)

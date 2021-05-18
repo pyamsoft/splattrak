@@ -25,33 +25,34 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.ImageTarget
 import com.pyamsoft.splattrak.lobby.databinding.BackgroundContainerBinding
 
-abstract class BackgroundContainer<S : UiViewState, V : UiViewEvent> protected constructor(
+abstract class BackgroundContainer<S : UiViewState, V : UiViewEvent>
+protected constructor(
     private val imageLoader: ImageLoader,
     parent: ViewGroup,
 ) : BaseUiView<S, V, BackgroundContainerBinding>(parent) {
 
-    final override val layoutRoot by boundView { backgroundContainer }
+  final override val layoutRoot by boundView { backgroundContainer }
 
-    final override val viewBinding = BackgroundContainerBinding::inflate
+  final override val viewBinding = BackgroundContainerBinding::inflate
 
-    init {
-        doOnInflate {
-            val disposable = imageLoader.asDrawable().load(R.drawable.repeating_stripes)
-                .into(object : ImageTarget<Drawable> {
+  init {
+    doOnInflate {
+      val disposable =
+          imageLoader
+              .asDrawable()
+              .load(R.drawable.repeating_stripes)
+              .into(
+                  object : ImageTarget<Drawable> {
                     override fun clear() {
-                        layoutRoot.background = null
+                      layoutRoot.background = null
                     }
 
                     override fun setImage(image: Drawable) {
-                        layoutRoot.background = image
+                      layoutRoot.background = image
                     }
+                  })
 
-                })
-
-            doOnTeardown {
-                disposable.dispose()
-            }
-        }
+      doOnTeardown { disposable.dispose() }
     }
-
+  }
 }

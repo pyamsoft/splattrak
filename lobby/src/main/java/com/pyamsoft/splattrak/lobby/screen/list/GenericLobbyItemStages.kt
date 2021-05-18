@@ -21,20 +21,21 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.splattrak.lobby.item.BaseLobbyStages
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 
-abstract class GenericLobbyItemStages protected constructor(
+abstract class GenericLobbyItemStages
+protected constructor(
     imageLoader: ImageLoader,
     parent: ViewGroup,
     private val isLarge: Boolean,
     private val matchResolver: () -> Int,
 ) : BaseLobbyStages<LobbyItemViewState.Data>(imageLoader, parent) {
 
-    final override fun isLarge(): Boolean {
-        return isLarge
-    }
+  final override fun isLarge(): Boolean {
+    return isLarge
+  }
 
-    final override fun getMatch(state: LobbyItemViewState.Data): SplatMatch {
-        val index = matchResolver()
-        val battles = state.battle.rotation()
-        return battles[index]
-    }
+  final override fun getMatch(state: LobbyItemViewState.Data): SplatMatch {
+    val index = matchResolver()
+    val battles = state.battle.rotation()
+    return battles[index]
+  }
 }

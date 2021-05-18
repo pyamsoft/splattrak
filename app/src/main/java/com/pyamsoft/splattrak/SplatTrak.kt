@@ -28,63 +28,59 @@ import timber.log.Timber
 
 class SplatTrak : Application() {
 
-    private val component by lazy {
-        val url = "https://github.com/pyamsoft/splattrak"
-        val parameters = PYDroid.Parameters(
-            url,
-            "$url/issues",
-            PRIVACY_POLICY_URL,
-            TERMS_CONDITIONS_URL,
-            BuildConfig.VERSION_CODE
-        )
+  private val component by lazy {
+    val url = "https://github.com/pyamsoft/splattrak"
+    val parameters =
+        PYDroid.Parameters(
+            url, "$url/issues", PRIVACY_POLICY_URL, TERMS_CONDITIONS_URL, BuildConfig.VERSION_CODE)
 
-        return@lazy createComponent(PYDroid.init(this, parameters))
-    }
+    return@lazy createComponent(PYDroid.init(this, parameters))
+  }
 
-    @CheckResult
-    private fun createComponent(provider: ModuleProvider): SplatComponent {
-        return DaggerSplatComponent.factory().create(
+  @CheckResult
+  private fun createComponent(provider: ModuleProvider): SplatComponent {
+    return DaggerSplatComponent.factory()
+        .create(
             this,
             isDebugMode(),
             provider.get().theming(),
             provider.get().imageLoader(),
         )
-            .also { addLibraries() }
+        .also { addLibraries() }
+  }
+
+  override fun onCreate() {
+    super.onCreate()
+    component.also { Timber.d("Component injected: $it") }
+  }
+
+  override fun getSystemService(name: String): Any? {
+    // Use component here in a weird way to guarantee the lazy is initialized.
+    return component.run { PYDroid.getSystemService(name) } ?: fallbackGetSystemService(name)
+  }
+
+  @CheckResult
+  private fun fallbackGetSystemService(name: String): Any? {
+    return if (name == SplatComponent::class.java.name) component
+    else {
+      super.getSystemService(name)
     }
+  }
 
-    override fun onCreate() {
-        super.onCreate()
-        component.also { Timber.d("Component injected: $it") }
+  companion object {
+
+    @JvmStatic
+    private fun addLibraries() {
+      // We are using pydroid-notify
+      OssLibraries.usingNotify = true
+
+      // We are using pydroid-autopsy
+      OssLibraries.usingAutopsy = true
+
+      OssLibraries.add(
+          "Dagger",
+          "https://github.com/google/dagger",
+          "A fast dependency injector for Android and Java.")
     }
-
-    override fun getSystemService(name: String): Any? {
-        // Use component here in a weird way to guarantee the lazy is initialized.
-        return component.run { PYDroid.getSystemService(name) } ?: fallbackGetSystemService(name)
-    }
-
-    @CheckResult
-    private fun fallbackGetSystemService(name: String): Any? {
-        return if (name == SplatComponent::class.java.name) component else {
-            super.getSystemService(name)
-        }
-    }
-
-    companion object {
-
-        @JvmStatic
-        private fun addLibraries() {
-            // We are using pydroid-notify
-            OssLibraries.usingNotify = true
-
-            // We are using pydroid-autopsy
-            OssLibraries.usingAutopsy = true
-
-            OssLibraries.add(
-                "Dagger",
-                "https://github.com/google/dagger",
-                "A fast dependency injector for Android and Java."
-            )
-        }
-
-    }
+  }
 }

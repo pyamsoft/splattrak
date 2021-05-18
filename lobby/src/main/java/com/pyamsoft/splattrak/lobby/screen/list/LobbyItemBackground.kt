@@ -23,30 +23,28 @@ import com.pyamsoft.splattrak.lobby.R
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 import javax.inject.Inject
 
-class LobbyItemBackground @Inject internal constructor(
+class LobbyItemBackground
+@Inject
+internal constructor(
     private val parent: ViewGroup,
 ) : UiView<LobbyItemViewState.Data, LobbyItemViewEvent>() {
 
-    init {
-        doOnTeardown {
-            parent.background = null
-        }
-    }
+  init {
+    doOnTeardown { parent.background = null }
+  }
 
-    override fun render(state: UiRender<LobbyItemViewState.Data>) {
-        state
-            .mapChanged { it.battle }
-            .mapChanged { it.mode() }
-            .render(viewScope) { handleBackground(it) }
+  override fun render(state: UiRender<LobbyItemViewState.Data>) {
+    state.mapChanged { it.battle }.mapChanged { it.mode() }.render(viewScope) {
+      handleBackground(it)
     }
+  }
 
-    private fun handleBackground(mode: SplatGameMode) {
-        parent.setBackgroundResource(
-            when (mode.mode()) {
-                SplatGameMode.Mode.REGULAR -> R.color.splatRegular
-                SplatGameMode.Mode.LEAGUE -> R.color.splatLeague
-                SplatGameMode.Mode.RANKED -> R.color.splatRanked
-            }
-        )
-    }
+  private fun handleBackground(mode: SplatGameMode) {
+    parent.setBackgroundResource(
+        when (mode.mode()) {
+          SplatGameMode.Mode.REGULAR -> R.color.splatRegular
+          SplatGameMode.Mode.LEAGUE -> R.color.splatLeague
+          SplatGameMode.Mode.RANKED -> R.color.splatRanked
+        })
+  }
 }

@@ -22,10 +22,10 @@ import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
-import com.pyamsoft.splattrak.ui.appbar.ThemeProviderModule
 import com.pyamsoft.splattrak.core.ViewModelFactoryModule
 import com.pyamsoft.splattrak.lobby.screen.LobbyViewModel
 import com.pyamsoft.splattrak.ui.appbar.AppBarActivity
+import com.pyamsoft.splattrak.ui.appbar.ThemeProviderModule
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Module
@@ -34,35 +34,35 @@ import dagger.multibindings.ClassKey
 import dagger.multibindings.IntoMap
 
 @Subcomponent(
-    modules = [
-        LobbyComponent.ComponentModule::class,
-        ViewModelFactoryModule::class,
-        ThemeProviderModule::class,
-    ]
-)
+    modules =
+        [
+            LobbyComponent.ComponentModule::class,
+            ViewModelFactoryModule::class,
+            ThemeProviderModule::class,
+        ])
 internal interface LobbyComponent {
 
-    fun inject(fragment: LobbyFragment)
+  fun inject(fragment: LobbyFragment)
 
-    @Subcomponent.Factory
-    interface Factory {
+  @Subcomponent.Factory
+  interface Factory {
 
-        @CheckResult
-        fun create(
-            @BindsInstance appBarActivity: AppBarActivity,
-            @BindsInstance toolbarActivity: ToolbarActivity,
-            @BindsInstance activity: Activity,
-            @BindsInstance owner: LifecycleOwner,
-            @BindsInstance parent: ViewGroup,
-        ): LobbyComponent
-    }
+    @CheckResult
+    fun create(
+        @BindsInstance appBarActivity: AppBarActivity,
+        @BindsInstance toolbarActivity: ToolbarActivity,
+        @BindsInstance activity: Activity,
+        @BindsInstance owner: LifecycleOwner,
+        @BindsInstance parent: ViewGroup,
+    ): LobbyComponent
+  }
 
-    @Module
-    abstract class ComponentModule {
+  @Module
+  abstract class ComponentModule {
 
-        @Binds
-        @IntoMap
-        @ClassKey(LobbyViewModel::class)
-        internal abstract fun bindViewModel(impl: LobbyViewModel): ViewModel
-    }
+    @Binds
+    @IntoMap
+    @ClassKey(LobbyViewModel::class)
+    internal abstract fun bindViewModel(impl: LobbyViewModel): ViewModel
+  }
 }

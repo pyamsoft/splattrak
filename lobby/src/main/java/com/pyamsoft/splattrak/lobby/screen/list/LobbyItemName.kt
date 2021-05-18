@@ -21,12 +21,13 @@ import com.pyamsoft.splattrak.lobby.item.BaseLobbyName
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import javax.inject.Inject
 
-class LobbyItemName @Inject internal constructor(
+class LobbyItemName
+@Inject
+internal constructor(
     parent: ViewGroup,
 ) : BaseLobbyName<LobbyItemViewState.Data>(parent) {
 
-    override fun getBattle(state: LobbyItemViewState.Data): SplatBattle {
-        return state.battle
-    }
-
+  override fun getBattle(state: LobbyItemViewState.Data): SplatBattle {
+    return state.battle
+  }
 }

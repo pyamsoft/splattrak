@@ -20,7 +20,8 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 
-data class DrilldownViewState internal constructor(
+data class DrilldownViewState
+internal constructor(
     val battle: SplatBattle?,
     val error: Throwable?,
     val loading: Boolean,
@@ -28,8 +29,5 @@ data class DrilldownViewState internal constructor(
 
 sealed class DrilldownViewEvent : UiViewEvent {
 
-    object ForceRefresh : DrilldownViewEvent()
-
+  object ForceRefresh : DrilldownViewEvent()
 }
-
-

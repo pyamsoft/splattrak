@@ -19,8 +19,8 @@ package com.pyamsoft.splattrak.splatnet.network
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-internal data class NetworkSplatRuleset internal constructor(
+internal data class NetworkSplatRuleset
+internal constructor(
     val name: String,
-
     val key: String,
 )

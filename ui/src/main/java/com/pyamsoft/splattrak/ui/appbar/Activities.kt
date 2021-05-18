@@ -20,12 +20,13 @@ import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
 
 val Fragment.appBarActivity: AppBarActivity?
-    @get:CheckResult get() {
-        val a = activity
-        return if (a is AppBarActivity) a else null
-    }
+  @get:CheckResult
+  get() {
+    val a = activity
+    return if (a is AppBarActivity) a else null
+  }
 
 @CheckResult
 fun Fragment.requireAppBarActivity(): AppBarActivity {
-    return requireNotNull(appBarActivity) { "AppBarActivity is required and cannot be null." }
+  return requireNotNull(appBarActivity) { "AppBarActivity is required and cannot be null." }
 }

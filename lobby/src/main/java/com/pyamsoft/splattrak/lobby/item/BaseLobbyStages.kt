@@ -32,105 +32,85 @@ import com.pyamsoft.splattrak.lobby.databinding.LobbyItemMapsBinding
 import com.pyamsoft.splattrak.splatnet.api.SplatMap
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 
-abstract class BaseLobbyStages<S : UiViewState> protected constructor(
+abstract class BaseLobbyStages<S : UiViewState>
+protected constructor(
     private val imageLoader: ImageLoader,
     parent: ViewGroup,
 ) : BaseUiView<S, Nothing, LobbyItemMapsBinding>(parent) {
 
-    final override val viewBinding = LobbyItemMapsBinding::inflate
+  final override val viewBinding = LobbyItemMapsBinding::inflate
 
-    final override val layoutRoot by boundView { lobbyItemStagesRoot }
+  final override val layoutRoot by boundView { lobbyItemStagesRoot }
 
-    private var stageALoaded: Loaded? = null
-    private var stageBLoaded: Loaded? = null
+  private var stageALoaded: Loaded? = null
+  private var stageBLoaded: Loaded? = null
 
-    init {
-        doOnTeardown {
-            clear()
-        }
+  init {
+    doOnTeardown { clear() }
 
-        doOnInflate {
-            setChildWeights(isLarge())
-        }
+    doOnInflate { setChildWeights(isLarge()) }
+  }
+
+  private fun setChildWeights(isLarge: Boolean) {
+    val ctx = layoutRoot.context.applicationContext
+    val orientation = if (isLarge) LinearLayout.VERTICAL else LinearLayout.HORIZONTAL
+    layoutRoot.orientation = orientation
+
+    binding.lobbyItemStageSpacer.updateLayoutParams {
+      val size = 8.asDp(ctx)
+      this.width = if (isLarge) LinearLayout.LayoutParams.MATCH_PARENT else size
+      this.height = if (isLarge) size * 2 else LinearLayout.LayoutParams.MATCH_PARENT
     }
 
-
-    private fun setChildWeights(isLarge: Boolean) {
-        val ctx = layoutRoot.context.applicationContext
-        val orientation = if (isLarge) LinearLayout.VERTICAL else LinearLayout.HORIZONTAL
-        layoutRoot.orientation = orientation
-
-        binding.lobbyItemStageSpacer.updateLayoutParams {
-            val size = 8.asDp(ctx)
-            this.width = if (isLarge) LinearLayout.LayoutParams.MATCH_PARENT else size
-            this.height = if (isLarge) size * 2 else LinearLayout.LayoutParams.MATCH_PARENT
-        }
-
-        binding.lobbyItemStageA.updateLayoutParams {
-            this.width = if (isLarge) LinearLayout.LayoutParams.MATCH_PARENT else 0
-            this.height = if (isLarge) 0 else LinearLayout.LayoutParams.MATCH_PARENT
-        }
-
-        binding.lobbyItemStageB.updateLayoutParams {
-            this.width = if (isLarge) LinearLayout.LayoutParams.MATCH_PARENT else 0
-            this.height = if (isLarge) 0 else LinearLayout.LayoutParams.MATCH_PARENT
-        }
+    binding.lobbyItemStageA.updateLayoutParams {
+      this.width = if (isLarge) LinearLayout.LayoutParams.MATCH_PARENT else 0
+      this.height = if (isLarge) 0 else LinearLayout.LayoutParams.MATCH_PARENT
     }
 
-    @CheckResult
-    protected abstract fun isLarge(): Boolean
+    binding.lobbyItemStageB.updateLayoutParams {
+      this.width = if (isLarge) LinearLayout.LayoutParams.MATCH_PARENT else 0
+      this.height = if (isLarge) 0 else LinearLayout.LayoutParams.MATCH_PARENT
+    }
+  }
 
-    @CheckResult
-    protected abstract fun getMatch(state: S): SplatMatch
+  @CheckResult protected abstract fun isLarge(): Boolean
 
-    private fun clear() {
-        stageALoaded?.dispose()
-        stageALoaded = null
+  @CheckResult protected abstract fun getMatch(state: S): SplatMatch
 
-        stageBLoaded?.dispose()
-        stageBLoaded = null
+  private fun clear() {
+    stageALoaded?.dispose()
+    stageALoaded = null
 
-        binding.lobbyItemStageAName.text = ""
-        binding.lobbyItemStageBName.text = ""
+    stageBLoaded?.dispose()
+    stageBLoaded = null
+
+    binding.lobbyItemStageAName.text = ""
+    binding.lobbyItemStageBName.text = ""
+  }
+
+  final override fun onRender(state: UiRender<S>) {
+    state.mapChanged { getMatch(it) }.mapChanged { it.stageA() }.render(viewScope) {
+      stageALoaded =
+          handleMapRotation(
+              stageALoaded, it, binding.lobbyItemStageAImage, binding.lobbyItemStageAName)
     }
 
-    final override fun onRender(state: UiRender<S>) {
-        state
-            .mapChanged { getMatch(it) }
-            .mapChanged { it.stageA() }
-            .render(viewScope) {
-                stageALoaded = handleMapRotation(
-                    stageALoaded,
-                    it,
-                    binding.lobbyItemStageAImage,
-                    binding.lobbyItemStageAName
-                )
-            }
-
-        state
-            .mapChanged { getMatch(it) }
-            .mapChanged { it.stageB() }
-            .render(viewScope) {
-                stageBLoaded = handleMapRotation(
-                    stageBLoaded,
-                    it,
-                    binding.lobbyItemStageBImage,
-                    binding.lobbyItemStageBName
-                )
-            }
+    state.mapChanged { getMatch(it) }.mapChanged { it.stageB() }.render(viewScope) {
+      stageBLoaded =
+          handleMapRotation(
+              stageBLoaded, it, binding.lobbyItemStageBImage, binding.lobbyItemStageBName)
     }
+  }
 
-    @CheckResult
-    private fun handleMapRotation(
-        loaded: Loaded?,
-        stage: SplatMap,
-        image: ImageView,
-        name: TextView,
-    ): Loaded {
-        loaded?.dispose()
-        name.text = stage.name()
-        return imageLoader.asDrawable().load(stage.imageUrl())
-            .into(image)
-    }
-
+  @CheckResult
+  private fun handleMapRotation(
+      loaded: Loaded?,
+      stage: SplatMap,
+      image: ImageView,
+      name: TextView,
+  ): Loaded {
+    loaded?.dispose()
+    name.text = stage.name()
+    return imageLoader.asDrawable().load(stage.imageUrl()).into(image)
+  }
 }

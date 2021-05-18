@@ -20,10 +20,7 @@ import androidx.annotation.CheckResult
 
 interface SplatBattle {
 
-    @CheckResult
-    fun mode(): SplatGameMode
+  @CheckResult fun mode(): SplatGameMode
 
-    @CheckResult
-    fun rotation(): List<SplatMatch>
-
+  @CheckResult fun rotation(): List<SplatMatch>
 }

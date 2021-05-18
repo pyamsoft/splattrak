@@ -19,10 +19,8 @@ package com.pyamsoft.splattrak.lobby.screen.list
 import android.view.ViewGroup
 import javax.inject.Inject
 
-class LobbyItemNextInfo @Inject internal constructor(
+class LobbyItemNextInfo
+@Inject
+internal constructor(
     parent: ViewGroup,
-) : GenericLobbyItemInfo(
-    parent,
-    isLarge = false,
-    matchResolver = { 1 }
-)
+) : GenericLobbyItemInfo(parent, isLarge = false, matchResolver = { 1 })

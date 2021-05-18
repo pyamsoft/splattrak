@@ -20,12 +20,9 @@ import android.view.ViewGroup
 import com.pyamsoft.pydroid.loader.ImageLoader
 import javax.inject.Inject
 
-class LobbyItemNextStages @Inject internal constructor(
+class LobbyItemNextStages
+@Inject
+internal constructor(
     imageLoader: ImageLoader,
     parent: ViewGroup,
-) : GenericLobbyItemStages(
-    imageLoader,
-    parent,
-    isLarge = false,
-    matchResolver = { 1 }
-)
+) : GenericLobbyItemStages(imageLoader, parent, isLarge = false, matchResolver = { 1 })

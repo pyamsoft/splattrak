@@ -20,108 +20,82 @@ import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
 import com.pyamsoft.splattrak.lobby.databinding.LobbyListItemHolderBinding
 import com.pyamsoft.splattrak.lobby.screen.LobbyListAdapter
-import timber.log.Timber
 import javax.inject.Inject
 
-class LobbyItemViewHolder internal constructor(
+class LobbyItemViewHolder
+internal constructor(
     binding: LobbyListItemHolderBinding,
     factory: LobbyItemComponent.Factory,
     callback: LobbyListAdapter.Callback,
 ) : BaseLobbyViewHolder(binding.root) {
 
-    @Inject
-    @JvmField
-    internal var clickHandler: LobbyItemClickHandler? = null
+  @Inject @JvmField internal var clickHandler: LobbyItemClickHandler? = null
 
-    @Inject
-    @JvmField
-    internal var background: LobbyItemBackground? = null
+  @Inject @JvmField internal var background: LobbyItemBackground? = null
 
-    @Inject
-    @JvmField
-    internal var backgroundContainer: LobbyItemBackgroundContainer? = null
+  @Inject @JvmField internal var backgroundContainer: LobbyItemBackgroundContainer? = null
 
-    @Inject
-    @JvmField
-    internal var name: LobbyItemName? = null
+  @Inject @JvmField internal var name: LobbyItemName? = null
 
-    @Inject
-    @JvmField
-    internal var currentContainer: LobbyItemLargeContainer? = null
+  @Inject @JvmField internal var currentContainer: LobbyItemLargeContainer? = null
 
-    @Inject
-    @JvmField
-    internal var currentInfo: LobbyItemCurrentInfo? = null
+  @Inject @JvmField internal var currentInfo: LobbyItemCurrentInfo? = null
 
-    @Inject
-    @JvmField
-    internal var currentStages: LobbyItemCurrentStages? = null
+  @Inject @JvmField internal var currentStages: LobbyItemCurrentStages? = null
 
-    @Inject
-    @JvmField
-    internal var nextContainer: LobbyItemNextContainer? = null
+  @Inject @JvmField internal var nextContainer: LobbyItemNextContainer? = null
 
-    @Inject
-    @JvmField
-    internal var nextCountdown: LobbyItemNextCountdown? = null
+  @Inject @JvmField internal var nextCountdown: LobbyItemNextCountdown? = null
 
-    @Inject
-    @JvmField
-    internal var nextInfo: LobbyItemNextInfo? = null
+  @Inject @JvmField internal var nextInfo: LobbyItemNextInfo? = null
 
-    @Inject
-    @JvmField
-    internal var nextStages: LobbyItemNextStages? = null
+  @Inject @JvmField internal var nextStages: LobbyItemNextStages? = null
 
-    private val viewBinder: ViewBinder<LobbyItemViewState.Data>
+  private val viewBinder: ViewBinder<LobbyItemViewState.Data>
 
-    init {
-        factory.create(binding.lobbyListItem).inject(this)
+  init {
+    factory.create(binding.lobbyListItem).inject(this)
 
-        val currentContainer = requireNotNull(currentContainer)
-        currentContainer.nest(requireNotNull(currentInfo), requireNotNull(currentStages))
+    val currentContainer = requireNotNull(currentContainer)
+    currentContainer.nest(requireNotNull(currentInfo), requireNotNull(currentStages))
 
-        val nextContainer = requireNotNull(nextContainer)
-        nextContainer.nest(requireNotNull(nextInfo), requireNotNull(nextStages))
+    val nextContainer = requireNotNull(nextContainer)
+    nextContainer.nest(requireNotNull(nextInfo), requireNotNull(nextStages))
 
-        val backgroundContainer = requireNotNull(backgroundContainer)
-        backgroundContainer.nest(
-            requireNotNull(name),
-            currentContainer,
-            requireNotNull(nextCountdown),
-            nextContainer
-        )
+    val backgroundContainer = requireNotNull(backgroundContainer)
+    backgroundContainer.nest(
+        requireNotNull(name), currentContainer, requireNotNull(nextCountdown), nextContainer)
 
-        viewBinder = createViewBinder(
+    viewBinder =
+        createViewBinder(
             requireNotNull(clickHandler),
             requireNotNull(background),
             backgroundContainer,
         ) {
-            return@createViewBinder when (it) {
-                is LobbyItemViewEvent.OnClick -> callback.onClick(bindingAdapterPosition)
-                is LobbyItemViewEvent.OnCountdown -> callback.onCountdown(bindingAdapterPosition)
-            }
+          return@createViewBinder when (it) {
+            is LobbyItemViewEvent.OnClick -> callback.onClick(bindingAdapterPosition)
+            is LobbyItemViewEvent.OnCountdown -> callback.onCountdown(bindingAdapterPosition)
+          }
         }
-    }
+  }
 
-    override fun bindState(state: LobbyItemViewState) {
-        state.data?.also { viewBinder.bindState(it) }
-    }
+  override fun bindState(state: LobbyItemViewState) {
+    state.data?.also { viewBinder.bindState(it) }
+  }
 
-    override fun teardown() {
-        viewBinder.teardown()
+  override fun teardown() {
+    viewBinder.teardown()
 
-        background = null
-        name = null
+    background = null
+    name = null
 
-        currentContainer = null
-        currentInfo = null
-        currentStages = null
+    currentContainer = null
+    currentInfo = null
+    currentStages = null
 
-        nextCountdown = null
-        nextContainer = null
-        nextInfo = null
-        nextStages = null
-    }
-
+    nextCountdown = null
+    nextContainer = null
+    nextInfo = null
+    nextStages = null
+  }
 }

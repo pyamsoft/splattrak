@@ -30,31 +30,31 @@ import dagger.multibindings.ClassKey
 import dagger.multibindings.IntoMap
 
 @Subcomponent(
-    modules = [
-        DrilldownComponent.ComponentModule::class,
-        ViewModelFactoryModule::class,
-    ]
-)
+    modules =
+        [
+            DrilldownComponent.ComponentModule::class,
+            ViewModelFactoryModule::class,
+        ])
 internal interface DrilldownComponent {
 
-    fun inject(fragment: DrilldownDialog)
+  fun inject(fragment: DrilldownDialog)
 
-    @Subcomponent.Factory
-    interface Factory {
+  @Subcomponent.Factory
+  interface Factory {
 
-        @CheckResult
-        fun create(
-            @BindsInstance parent: ViewGroup,
-            @BindsInstance mode: SplatGameMode.Mode,
-        ): DrilldownComponent
-    }
+    @CheckResult
+    fun create(
+        @BindsInstance parent: ViewGroup,
+        @BindsInstance mode: SplatGameMode.Mode,
+    ): DrilldownComponent
+  }
 
-    @Module
-    abstract class ComponentModule {
+  @Module
+  abstract class ComponentModule {
 
-        @Binds
-        @IntoMap
-        @ClassKey(DrilldownViewModel::class)
-        internal abstract fun bindViewModel(impl: DrilldownViewModel): ViewModel
-    }
+    @Binds
+    @IntoMap
+    @ClassKey(DrilldownViewModel::class)
+    internal abstract fun bindViewModel(impl: DrilldownViewModel): ViewModel
+  }
 }

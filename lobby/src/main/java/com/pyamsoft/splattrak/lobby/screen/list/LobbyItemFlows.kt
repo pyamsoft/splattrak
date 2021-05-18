@@ -21,22 +21,23 @@ import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 
-data class LobbyItemViewState internal constructor(
+data class LobbyItemViewState
+internal constructor(
     val isDisclaimer: Boolean,
     val data: Data?,
 ) : UiViewState {
 
-    data class Data internal constructor(
-        val currentMatch: SplatMatch,
-        val nextMatch: SplatMatch,
-        val battle: SplatBattle,
-    ) : UiViewState
+  data class Data
+  internal constructor(
+      val currentMatch: SplatMatch,
+      val nextMatch: SplatMatch,
+      val battle: SplatBattle,
+  ) : UiViewState
 }
 
 sealed class LobbyItemViewEvent : UiViewEvent {
 
-    object OnClick : LobbyItemViewEvent()
+  object OnClick : LobbyItemViewEvent()
 
-    object OnCountdown : LobbyItemViewEvent()
-
+  object OnCountdown : LobbyItemViewEvent()
 }

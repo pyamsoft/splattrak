@@ -20,28 +20,24 @@ import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 
-data class MainViewState internal constructor(
+data class MainViewState
+internal constructor(
     val page: MainPage?,
     val appNameRes: Int,
 ) : UiViewState
 
 sealed class MainViewEvent : UiViewEvent {
 
-    object OpenLobby : MainViewEvent()
+  object OpenLobby : MainViewEvent()
 
-    object OpenSettings : MainViewEvent()
+  object OpenSettings : MainViewEvent()
 
-    data class BottomBarMeasured internal constructor(val height: Int) : MainViewEvent()
-
+  data class BottomBarMeasured internal constructor(val height: Int) : MainViewEvent()
 }
 
 sealed class MainControllerEvent : UiControllerEvent {
 
-    data class PushPage internal constructor(
-        val newPage: MainPage,
-        val oldPage: MainPage?,
-        val force: Boolean
-    ) : MainControllerEvent()
-
+  data class PushPage
+  internal constructor(val newPage: MainPage, val oldPage: MainPage?, val force: Boolean) :
+      MainControllerEvent()
 }
-

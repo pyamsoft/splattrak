@@ -29,141 +29,138 @@ import com.pyamsoft.splattrak.lobby.databinding.LobbyListBinding
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemComponent
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemViewState
 import io.cabriole.decorator.LinearMarginDecoration
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
-class LobbyList @Inject internal constructor(
+class LobbyList
+@Inject
+internal constructor(
     private val factory: LobbyItemComponent.Factory,
     parent: ViewGroup,
-) : BaseUiView<LobbyViewState, LobbyViewEvent, LobbyListBinding>(parent),
+) :
+    BaseUiView<LobbyViewState, LobbyViewEvent, LobbyListBinding>(parent),
     SwipeRefreshLayout.OnRefreshListener,
     LobbyListAdapter.Callback {
 
-    override val viewBinding = LobbyListBinding::inflate
+  override val viewBinding = LobbyListBinding::inflate
 
-    override val layoutRoot by boundView { lobbyListRoot }
+  override val layoutRoot by boundView { lobbyListRoot }
 
-    private var modelAdapter: LobbyListAdapter? = null
+  private var modelAdapter: LobbyListAdapter? = null
 
-    private var lastScrollPosition = 0
+  private var lastScrollPosition = 0
 
-    init {
-        doOnInflate {
-            binding.lobbyList.layoutManager =
-                LinearLayoutManager(binding.lobbyList.context).apply {
-                    isItemPrefetchEnabled = true
-                    initialPrefetchItemCount = 3
-                }
+  init {
+    doOnInflate {
+      binding.lobbyList.layoutManager =
+          LinearLayoutManager(binding.lobbyList.context).apply {
+            isItemPrefetchEnabled = true
+            initialPrefetchItemCount = 3
+          }
+    }
+
+    doOnInflate {
+      modelAdapter = LobbyListAdapter(factory, callback = this)
+      binding.lobbyList.adapter = modelAdapter
+    }
+
+    doOnInflate { binding.lobbySwipeRefresh.setOnRefreshListener(this) }
+
+    doOnInflate { savedInstanceState ->
+      val position = savedInstanceState.get(LAST_SCROLL_POSITION) ?: -1
+      if (position >= 0) {
+        Timber.d("Last scroll position saved at: $position")
+        lastScrollPosition = position
+      }
+    }
+
+    doOnSaveState { outState ->
+      val manager = binding.lobbyList.layoutManager
+      if (manager is GridLayoutManager) {
+        val position = manager.findFirstVisibleItemPosition()
+        if (position > 0) {
+          outState.put(LAST_SCROLL_POSITION, position)
+          return@doOnSaveState
         }
+      }
 
-        doOnInflate {
-            modelAdapter = LobbyListAdapter(factory, callback = this)
-            binding.lobbyList.adapter = modelAdapter
+      outState.remove<Nothing>(LAST_SCROLL_POSITION)
+    }
+
+    doOnInflate {
+      val margin = 16.asDp(binding.lobbyList.context)
+
+      // Standard margin on all items
+      // For some reason, the margin registers only half as large as it needs to
+      // be, so we must double it.
+      LinearMarginDecoration.create(margin = margin).apply {
+        binding.lobbyList.addItemDecoration(this)
+      }
+    }
+
+    doOnTeardown { binding.lobbyList.removeAllItemDecorations() }
+
+    doOnTeardown {
+      binding.lobbyList.adapter = null
+
+      binding.lobbySwipeRefresh.setOnRefreshListener(null)
+
+      modelAdapter = null
+    }
+  }
+
+  @CheckResult
+  private fun usingAdapter(): LobbyListAdapter {
+    return requireNotNull(modelAdapter)
+  }
+
+  override fun onRefresh() {
+    publish(LobbyViewEvent.ForceRefresh)
+  }
+
+  override fun onCountdown(index: Int) {
+    publish(LobbyViewEvent.ForceRefresh)
+  }
+
+  override fun onClick(index: Int) {
+    publish(LobbyViewEvent.ViewBattleRotation(index))
+  }
+
+  override fun onRender(state: UiRender<LobbyViewState>) {
+    state.mapChanged { it.schedule }.render(viewScope) { handleList(it) }
+    state.mapChanged { it.loading }.render(viewScope) { handleLoading(it) }
+  }
+
+  private fun setList(groupings: List<LobbyViewState.ScheduleGroupings>) {
+    val data =
+        groupings.map {
+          LobbyItemViewState(
+              isDisclaimer = false,
+              data =
+                  LobbyItemViewState.Data(
+                      currentMatch = it.currentMatch, nextMatch = it.nextMatch, battle = it.battle))
         }
+    Timber.d("Submit data list: $data")
+    usingAdapter().submitList(data + LobbyItemViewState(isDisclaimer = true, data = null))
+  }
 
-        doOnInflate {
-            binding.lobbySwipeRefresh.setOnRefreshListener(this)
-        }
+  private fun clearList() {
+    usingAdapter().submitList(null)
+  }
 
-        doOnInflate { savedInstanceState ->
-            val position = savedInstanceState.get(LAST_SCROLL_POSITION) ?: -1
-            if (position >= 0) {
-                Timber.d("Last scroll position saved at: $position")
-                lastScrollPosition = position
-            }
-        }
+  private fun handleLoading(loading: Boolean) {
+    binding.lobbySwipeRefresh.isRefreshing = loading
+  }
 
-        doOnSaveState { outState ->
-            val manager = binding.lobbyList.layoutManager
-            if (manager is GridLayoutManager) {
-                val position = manager.findFirstVisibleItemPosition()
-                if (position > 0) {
-                    outState.put(LAST_SCROLL_POSITION, position)
-                    return@doOnSaveState
-                }
-            }
-
-            outState.remove<Nothing>(LAST_SCROLL_POSITION)
-        }
-
-        doOnInflate {
-            val margin = 16.asDp(binding.lobbyList.context)
-
-            // Standard margin on all items
-            // For some reason, the margin registers only half as large as it needs to
-            // be, so we must double it.
-            LinearMarginDecoration.create(margin = margin).apply {
-                binding.lobbyList.addItemDecoration(this)
-            }
-        }
-
-        doOnTeardown {
-            binding.lobbyList.removeAllItemDecorations()
-        }
-
-        doOnTeardown {
-            binding.lobbyList.adapter = null
-
-            binding.lobbySwipeRefresh.setOnRefreshListener(null)
-
-            modelAdapter = null
-        }
+  private fun handleList(schedule: List<LobbyViewState.ScheduleGroupings>) {
+    if (schedule.isEmpty()) {
+      clearList()
+    } else {
+      setList(schedule)
     }
+  }
 
-
-    @CheckResult
-    private fun usingAdapter(): LobbyListAdapter {
-        return requireNotNull(modelAdapter)
-    }
-
-    override fun onRefresh() {
-        publish(LobbyViewEvent.ForceRefresh)
-    }
-
-    override fun onCountdown(index: Int) {
-        publish(LobbyViewEvent.ForceRefresh)
-    }
-
-    override fun onClick(index: Int) {
-        publish(LobbyViewEvent.ViewBattleRotation(index))
-    }
-
-    override fun onRender(state: UiRender<LobbyViewState>) {
-        state.mapChanged { it.schedule }.render(viewScope) { handleList(it) }
-        state.mapChanged { it.loading }.render(viewScope) { handleLoading(it) }
-    }
-
-    private fun setList(groupings: List<LobbyViewState.ScheduleGroupings>) {
-        val data = groupings.map {
-            LobbyItemViewState(isDisclaimer = false,
-                data = LobbyItemViewState.Data(
-                    currentMatch = it.currentMatch,
-                    nextMatch = it.nextMatch,
-                    battle = it.battle)
-            )
-        }
-        Timber.d("Submit data list: $data")
-        usingAdapter().submitList(data + LobbyItemViewState(isDisclaimer = true, data = null))
-    }
-
-    private fun clearList() {
-        usingAdapter().submitList(null)
-    }
-
-    private fun handleLoading(loading: Boolean) {
-        binding.lobbySwipeRefresh.isRefreshing = loading
-    }
-
-    private fun handleList(schedule: List<LobbyViewState.ScheduleGroupings>) {
-        if (schedule.isEmpty()) {
-            clearList()
-        } else {
-            setList(schedule)
-        }
-    }
-
-    companion object {
-        private const val LAST_SCROLL_POSITION = "lobby_last_scroll_position"
-    }
-
+  companion object {
+    private const val LAST_SCROLL_POSITION = "lobby_last_scroll_position"
+  }
 }

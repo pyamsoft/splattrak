@@ -21,11 +21,10 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.splattrak.main.databinding.MainContainerBinding
 import javax.inject.Inject
 
-class MainContainer @Inject internal constructor(
-    parent: ViewGroup
-) : BaseUiView<MainViewState, MainViewEvent, MainContainerBinding>(parent) {
+class MainContainer @Inject internal constructor(parent: ViewGroup) :
+    BaseUiView<MainViewState, MainViewEvent, MainContainerBinding>(parent) {
 
-    override val viewBinding = MainContainerBinding::inflate
+  override val viewBinding = MainContainerBinding::inflate
 
-    override val layoutRoot by boundView { mainContainer }
+  override val layoutRoot by boundView { mainContainer }
 }

@@ -21,7 +21,9 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.splattrak.lobby.BackgroundContainer
 import javax.inject.Inject
 
-class LobbyItemBackgroundContainer @Inject internal constructor(
+class LobbyItemBackgroundContainer
+@Inject
+internal constructor(
     imageLoader: ImageLoader,
     parent: ViewGroup,
 ) : BackgroundContainer<LobbyItemViewState.Data, LobbyItemViewEvent>(imageLoader, parent)

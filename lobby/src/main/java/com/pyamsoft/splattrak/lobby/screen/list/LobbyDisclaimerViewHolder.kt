@@ -23,30 +23,27 @@ import com.pyamsoft.pydroid.ui.databinding.ListitemFrameBinding
 import com.pyamsoft.splattrak.ui.NintendoDisclaimer
 import javax.inject.Inject
 
-class LobbyDisclaimerViewHolder internal constructor(
+class LobbyDisclaimerViewHolder
+internal constructor(
     binding: ListitemFrameBinding,
     factory: LobbyItemComponent.Factory,
 ) : BaseLobbyViewHolder(binding.root) {
 
-    @Inject
-    @JvmField
-    internal var disclaimer: NintendoDisclaimer? = null
+  @Inject @JvmField internal var disclaimer: NintendoDisclaimer? = null
 
+  private val viewBinder: ViewBinder<UnitViewState>
 
-    private val viewBinder: ViewBinder<UnitViewState>
+  init {
+    factory.create(binding.listitemFrame).inject(this)
 
-    init {
-        factory.create(binding.listitemFrame).inject(this)
+    viewBinder = createViewBinder(requireNotNull(disclaimer)) {}
+  }
 
-        viewBinder = createViewBinder(requireNotNull(disclaimer)) {}
-    }
+  override fun bindState(state: LobbyItemViewState) {
+    viewBinder.bindState(UnitViewState)
+  }
 
-    override fun bindState(state: LobbyItemViewState) {
-        viewBinder.bindState(UnitViewState)
-    }
-
-    override fun teardown() {
-        viewBinder.teardown()
-    }
-
+  override fun teardown() {
+    viewBinder.teardown()
+  }
 }

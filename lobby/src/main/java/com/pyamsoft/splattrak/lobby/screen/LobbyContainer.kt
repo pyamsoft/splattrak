@@ -23,19 +23,21 @@ import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.splattrak.lobby.databinding.LobbyContainerBinding
 import javax.inject.Inject
 
-class LobbyContainer @Inject internal constructor(
+class LobbyContainer
+@Inject
+internal constructor(
     parent: ViewGroup,
 ) : BaseUiView<LobbyViewState, LobbyViewEvent, LobbyContainerBinding>(parent) {
 
-    override val viewBinding = LobbyContainerBinding::inflate
+  override val viewBinding = LobbyContainerBinding::inflate
 
-    override val layoutRoot by boundView { lobbyContainer }
+  override val layoutRoot by boundView { lobbyContainer }
 
-    override fun onRender(state: UiRender<LobbyViewState>) {
-        state.mapChanged { it.bottomOffset }.render(viewScope) { handleBottomMargin(it) }
-    }
+  override fun onRender(state: UiRender<LobbyViewState>) {
+    state.mapChanged { it.bottomOffset }.render(viewScope) { handleBottomMargin(it) }
+  }
 
-    private fun handleBottomMargin(height: Int) {
-        layoutRoot.updatePadding(bottom = height)
-    }
+  private fun handleBottomMargin(height: Int) {
+    layoutRoot.updatePadding(bottom = height)
+  }
 }

@@ -22,23 +22,17 @@ import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import javax.inject.Inject
 
-class LobbyItemClickHandler @Inject internal constructor(
+class LobbyItemClickHandler
+@Inject
+internal constructor(
     private val parent: ViewGroup,
 ) : UiView<LobbyItemViewState.Data, LobbyItemViewEvent>() {
 
-    init {
-        doOnInflate {
-            parent.setOnDebouncedClickListener {
-                publish(LobbyItemViewEvent.OnClick)
-            }
-        }
+  init {
+    doOnInflate { parent.setOnDebouncedClickListener { publish(LobbyItemViewEvent.OnClick) } }
 
-        doOnTeardown {
-            parent.setOnDebouncedClickListener(null)
-        }
-    }
+    doOnTeardown { parent.setOnDebouncedClickListener(null) }
+  }
 
-    override fun render(state: UiRender<LobbyItemViewState.Data>) {
-    }
-
+  override fun render(state: UiRender<LobbyItemViewState.Data>) {}
 }
