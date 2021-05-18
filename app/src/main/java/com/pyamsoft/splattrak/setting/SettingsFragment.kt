@@ -63,7 +63,9 @@ internal class SettingsFragment : AppSettingsFragment() {
   internal class SettingsPreferenceFragment :
       AppSettingsPreferenceFragment(), UiController<UnitControllerEvent> {
 
-    override val preferenceXmlResId: Int = 0
+    override val preferenceXmlResId = 0
+
+    override val hideUpgradeInformation = true
 
     @JvmField @Inject internal var factory: SplatViewModelFactory? = null
     private val viewModel by fromViewModelFactory<SettingsViewModel>(activity = true) {
