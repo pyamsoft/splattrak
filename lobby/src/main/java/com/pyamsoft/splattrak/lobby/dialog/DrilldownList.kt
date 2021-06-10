@@ -18,6 +18,7 @@ package com.pyamsoft.splattrak.lobby.dialog
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -38,6 +39,7 @@ class DrilldownList
 @Inject
 internal constructor(
     private val factory: DrilldownItemComponent.Factory,
+    owner: LifecycleOwner,
     parent: ViewGroup,
 ) :
     BaseUiView<DrilldownViewState, DrilldownViewEvent, LobbyListBinding>(parent),
@@ -61,7 +63,7 @@ internal constructor(
     }
 
     doOnInflate {
-      modelAdapter = DrilldownListAdapter(factory)
+      modelAdapter = DrilldownListAdapter(owner, factory)
       binding.lobbyList.adapter = modelAdapter
     }
 

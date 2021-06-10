@@ -17,6 +17,10 @@
 package com.pyamsoft.splattrak.lobby.screen.list
 
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.splattrak.lobby.databinding.LobbyItemCountdownBinding
@@ -27,6 +31,7 @@ import javax.inject.Inject
 class LobbyItemNextCountdown
 @Inject
 internal constructor(
+    owner: LifecycleOwner,
     parent: ViewGroup,
 ) :
     BaseUiView<LobbyItemViewState.Data, LobbyItemViewEvent, LobbyItemCountdownBinding>(
@@ -37,13 +42,37 @@ internal constructor(
 
   override val viewBinding = LobbyItemCountdownBinding::inflate
 
+  private var nextStartTime: LocalDateTime? = null
   private var timer: SplatCountdownTimer? = null
 
   init {
-    doOnTeardown {
-      timer?.cancel()
-      timer = null
-    }
+    doOnTeardown { pauseTimer() }
+
+    doOnTeardown { nextStartTime = null }
+
+    val observer =
+        object : LifecycleObserver {
+
+          @Suppress("unused")
+          @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+          fun onResume() {
+            resumeTimer()
+          }
+
+          @Suppress("unused")
+          @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+          fun onPause() {
+            pauseTimer()
+          }
+
+          @Suppress("unused")
+          @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+          fun onDestroy() {
+            owner.lifecycle.removeObserver(this)
+          }
+        }
+
+    owner.lifecycle.addObserver(observer)
   }
 
   override fun onRender(state: UiRender<LobbyItemViewState.Data>) {
@@ -53,9 +82,20 @@ internal constructor(
   }
 
   private fun handleNextStartTime(time: LocalDateTime) {
+    nextStartTime = time
+    resumeTimer()
+  }
+
+  private fun pauseTimer() {
+    timer?.cancel()
+    timer = null
+  }
+
+  private fun resumeTimer() {
+    val time = nextStartTime ?: return
     val now = LocalDateTime.now()
     val timeUntilStart = now.until(time, ChronoUnit.SECONDS)
-    timer?.cancel()
+    pauseTimer()
     timer =
         SplatCountdownTimer(viewScope, timeUntilStart) { display, isComplete ->
           binding.lobbyItemNextCountdownText.text = display

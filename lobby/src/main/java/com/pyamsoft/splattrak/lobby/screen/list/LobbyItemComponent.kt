@@ -18,6 +18,7 @@ package com.pyamsoft.splattrak.lobby.screen.list
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import dagger.BindsInstance
 import dagger.Subcomponent
 
@@ -31,6 +32,10 @@ interface LobbyItemComponent {
   @Subcomponent.Factory
   interface Factory {
 
-    @CheckResult fun create(@BindsInstance parent: ViewGroup): LobbyItemComponent
+    @CheckResult
+    fun create(
+        @BindsInstance owner: LifecycleOwner,
+        @BindsInstance parent: ViewGroup
+    ): LobbyItemComponent
   }
 }

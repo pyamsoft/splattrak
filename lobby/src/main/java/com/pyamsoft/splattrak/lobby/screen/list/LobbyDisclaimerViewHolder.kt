@@ -16,16 +16,19 @@
 
 package com.pyamsoft.splattrak.lobby.screen.list
 
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
 import com.pyamsoft.pydroid.ui.databinding.ListitemFrameBinding
+import com.pyamsoft.pydroid.util.doOnDestroy
 import com.pyamsoft.splattrak.ui.NintendoDisclaimer
 import javax.inject.Inject
 
 class LobbyDisclaimerViewHolder
 internal constructor(
     binding: ListitemFrameBinding,
+    owner: LifecycleOwner,
     factory: LobbyItemComponent.Factory,
 ) : BaseLobbyViewHolder(binding.root) {
 
@@ -34,9 +37,11 @@ internal constructor(
   private val viewBinder: ViewBinder<UnitViewState>
 
   init {
-    factory.create(binding.listitemFrame).inject(this)
+    factory.create(owner, binding.listitemFrame).inject(this)
 
     viewBinder = createViewBinder(requireNotNull(disclaimer)) {}
+
+    owner.doOnDestroy { teardown() }
   }
 
   override fun bindState(state: LobbyItemViewState) {

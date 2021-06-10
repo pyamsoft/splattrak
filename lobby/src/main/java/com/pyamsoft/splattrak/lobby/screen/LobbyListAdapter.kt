@@ -18,6 +18,7 @@ package com.pyamsoft.splattrak.lobby.screen
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,7 @@ import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemViewState
 
 class LobbyListAdapter
 internal constructor(
+    private val owner: LifecycleOwner,
     private val factory: LobbyItemComponent.Factory,
     private val callback: Callback,
 ) : ListAdapter<LobbyItemViewState, BaseLobbyViewHolder>(DIFFER) {
@@ -54,21 +56,16 @@ internal constructor(
     val inflater = LayoutInflater.from(parent.context)
     return if (viewType == VIEW_TYPE_ITEM) {
       val binding = LobbyListItemHolderBinding.inflate(inflater, parent, false)
-      LobbyItemViewHolder(binding, factory, callback)
+      LobbyItemViewHolder(binding, owner, factory, callback)
     } else {
       val binding = ListitemFrameBinding.inflate(inflater, parent, false)
-      LobbyDisclaimerViewHolder(binding, factory)
+      LobbyDisclaimerViewHolder(binding, owner, factory)
     }
   }
 
   override fun onBindViewHolder(holder: BaseLobbyViewHolder, position: Int) {
     val item = getItem(position)
     holder.bindState(item)
-  }
-
-  override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-    super.onDetachedFromRecyclerView(recyclerView)
-    teardownAdapter(recyclerView)
   }
 
   interface Callback {

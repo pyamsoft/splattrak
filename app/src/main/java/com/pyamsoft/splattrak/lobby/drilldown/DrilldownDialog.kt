@@ -77,7 +77,7 @@ internal class DrilldownDialog : AppCompatDialogFragment(), UiController<Nothing
     val binding = LayoutFrameBinding.bind(view)
     Injector.obtainFromApplication<SplatComponent>(view.context)
         .plusDrilldownComponent()
-        .create(binding.layoutFrame, gameMode)
+        .create(viewLifecycleOwner, binding.layoutFrame, gameMode)
         .inject(this)
 
     val backgroundContainer = requireNotNull(backgroundContainer)

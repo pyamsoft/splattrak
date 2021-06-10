@@ -16,8 +16,10 @@
 
 package com.pyamsoft.splattrak.lobby.screen.list
 
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
+import com.pyamsoft.pydroid.util.doOnDestroy
 import com.pyamsoft.splattrak.lobby.databinding.LobbyListItemHolderBinding
 import com.pyamsoft.splattrak.lobby.screen.LobbyListAdapter
 import javax.inject.Inject
@@ -25,6 +27,7 @@ import javax.inject.Inject
 class LobbyItemViewHolder
 internal constructor(
     binding: LobbyListItemHolderBinding,
+    owner: LifecycleOwner,
     factory: LobbyItemComponent.Factory,
     callback: LobbyListAdapter.Callback,
 ) : BaseLobbyViewHolder(binding.root) {
@@ -54,7 +57,7 @@ internal constructor(
   private val viewBinder: ViewBinder<LobbyItemViewState.Data>
 
   init {
-    factory.create(binding.lobbyListItem).inject(this)
+    factory.create(owner, binding.lobbyListItem).inject(this)
 
     val currentContainer = requireNotNull(currentContainer)
     currentContainer.nest(requireNotNull(currentInfo), requireNotNull(currentStages))
@@ -77,6 +80,8 @@ internal constructor(
             is LobbyItemViewEvent.OnCountdown -> callback.onCountdown(bindingAdapterPosition)
           }
         }
+
+    owner.doOnDestroy { teardown() }
   }
 
   override fun bindState(state: LobbyItemViewState) {

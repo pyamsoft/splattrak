@@ -16,15 +16,18 @@
 
 package com.pyamsoft.splattrak.lobby.dialog.list
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
+import com.pyamsoft.pydroid.util.doOnDestroy
 import com.pyamsoft.splattrak.lobby.databinding.DrilldownListItemHolderBinding
 import javax.inject.Inject
 
 class DrilldownItemViewHolder
 internal constructor(
     binding: DrilldownListItemHolderBinding,
+    owner: LifecycleOwner,
     factory: DrilldownItemComponent.Factory,
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<DrilldownItemViewState> {
 
@@ -43,6 +46,8 @@ internal constructor(
     nextContainer.nest(requireNotNull(info), requireNotNull(stages))
 
     viewBinder = createViewBinder(nextContainer) {}
+
+    owner.doOnDestroy { teardown() }
   }
 
   override fun bindState(state: DrilldownItemViewState) {

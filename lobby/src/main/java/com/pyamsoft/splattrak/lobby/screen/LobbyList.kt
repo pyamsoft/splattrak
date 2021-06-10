@@ -18,6 +18,7 @@ package com.pyamsoft.splattrak.lobby.screen
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -36,6 +37,7 @@ class LobbyList
 @Inject
 internal constructor(
     private val factory: LobbyItemComponent.Factory,
+    owner: LifecycleOwner,
     parent: ViewGroup,
 ) :
     BaseUiView<LobbyViewState, LobbyViewEvent, LobbyListBinding>(parent),
@@ -60,7 +62,7 @@ internal constructor(
     }
 
     doOnInflate {
-      modelAdapter = LobbyListAdapter(factory, callback = this)
+      modelAdapter = LobbyListAdapter(owner, factory, callback = this)
       binding.lobbyList.adapter = modelAdapter
     }
 

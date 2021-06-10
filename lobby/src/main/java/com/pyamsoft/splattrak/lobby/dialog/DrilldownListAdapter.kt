@@ -18,10 +18,9 @@ package com.pyamsoft.splattrak.lobby.dialog
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.ui.util.teardownAdapter
 import com.pyamsoft.splattrak.lobby.databinding.DrilldownListItemHolderBinding
 import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemComponent
 import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemViewHolder
@@ -29,6 +28,7 @@ import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemViewState
 
 class DrilldownListAdapter
 internal constructor(
+    private val owner: LifecycleOwner,
     private val factory: DrilldownItemComponent.Factory,
 ) : ListAdapter<DrilldownItemViewState, DrilldownItemViewHolder>(DIFFER) {
 
@@ -43,17 +43,12 @@ internal constructor(
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DrilldownItemViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     val binding = DrilldownListItemHolderBinding.inflate(inflater, parent, false)
-    return DrilldownItemViewHolder(binding, factory)
+    return DrilldownItemViewHolder(binding, owner, factory)
   }
 
   override fun onBindViewHolder(holder: DrilldownItemViewHolder, position: Int) {
     val item = getItem(position)
     holder.bindState(item)
-  }
-
-  override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-    super.onDetachedFromRecyclerView(recyclerView)
-    teardownAdapter(recyclerView)
   }
 
   companion object {
