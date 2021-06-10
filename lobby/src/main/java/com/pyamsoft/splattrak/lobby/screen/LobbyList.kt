@@ -28,6 +28,8 @@ import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.splattrak.lobby.databinding.LobbyListBinding
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemComponent
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemViewState
+import com.pyamsoft.splattrak.ui.doOnChildRemoved
+import com.pyamsoft.splattrak.ui.teardownViewHolderAt
 import io.cabriole.decorator.LinearMarginDecoration
 import javax.inject.Inject
 import timber.log.Timber
@@ -60,7 +62,10 @@ internal constructor(
     }
 
     doOnInflate {
-      modelAdapter = LobbyListAdapter(factory, callback = this)
+      modelAdapter = LobbyListAdapter(factory, callback = this).apply {
+        val registration = doOnChildRemoved { binding.lobbyList.teardownViewHolderAt(it) }
+        doOnTeardown { registration.unregister() }
+      }
       binding.lobbyList.adapter = modelAdapter
     }
 
