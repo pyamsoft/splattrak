@@ -30,8 +30,6 @@ import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemComponent
 import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemViewState
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
-import com.pyamsoft.splattrak.ui.doOnChildRemoved
-import com.pyamsoft.splattrak.ui.teardownViewHolderAt
 import io.cabriole.decorator.LinearMarginDecoration
 import javax.inject.Inject
 import timber.log.Timber
@@ -63,11 +61,7 @@ internal constructor(
     }
 
     doOnInflate {
-      modelAdapter =
-          DrilldownListAdapter(factory).apply {
-            val registration = doOnChildRemoved { binding.lobbyList.teardownViewHolderAt(it) }
-            doOnTeardown { registration.unregister() }
-          }
+      modelAdapter = DrilldownListAdapter(factory)
       binding.lobbyList.adapter = modelAdapter
     }
 
