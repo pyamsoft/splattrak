@@ -19,12 +19,10 @@ package com.pyamsoft.splattrak.lobby.screen
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
-import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.splattrak.lobby.databinding.LobbyListBinding
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemComponent
@@ -78,7 +76,7 @@ internal constructor(
 
     doOnSaveState { outState ->
       val manager = binding.lobbyList.layoutManager
-      if (manager is GridLayoutManager) {
+      if (manager is LinearLayoutManager) {
         val position = manager.findFirstVisibleItemPosition()
         if (position > 0) {
           outState.put(LAST_SCROLL_POSITION, position)
