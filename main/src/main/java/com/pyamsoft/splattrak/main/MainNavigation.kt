@@ -16,28 +16,23 @@
 
 package com.pyamsoft.splattrak.main
 
-import android.content.res.ColorStateList
 import android.os.Handler
 import android.os.Looper
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewPropertyAnimatorCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.marginBottom
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.lifecycle.LifecycleOwner
-import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.shape.RoundedCornerTreatment
-import com.google.android.material.shape.ShapeAppearanceModel
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
-import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.splattrak.main.databinding.MainNavigationBinding
 import com.pyamsoft.splattrak.ui.R as R2
 import com.pyamsoft.splattrak.ui.appbar.animatePopInFromBottom
+import com.pyamsoft.splattrak.ui.withRoundedBackground
 import javax.inject.Inject
 import timber.log.Timber
 
@@ -105,29 +100,8 @@ internal constructor(
    * through the transparent bar
    */
   private fun correctBackground() {
-    val context = layoutRoot.context
-    val cornerSize = 16.asDp(layoutRoot.context).toFloat()
-
-    val shapeModel =
-        ShapeAppearanceModel.Builder()
-            .apply {
-              setAllCorners(RoundedCornerTreatment())
-              setAllCornerSizes(cornerSize)
-            }
-            .build()
-
-    // Create background
-    val color = ContextCompat.getColor(layoutRoot.context, R2.color.colorPrimarySeeThrough)
-    val materialShapeDrawable = MaterialShapeDrawable(shapeModel)
-    materialShapeDrawable.initializeElevationOverlay(context)
-    materialShapeDrawable.shadowCompatibilityMode = MaterialShapeDrawable.SHADOW_COMPAT_MODE_ALWAYS
-    materialShapeDrawable.fillColor = ColorStateList.valueOf(color)
-    materialShapeDrawable.elevation = 0F
-
-    binding.mainBottomNavigationMenu.apply {
-      elevation = 8.asDp(context).toFloat()
-      background = materialShapeDrawable
-    }
+    binding.mainBottomNavigationMenu.withRoundedBackground(
+        R2.color.colorPrimarySeeThrough, applyAllCorners = true)
   }
 
   private fun animateIn() {

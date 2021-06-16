@@ -23,7 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
 import com.pyamsoft.splattrak.ui.appbar.AppBarActivityProvider
-import com.pyamsoft.splattrak.ui.appbar.ThemeProviderModule
+import com.pyamsoft.splattrak.ui.ThemeProviderModule
 import dagger.BindsInstance
 import dagger.Subcomponent
 

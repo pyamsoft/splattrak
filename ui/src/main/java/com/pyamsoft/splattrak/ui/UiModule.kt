@@ -14,6 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.ui.appbar
+package com.pyamsoft.splattrak.ui
 
-data class BottomOffset(val height: Int)
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.bus.EventConsumer
+import dagger.Binds
+import dagger.Module
+
+@Module
+abstract class UiModule {
+
+  @Binds
+  @CheckResult
+  internal abstract fun bindBottomOffsetBus(impl: BottomOffsetBus): EventBus<BottomOffset>
+
+  @Binds
+  @CheckResult
+  internal abstract fun bindBottomOffsetConsumer(
+      impl: EventBus<BottomOffset>
+  ): EventConsumer<BottomOffset>
+}

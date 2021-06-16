@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.ui.appbar
+package com.pyamsoft.splattrak.ui
 
-import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.bus.EventConsumer
-import dagger.Binds
-import dagger.Module
+import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.splattrak.ui.BottomOffset
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Module
-abstract class UiModule {
+@Singleton
+internal class BottomOffsetBus @Inject internal constructor() : EventBus<BottomOffset> {
 
-  @Binds
-  @CheckResult
-  internal abstract fun bindBottomOffsetBus(impl: BottomOffsetBus): EventBus<BottomOffset>
+  private val bus = EventBus.create<BottomOffset>(emitOnlyWhenActive = false, replayCount = 1)
 
-  @Binds
-  @CheckResult
-  internal abstract fun bindBottomOffsetConsumer(
-      impl: EventBus<BottomOffset>
-  ): EventConsumer<BottomOffset>
+  override suspend fun onEvent(emitter: suspend (event: BottomOffset) -> Unit) {
+    Enforcer.assertOffMainThread()
+    return bus.onEvent(emitter)
+  }
+
+  override suspend fun send(event: BottomOffset) {
+    Enforcer.assertOffMainThread()
+    bus.send(event)
+  }
 }

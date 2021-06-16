@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.splattrak.splatnet.SplatnetInteractor
-import com.pyamsoft.splattrak.ui.appbar.BottomOffset
+import com.pyamsoft.splattrak.ui.BottomOffset
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

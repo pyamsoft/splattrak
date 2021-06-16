@@ -20,7 +20,7 @@ import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.bus.EventConsumer
-import com.pyamsoft.splattrak.ui.appbar.BottomOffset
+import com.pyamsoft.splattrak.ui.BottomOffset
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

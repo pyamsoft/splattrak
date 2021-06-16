@@ -45,7 +45,7 @@ import com.pyamsoft.splattrak.lobby.LobbyFragment
 import com.pyamsoft.splattrak.setting.SettingsFragment
 import com.pyamsoft.splattrak.ui.appbar.AppBarActivity
 import com.pyamsoft.splattrak.ui.appbar.AppBarActivityProvider
-import com.pyamsoft.splattrak.ui.appbar.SnackbarContainer
+import com.pyamsoft.splattrak.ui.SnackbarContainer
 import javax.inject.Inject
 import timber.log.Timber
 

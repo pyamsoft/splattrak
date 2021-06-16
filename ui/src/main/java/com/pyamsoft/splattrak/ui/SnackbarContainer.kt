@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.ui.appbar
+package com.pyamsoft.splattrak.ui
 
-import android.app.Activity
-import com.pyamsoft.pydroid.ui.theme.ThemeProvider
-import com.pyamsoft.pydroid.ui.theme.Theming
-import dagger.Module
-import dagger.Provides
+import androidx.annotation.CheckResult
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 
-@Module
-object ThemeProviderModule {
+interface SnackbarContainer {
 
-  @Provides
-  @JvmStatic
-  fun provideThemeProvider(activity: Activity, theming: Theming): ThemeProvider {
-    return ThemeProvider { theming.isDarkTheme(activity) }
-  }
+  @CheckResult fun container(): CoordinatorLayout?
 }

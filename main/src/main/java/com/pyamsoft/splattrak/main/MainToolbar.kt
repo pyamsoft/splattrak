@@ -16,22 +16,17 @@
 
 package com.pyamsoft.splattrak.main
 
-import android.content.res.ColorStateList
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorCompat
 import androidx.core.view.updateLayoutParams
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.R as R2
-import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.shape.RoundedCornerTreatment
-import com.google.android.material.shape.ShapeAppearanceModel
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
@@ -43,8 +38,8 @@ import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.splattrak.core.PRIVACY_POLICY_URL
 import com.pyamsoft.splattrak.core.TERMS_CONDITIONS_URL
 import com.pyamsoft.splattrak.main.databinding.MainToolbarBinding
-import com.pyamsoft.splattrak.ui.R as R3
 import com.pyamsoft.splattrak.ui.appbar.AppBarActivityProvider
+import com.pyamsoft.splattrak.ui.withRoundedBackground
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -101,30 +96,7 @@ internal constructor(
     doOnInflate {
       val listener =
           View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            val context = layoutRoot.context
-            val cornerSize = 16.asDp(layoutRoot.context).toFloat()
-
-            val shapeModel =
-                ShapeAppearanceModel.Builder()
-                    .apply {
-                      setAllCorners(RoundedCornerTreatment())
-                      setAllCornerSizes(cornerSize)
-                    }
-                    .build()
-
-            // Create background
-            val color = ContextCompat.getColor(context, R3.color.colorPrimary)
-            val materialShapeDrawable = MaterialShapeDrawable(shapeModel)
-            materialShapeDrawable.initializeElevationOverlay(context)
-            materialShapeDrawable.shadowCompatibilityMode =
-                MaterialShapeDrawable.SHADOW_COMPAT_MODE_ALWAYS
-            materialShapeDrawable.fillColor = ColorStateList.valueOf(color)
-            materialShapeDrawable.elevation = 0F
-
-            binding.mainAppbar.apply {
-              elevation = 8.asDp(context).toFloat()
-              background = materialShapeDrawable
-            }
+            binding.mainAppbar.withRoundedBackground(applyAllCorners = true)
             binding.mainToolbar.elevation = 0F
           }
       binding.mainAppbar.addOnLayoutChangeListener(listener)

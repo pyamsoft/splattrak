@@ -35,7 +35,7 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.splattrak.main.databinding.MainSnackbarBinding
-import com.pyamsoft.splattrak.ui.appbar.SnackbarContainer
+import com.pyamsoft.splattrak.ui.SnackbarContainer
 import javax.inject.Inject
 
 class MainSnackbar

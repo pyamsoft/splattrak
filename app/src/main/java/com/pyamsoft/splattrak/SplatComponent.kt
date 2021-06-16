@@ -28,7 +28,7 @@ import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemComponent
 import com.pyamsoft.splattrak.main.MainComponent
 import com.pyamsoft.splattrak.setting.SettingsComponent
 import com.pyamsoft.splattrak.splatnet.SplatnetModule
-import com.pyamsoft.splattrak.ui.appbar.UiModule
+import com.pyamsoft.splattrak.ui.UiModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
