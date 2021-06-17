@@ -24,13 +24,13 @@ import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.ui.Injector
+import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.settings.AppSettingsFragment
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
+import com.pyamsoft.pydroid.ui.util.applyAppBarOffset
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.core.SplatViewModelFactory
-import com.pyamsoft.splattrak.ui.applyToolbarOffset
 import com.pyamsoft.splattrak.ui.appbar.requireAppBarActivity
 import javax.inject.Inject
 
@@ -38,7 +38,7 @@ internal class SettingsFragment : AppSettingsFragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    view.applyToolbarOffset(requireAppBarActivity(), viewLifecycleOwner)
+    view.applyAppBarOffset(requireAppBarActivity(), viewLifecycleOwner)
   }
 
   override fun provideSettingsFragment(): AppSettingsPreferenceFragment {

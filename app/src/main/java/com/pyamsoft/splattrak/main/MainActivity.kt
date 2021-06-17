@@ -28,7 +28,9 @@ import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.arch.createSavedStateViewModelFactory
-import com.pyamsoft.pydroid.ui.Injector
+import com.pyamsoft.pydroid.inject.Injector
+import com.pyamsoft.pydroid.ui.app.AppBarActivity
+import com.pyamsoft.pydroid.ui.app.AppBarActivityProvider
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
@@ -43,8 +45,6 @@ import com.pyamsoft.splattrak.R
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.lobby.LobbyFragment
 import com.pyamsoft.splattrak.setting.SettingsFragment
-import com.pyamsoft.splattrak.ui.appbar.AppBarActivity
-import com.pyamsoft.splattrak.ui.appbar.AppBarActivityProvider
 import com.pyamsoft.splattrak.ui.SnackbarContainer
 import javax.inject.Inject
 import timber.log.Timber

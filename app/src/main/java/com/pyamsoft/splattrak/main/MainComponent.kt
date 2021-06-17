@@ -21,8 +21,8 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.pyamsoft.pydroid.ui.app.AppBarActivityProvider
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
-import com.pyamsoft.splattrak.ui.appbar.AppBarActivityProvider
 import com.pyamsoft.splattrak.ui.ThemeProviderModule
 import dagger.BindsInstance
 import dagger.Subcomponent

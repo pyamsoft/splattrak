@@ -21,10 +21,10 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import com.pyamsoft.pydroid.ui.app.AppBarActivity
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.splattrak.core.ViewModelFactoryModule
 import com.pyamsoft.splattrak.lobby.screen.LobbyViewModel
-import com.pyamsoft.splattrak.ui.appbar.AppBarActivity
 import com.pyamsoft.splattrak.ui.ThemeProviderModule
 import dagger.Binds
 import dagger.BindsInstance

@@ -18,7 +18,7 @@ package com.pyamsoft.splattrak.lobby.screen
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.splattrak.ui.appbar.AppBarActivity
+import com.pyamsoft.pydroid.ui.app.AppBarActivity
 import com.pyamsoft.splattrak.ui.appbar.UiAppBarSpacer
 import javax.inject.Inject
 

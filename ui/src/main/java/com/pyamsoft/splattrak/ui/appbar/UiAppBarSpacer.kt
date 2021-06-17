@@ -22,7 +22,8 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.splattrak.ui.applyToolbarOffset
+import com.pyamsoft.pydroid.ui.app.AppBarActivity
+import com.pyamsoft.pydroid.ui.util.applyAppBarOffset
 import com.pyamsoft.splattrak.ui.databinding.UiAppbarSpacerBinding
 
 abstract class UiAppBarSpacer<S : UiViewState, V : UiViewEvent>
@@ -37,7 +38,7 @@ protected constructor(
   final override val layoutRoot by boundView { uiAppbarRoot }
 
   init {
-    doOnInflate { binding.uiAppbarSpace.applyToolbarOffset(appBarActivity, owner) }
+    doOnInflate { binding.uiAppbarSpace.applyAppBarOffset(appBarActivity, owner) }
   }
 
   final override fun onRender(state: UiRender<S>) {

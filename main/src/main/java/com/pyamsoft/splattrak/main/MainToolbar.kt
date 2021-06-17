@@ -29,6 +29,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.R as R2
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.ui.app.AppBarActivityProvider
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
 import com.pyamsoft.pydroid.ui.privacy.addPrivacy
 import com.pyamsoft.pydroid.ui.privacy.removePrivacy
@@ -38,7 +39,6 @@ import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.splattrak.core.PRIVACY_POLICY_URL
 import com.pyamsoft.splattrak.core.TERMS_CONDITIONS_URL
 import com.pyamsoft.splattrak.main.databinding.MainToolbarBinding
-import com.pyamsoft.splattrak.ui.appbar.AppBarActivityProvider
 import com.pyamsoft.splattrak.ui.withRoundedBackground
 import javax.inject.Inject
 import javax.inject.Named

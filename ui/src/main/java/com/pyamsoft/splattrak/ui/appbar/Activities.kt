@@ -18,6 +18,7 @@ package com.pyamsoft.splattrak.ui.appbar
 
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
+import com.pyamsoft.pydroid.ui.app.AppBarActivity
 
 val Fragment.appBarActivity: AppBarActivity?
   @get:CheckResult
