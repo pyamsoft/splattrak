@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.splattrak.ui.applyToolbarOffset
 import com.pyamsoft.splattrak.ui.databinding.UiAppbarSpacerBinding
 
 abstract class UiAppBarSpacer<S : UiViewState, V : UiViewEvent>

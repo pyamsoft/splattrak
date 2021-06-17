@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.ui.appbar
+package com.pyamsoft.splattrak.ui
 
 import android.content.Context
 import android.graphics.Point

@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.ui.appbar
+package com.pyamsoft.splattrak.ui
 
 import android.view.View
 import androidx.core.view.updatePadding
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.pydroid.util.doOnDestroy
+import com.pyamsoft.splattrak.ui.appbar.AppBarActivity
 import timber.log.Timber
 
 private inline fun watchToolbarOffset(

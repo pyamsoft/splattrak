@@ -29,10 +29,11 @@ import com.google.android.material.shape.ShapeAppearanceModel
 import com.pyamsoft.pydroid.util.asDp
 
 @CheckResult
-private fun createDialogRoundedToolbarBackground(
+@JvmOverloads
+fun createRoundedBackground(
     context: Context,
-    @ColorRes colorRes: Int,
-    applyAllCorners: Boolean
+    @ColorRes colorRes: Int = R.color.colorPrimary,
+    applyAllCorners: Boolean = false
 ): Drawable {
   val cornerSize = 16.asDp(context).toFloat()
 
@@ -63,10 +64,10 @@ private fun createDialogRoundedToolbarBackground(
 
 @JvmOverloads
 fun View.withRoundedBackground(
-    @ColorRes color: Int = R.color.blue500,
+    @ColorRes color: Int = R.color.colorPrimary,
     applyAllCorners: Boolean = false
 ) {
   val ctx = context.applicationContext
-  this.background = createDialogRoundedToolbarBackground(ctx, color, applyAllCorners)
+  this.background = createRoundedBackground(ctx, color, applyAllCorners)
   this.elevation = 8.asDp(ctx).toFloat()
 }

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.splattrak.main
 
+import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
 import android.view.ViewGroup
@@ -28,11 +29,11 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.splattrak.main.databinding.MainNavigationBinding
-import com.pyamsoft.splattrak.ui.R as R2
-import com.pyamsoft.splattrak.ui.appbar.animatePopInFromBottom
-import com.pyamsoft.splattrak.ui.withRoundedBackground
+import com.pyamsoft.splattrak.ui.animatePopInFromBottom
+import com.pyamsoft.splattrak.ui.createRoundedBackground
 import javax.inject.Inject
 import timber.log.Timber
 
@@ -47,11 +48,16 @@ internal constructor(
 
   override val layoutRoot by boundView { mainBottomNavigationMenu }
 
+  private var backgroundDrawable: Drawable? = null
+
   private val handler = Handler(Looper.getMainLooper())
   private var animator: ViewPropertyAnimatorCompat? = null
 
   init {
     doOnInflate {
+      backgroundDrawable =
+          createRoundedBackground(
+              layoutRoot.context, R.color.colorPrimarySeeThrough, applyAllCorners = true)
       correctBackground()
       animateIn()
     }
@@ -92,6 +98,8 @@ internal constructor(
     doOnTeardown {
       animator?.cancel()
       animator = null
+
+      backgroundDrawable = null
     }
   }
 
@@ -100,8 +108,10 @@ internal constructor(
    * through the transparent bar
    */
   private fun correctBackground() {
-    binding.mainBottomNavigationMenu.withRoundedBackground(
-        R2.color.colorPrimarySeeThrough, applyAllCorners = true)
+    binding.mainBottomNavigationMenu.apply {
+      background = requireNotNull(backgroundDrawable)
+      elevation = 8.asDp(context).toFloat()
+    }
   }
 
   private fun animateIn() {
@@ -111,6 +121,7 @@ internal constructor(
   }
 
   override fun onRender(state: UiRender<MainViewState>) {
+    correctBackground()
     state.mapChanged { it.page }.render(viewScope) { handlePage(it) }
   }
 

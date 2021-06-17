@@ -30,7 +30,7 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsFragment
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.core.SplatViewModelFactory
-import com.pyamsoft.splattrak.ui.appbar.applyToolbarOffset
+import com.pyamsoft.splattrak.ui.applyToolbarOffset
 import com.pyamsoft.splattrak.ui.appbar.requireAppBarActivity
 import javax.inject.Inject
 
