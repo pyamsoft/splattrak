@@ -27,6 +27,7 @@ import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.requireAppBarActivity
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutCoordinatorBinding
@@ -40,7 +41,6 @@ import com.pyamsoft.splattrak.lobby.screen.LobbyControllerEvent
 import com.pyamsoft.splattrak.lobby.screen.LobbyList
 import com.pyamsoft.splattrak.lobby.screen.LobbyViewEvent
 import com.pyamsoft.splattrak.lobby.screen.LobbyViewModel
-import com.pyamsoft.splattrak.ui.appbar.requireAppBarActivity
 import javax.inject.Inject
 
 internal class LobbyFragment : Fragment(), UiController<LobbyControllerEvent> {

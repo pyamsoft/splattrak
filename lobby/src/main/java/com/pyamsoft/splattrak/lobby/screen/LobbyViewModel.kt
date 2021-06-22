@@ -19,9 +19,10 @@ package com.pyamsoft.splattrak.lobby.screen
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.splattrak.splatnet.SplatnetInteractor
+import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
 import com.pyamsoft.splattrak.ui.BottomOffset
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -43,26 +44,17 @@ internal constructor(
             bottomOffset = 0)) {
 
   private val scheduleRunner =
-      highlander<Unit> {
-        setState(
-            stateChange = { copy(loading = true) },
-            andThen = {
-              try {
-                val schedule = splatnetInteractor.schedule()
-                val groupings = mutableListOf<LobbyViewState.ScheduleGroupings>()
-                for (entry in schedule.battles()) {
-                  val currentMatch = entry.rotation()[0]
-                  val nextMatch = entry.rotation()[1]
-                  groupings.add(LobbyViewState.ScheduleGroupings(currentMatch, nextMatch, entry))
-                }
-                setState { copy(schedule = groupings, rawSchedule = schedule, loading = false) }
-              } catch (error: Throwable) {
-                error.onActualError { e ->
-                  Timber.e(e, "Failed to load Splatoon2.ink lobby list")
-                  setState { copy(error = e, loading = false) }
-                }
-              }
-            })
+      highlander<ResultWrapper<LobbyData>> {
+        splatnetInteractor.schedule().map { schedule ->
+          val groupings = mutableListOf<LobbyViewState.ScheduleGroupings>()
+          for (entry in schedule.battles()) {
+            val currentMatch = entry.rotation()[0]
+            val nextMatch = entry.rotation()[1]
+            groupings.add(LobbyViewState.ScheduleGroupings(currentMatch, nextMatch, entry))
+          }
+
+          LobbyData(groupings = groupings, schedule = schedule)
+        }
       }
 
   init {
@@ -89,6 +81,25 @@ internal constructor(
   }
 
   private fun performRefresh() {
-    viewModelScope.launch(context = Dispatchers.Default) { scheduleRunner.call() }
+    viewModelScope.launch(context = Dispatchers.Default) {
+      setState(
+          stateChange = { copy(loading = true) },
+          andThen = {
+            scheduleRunner
+                .call()
+                .onSuccess { data ->
+                  setState {
+                    copy(schedule = data.groupings, rawSchedule = data.schedule, loading = false)
+                  }
+                }
+                .onFailure { Timber.e(it, "Failed to load Splatoon2.ink lobby list") }
+                .onFailure { setState { copy(error = it, loading = false) } }
+          })
+    }
   }
+
+  private data class LobbyData(
+      val groupings: List<LobbyViewState.ScheduleGroupings>,
+      val schedule: SplatSchedule
+  )
 }

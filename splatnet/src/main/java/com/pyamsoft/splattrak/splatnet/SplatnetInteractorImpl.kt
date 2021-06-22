@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.cachify.MemoryCacheStorage
 import com.pyamsoft.cachify.cachify
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.splattrak.splatnet.api.*
 import com.pyamsoft.splattrak.splatnet.data.*
 import java.time.LocalDateTime
@@ -28,6 +29,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 @Singleton
 internal class SplatnetInteractorImpl
@@ -37,30 +39,37 @@ internal constructor(
 ) : SplatnetInteractor {
 
   private val scheduleCache =
-      cachify<SplatSchedule>(storage = { listOf(MemoryCacheStorage.create(24, TimeUnit.HOURS)) }) {
+      cachify<ResultWrapper<SplatSchedule>>(
+          storage = { listOf(MemoryCacheStorage.create(24, TimeUnit.HOURS)) }) {
         interactor.schedule()
       }
 
-  override suspend fun schedule(): SplatSchedule =
+  override suspend fun schedule(): ResultWrapper<SplatSchedule> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        val schedule = scheduleCache.call()
-        val now = LocalDateTime.now()
-        val validRotations =
-            schedule.battles().map { entry ->
-              SplatBattleImpl(
-                  mode = entry.mode(),
-                  rotation =
-                      entry
-                          .rotation()
-                          .asSequence()
-                          .filter { filterPastMatches(it, now) }
-                          .sortedWith(SORTER)
-                          .toList())
-            }
+        return@withContext try {
+          scheduleCache.call().map { schedule ->
+            val now = LocalDateTime.now()
+            val validRotations =
+                schedule.battles().map { entry ->
+                  SplatBattleImpl(
+                      mode = entry.mode(),
+                      rotation =
+                          entry
+                              .rotation()
+                              .asSequence()
+                              .filter { filterPastMatches(it, now) }
+                              .sortedWith(SORTER)
+                              .toList())
+                }
 
-        return@withContext SplatScheduleImpl(validRotations)
+            return@map SplatScheduleImpl(validRotations)
+          }
+        } catch (e: Throwable) {
+          Timber.e(e, "Error fetching splat lobby schedule")
+          ResultWrapper.failure(e)
+        }
       }
 
   companion object {

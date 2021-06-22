@@ -19,8 +19,9 @@ package com.pyamsoft.splattrak.lobby.dialog
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.onActualError
+import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.splattrak.splatnet.SplatnetInteractor
+import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -41,29 +42,18 @@ internal constructor(
         )) {
 
   private val scheduleRunner =
-      highlander<Unit> {
-        setState(
-            stateChange = { copy(loading = true) },
-            andThen = {
-              try {
-                val schedule = splatnetInteractor.schedule()
-                for (entry in schedule.battles()) {
-                  if (entry.mode().mode() == expectedMode) {
-                    return@setState setState { copy(battle = entry, loading = false) }
-                  }
-                }
+      highlander<ResultWrapper<LobbyData>> {
+        splatnetInteractor.schedule().map { schedule ->
+          for (entry in schedule.battles()) {
+            if (entry.mode().mode() == expectedMode) {
+              return@map LobbyData.Battle(entry)
+            }
+          }
 
-                val missingBattleError =
-                    IllegalStateException("Missing battle: ${expectedMode.name}")
-                Timber.e(missingBattleError, "Failed to find battle")
-                setState { copy(error = missingBattleError, loading = false) }
-              } catch (error: Throwable) {
-                error.onActualError { e ->
-                  Timber.e(e, "Failed to load Splatoon2.ink lobby list")
-                  setState { copy(error = e, loading = false) }
-                }
-              }
-            })
+          val missingBattleError = IllegalStateException("Missing battle: ${expectedMode.name}")
+          Timber.e(missingBattleError, "Failed to find battle")
+          LobbyData.Error(missingBattleError)
+        }
       }
 
   init {
@@ -75,6 +65,26 @@ internal constructor(
   }
 
   private fun performRefresh() {
-    viewModelScope.launch(context = Dispatchers.Default) { scheduleRunner.call() }
+    viewModelScope.launch(context = Dispatchers.Default) {
+      setState(
+          stateChange = { copy(loading = true) },
+          andThen = {
+            scheduleRunner
+                .call()
+                .onSuccess { data ->
+                  when (data) {
+                    is LobbyData.Battle -> setState { copy(battle = data.battle, loading = false) }
+                    is LobbyData.Error -> setState { copy(error = data.error, loading = false) }
+                  }
+                }
+                .onFailure { Timber.e(it, "Failed to load Splatoon2.ink lobby list") }
+                .onFailure { setState { copy(error = it, loading = false) } }
+          })
+    }
+  }
+
+  private sealed class LobbyData {
+    data class Battle(val battle: SplatBattle) : LobbyData()
+    data class Error(val error: Throwable) : LobbyData()
   }
 }

@@ -22,6 +22,7 @@ import android.os.Looper
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.core.view.ViewPropertyAnimatorCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.marginBottom
 import androidx.core.view.updateLayoutParams
@@ -67,7 +68,8 @@ internal constructor(
         val initialBottomMargin = view.marginBottom
         view.doOnApplyWindowInsets(owner) { v, insets, _ ->
           v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            this.bottomMargin = initialBottomMargin + insets.systemWindowInsetBottom
+            this.bottomMargin =
+                initialBottomMargin + insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
           }
           v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
 

@@ -23,6 +23,7 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import androidx.lifecycle.LifecycleOwner
@@ -74,7 +75,7 @@ internal constructor(
 
       layoutRoot.doOnApplyWindowInsets(owner) { v, insets, padding ->
         v.updateLayoutParams<MarginLayoutParams> {
-          topMargin = padding.top + insets.systemWindowInsetTop + 8.asDp(v.context)
+          topMargin = padding.top + insets.getInsets(WindowInsetsCompat.Type.systemBars()).top + 8.asDp(v.context)
         }
       }
 

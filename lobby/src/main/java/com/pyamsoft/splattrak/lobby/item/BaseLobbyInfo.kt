@@ -87,7 +87,7 @@ protected constructor(
   }
 
   private fun handleTime(time: LocalDateTime, textView: TextView) {
-    textView.text = time.format(getDateFormatter()).toLowerCase(Locale.getDefault())
+    textView.text = time.format(getDateFormatter()).lowercase(Locale.getDefault())
   }
 
   private fun handleRuleset(rules: SplatRuleset) {

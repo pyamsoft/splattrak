@@ -18,6 +18,7 @@ package com.pyamsoft.splattrak.splatnet
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.splattrak.splatnet.api.*
 import com.pyamsoft.splattrak.splatnet.data.*
 import com.pyamsoft.splattrak.splatnet.network.NetworkSplatMatch
@@ -29,6 +30,7 @@ import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 internal class SplatnetNetworkInteractor
 @Inject
@@ -36,16 +38,22 @@ internal constructor(
     @InternalApi private val splatnet: Splatnet,
 ) : SplatnetInteractor {
 
-  override suspend fun schedule(): SplatSchedule =
+  override suspend fun schedule(): ResultWrapper<SplatSchedule> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
-        val networkSchedule = splatnet.lobbySchedule()
 
-        return@withContext SplatScheduleImpl(
-            listOf(
-                assembleBattles(SplatGameMode.Mode.REGULAR, networkSchedule.regular),
-                assembleBattles(SplatGameMode.Mode.LEAGUE, networkSchedule.league),
-                assembleBattles(SplatGameMode.Mode.RANKED, networkSchedule.ranked)))
+        return@withContext try {
+          val networkSchedule = splatnet.lobbySchedule()
+          ResultWrapper.success(
+              SplatScheduleImpl(
+                  listOf(
+                      assembleBattles(SplatGameMode.Mode.REGULAR, networkSchedule.regular),
+                      assembleBattles(SplatGameMode.Mode.LEAGUE, networkSchedule.league),
+                      assembleBattles(SplatGameMode.Mode.RANKED, networkSchedule.ranked))))
+        } catch (e: Throwable) {
+          Timber.e(e, "Failed to get Lobby schedule")
+          ResultWrapper.failure(e)
+        }
       }
 
   companion object {
