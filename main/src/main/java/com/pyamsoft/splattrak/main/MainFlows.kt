@@ -16,6 +16,7 @@
 
 package com.pyamsoft.splattrak.main
 
+import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
@@ -23,7 +24,8 @@ import com.pyamsoft.pydroid.arch.UiViewState
 data class MainViewState
 internal constructor(
     val page: MainPage?,
-    val appNameRes: Int,
+    @StringRes val appNameRes: Int,
+    val bottomBarHeight: Int,
 ) : UiViewState
 
 sealed class MainViewEvent : UiViewEvent {

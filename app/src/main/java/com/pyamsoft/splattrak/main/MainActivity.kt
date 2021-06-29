@@ -19,8 +19,6 @@ package com.pyamsoft.splattrak.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.appbar.AppBarLayout
@@ -35,9 +33,8 @@ import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.changelog.buildChangeLog
-import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
+import com.pyamsoft.pydroid.ui.databinding.LayoutCoordinatorBinding
 import com.pyamsoft.pydroid.ui.util.commitNow
-import com.pyamsoft.pydroid.ui.util.layout
 import com.pyamsoft.pydroid.util.doOnStart
 import com.pyamsoft.pydroid.util.stableLayoutHideNavigation
 import com.pyamsoft.splattrak.BuildConfig
@@ -46,8 +43,8 @@ import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.lobby.LobbyFragment
 import com.pyamsoft.splattrak.setting.SettingsFragment
 import com.pyamsoft.splattrak.ui.SnackbarContainer
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 internal class MainActivity :
     ChangeLogActivity(), AppBarActivity, AppBarActivityProvider, UiController<MainControllerEvent> {
@@ -118,17 +115,16 @@ internal class MainActivity :
   override fun onCreate(savedInstanceState: Bundle?) {
     setTheme(R.style.Theme_Splat)
     super.onCreate(savedInstanceState)
-    val binding = LayoutConstraintBinding.inflate(layoutInflater)
+    val binding = LayoutCoordinatorBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
     Injector.obtainFromApplication<SplatComponent>(this)
         .plusMainComponent()
-        .create(this, this, this, binding.layoutConstraint, this, this)
+        .create(this, this, this, binding.layoutCoordinator, this, this)
         .inject(this)
 
     stableLayoutHideNavigation()
     inflateComponents(savedInstanceState)
-    layoutComponents(binding.layoutConstraint)
 
     val existingFragment = supportFragmentManager.findFragmentById(fragmentContainerId)
     if (savedInstanceState == null || existingFragment == null) {
@@ -209,48 +205,6 @@ internal class MainActivity :
     if (animations != null) {
       val (enter, exit) = animations
       setCustomAnimations(enter, exit, enter, exit)
-    }
-  }
-
-  private fun layoutComponents(constraintLayout: ConstraintLayout) {
-    val container = requireNotNull(container)
-    val toolbar = requireNotNull(toolbar)
-    val navigation = requireNotNull(navigation)
-    val snackbar = requireNotNull(snackbar)
-
-    constraintLayout.layout {
-      toolbar.also {
-        connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      navigation.also {
-        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-        constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
-      }
-
-      container.also {
-        connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      snackbar.also {
-        connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        connect(it.id(), ConstraintSet.BOTTOM, navigation.id(), ConstraintSet.TOP)
-        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
     }
   }
 

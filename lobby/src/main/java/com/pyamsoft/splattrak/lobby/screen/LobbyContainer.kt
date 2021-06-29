@@ -34,10 +34,10 @@ internal constructor(
   override val layoutRoot by boundView { lobbyContainer }
 
   override fun onRender(state: UiRender<LobbyViewState>) {
-    state.mapChanged { it.bottomOffset }.render(viewScope) { handleBottomMargin(it) }
+    state.mapChanged { it.bottomOffset }.render(viewScope) { handleBottomBarHeight(it) }
   }
 
-  private fun handleBottomMargin(height: Int) {
+  private fun handleBottomBarHeight(height: Int) {
     layoutRoot.updatePadding(bottom = height)
   }
 }

@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import androidx.annotation.CheckResult
 import androidx.core.view.ViewPropertyAnimatorCompat
 import androidx.core.view.WindowInsetsCompat
@@ -47,7 +48,7 @@ internal constructor(
 
   override val viewBinding = MainNavigationBinding::inflate
 
-  override val layoutRoot by boundView { mainBottomNavigationMenu }
+  override val layoutRoot by boundView { mainBottomBar }
 
   private var backgroundDrawable: Drawable? = null
 
@@ -55,10 +56,18 @@ internal constructor(
   private var animator: ViewPropertyAnimatorCompat? = null
 
   init {
+
     doOnInflate {
-      backgroundDrawable =
-          createRoundedBackground(
-              layoutRoot.context, R.color.colorPrimarySeeThrough, applyAllCorners = true)
+      layoutRoot.outlineProvider = ViewOutlineProvider.BACKGROUND
+    }
+
+    doOnInflate {
+      // Remove background shadow from nav
+      binding.mainBottomNavigationMenu.outlineProvider = null
+    }
+
+    doOnInflate {
+      backgroundDrawable = createRoundedBackground(layoutRoot.context, applyAllCorners = true)
       correctBackground()
       animateIn()
     }
@@ -71,10 +80,13 @@ internal constructor(
             this.bottomMargin =
                 initialBottomMargin + insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
           }
+
+          // Remove padding or the bar is too big
           v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
 
           // Publish the measured height
-          publish(MainViewEvent.BottomBarMeasured(v.height))
+          // Make sure we are laid out before grabbing the height
+          v.post { publish(MainViewEvent.BottomBarMeasured(v.height)) }
         }
       }
     }
@@ -110,7 +122,7 @@ internal constructor(
    * through the transparent bar
    */
   private fun correctBackground() {
-    binding.mainBottomNavigationMenu.apply {
+    layoutRoot.apply {
       background = requireNotNull(backgroundDrawable)
       elevation = 8.asDp(context).toFloat()
     }
@@ -118,7 +130,7 @@ internal constructor(
 
   private fun animateIn() {
     if (animator == null) {
-      animator = animatePopInFromBottom(binding.mainBottomNavigationMenu, 600, false)
+      animator = animatePopInFromBottom(layoutRoot, 600, false)
     }
   }
 

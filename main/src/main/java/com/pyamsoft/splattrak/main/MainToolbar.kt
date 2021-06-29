@@ -19,6 +19,7 @@ package com.pyamsoft.splattrak.main
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
+import android.view.ViewOutlineProvider
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.view.ViewCompat
@@ -61,6 +62,10 @@ internal constructor(
   override val layoutRoot by boundView { mainAppbar }
 
   init {
+    doOnInflate { layoutRoot.outlineProvider = ViewOutlineProvider.BACKGROUND }
+
+    doOnInflate { binding.mainToolbar.outlineProvider = null }
+
     doOnInflate {
       binding.mainAppbar.apply {
         appBarProvider.setAppBar(this)
@@ -75,7 +80,10 @@ internal constructor(
 
       layoutRoot.doOnApplyWindowInsets(owner) { v, insets, padding ->
         v.updateLayoutParams<MarginLayoutParams> {
-          topMargin = padding.top + insets.getInsets(WindowInsetsCompat.Type.systemBars()).top + 8.asDp(v.context)
+          topMargin =
+              padding.top +
+                  insets.getInsets(WindowInsetsCompat.Type.systemBars()).top +
+                  8.asDp(v.context)
         }
       }
 

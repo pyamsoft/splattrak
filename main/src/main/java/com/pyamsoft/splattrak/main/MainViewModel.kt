@@ -43,6 +43,7 @@ internal constructor(
         MainViewState(
             page = null,
             appNameRes = appNameRes,
+            bottomBarHeight = 0,
         )) {
 
   fun handleLoadDefaultPage() {
@@ -64,7 +65,9 @@ internal constructor(
 
   fun handleConsumeBottomBarHeight(height: Int) {
     viewModelScope.launch(context = Dispatchers.Default) {
-      bottomOffsetBus.send(BottomOffset(height))
+      setState(
+          stateChange = { copy(bottomBarHeight = height) },
+          andThen = { bottomOffsetBus.send(BottomOffset(it.bottomBarHeight)) })
     }
   }
 

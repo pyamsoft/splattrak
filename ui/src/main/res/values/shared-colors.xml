@@ -22,8 +22,6 @@
     <color name="colorSecondary">@color/colorPrimary</color>
     <color name="colorOnSecondary">@color/colorOnPrimary</color>
 
-    <color name="colorPrimarySeeThrough">#D79400DB</color>
-
     <color name="transparent">#00000000</color>
 
     <!-- Status bar is transparent so content can scroll behind it -->
