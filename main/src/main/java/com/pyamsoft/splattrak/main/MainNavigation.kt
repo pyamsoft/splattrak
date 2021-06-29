@@ -57,9 +57,7 @@ internal constructor(
 
   init {
 
-    doOnInflate {
-      layoutRoot.outlineProvider = ViewOutlineProvider.BACKGROUND
-    }
+    doOnInflate { layoutRoot.outlineProvider = ViewOutlineProvider.BACKGROUND }
 
     doOnInflate {
       // Remove background shadow from nav
@@ -76,17 +74,23 @@ internal constructor(
       layoutRoot.doOnLayout { view ->
         val initialBottomMargin = view.marginBottom
         view.doOnApplyWindowInsets(owner) { v, insets, _ ->
-          v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            this.bottomMargin =
-                initialBottomMargin + insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
+          // Ensure this happens last
+          v.post {
+
+            // Float above the bottom nav
+            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+              this.bottomMargin =
+                  initialBottomMargin +
+                      insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
+            }
+
+            // Remove padding or the bar is too big
+            v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+
+            // Publish the measured height
+            // Make sure we are laid out before grabbing the height
+            v.post { publish(MainViewEvent.BottomBarMeasured(v.height)) }
           }
-
-          // Remove padding or the bar is too big
-          v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
-
-          // Publish the measured height
-          // Make sure we are laid out before grabbing the height
-          v.post { publish(MainViewEvent.BottomBarMeasured(v.height)) }
         }
       }
     }

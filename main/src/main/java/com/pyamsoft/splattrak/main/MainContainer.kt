@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.splattrak.main.databinding.MainContainerBinding
 import javax.inject.Inject
 
+// We don't use a scrolling behavior so that this entire container can scroll below the AppBar
 class MainContainer @Inject internal constructor(parent: ViewGroup) :
     BaseUiView<MainViewState, MainViewEvent, MainContainerBinding>(parent) {
 
@@ -33,7 +34,7 @@ class MainContainer @Inject internal constructor(parent: ViewGroup) :
   private var initialHeight: Int? = null
 
   init {
-    doOnInflate { layoutRoot.post { initialHeight = layoutRoot.height } }
+    doOnInflate { layoutRoot.also { v -> v.post { initialHeight = v.height } } }
   }
 
   override fun onRender(state: UiRender<MainViewState>) {

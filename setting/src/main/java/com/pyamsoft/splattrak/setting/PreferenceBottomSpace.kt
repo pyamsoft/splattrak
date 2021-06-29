@@ -45,11 +45,11 @@ internal constructor(
       binding.nintendoDisclaimer.setText(com.pyamsoft.splattrak.ui.R.string.nintendo_disclaimer)
       binding.nintendoDisclaimer.movementMethod = LinkMovementMethod.getInstance()
 
-      if (h > 0) {
-        view.updatePadding(bottom = h)
-        binding.nintendoDisclaimer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-          this.bottomMargin = h
-        }
+      view.updatePadding(bottom = h)
+
+      // Multiply by 2 to account for the bar offset and the height change in MainContainer
+      binding.nintendoDisclaimer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+        this.bottomMargin = h * 2
       }
     }
   }
