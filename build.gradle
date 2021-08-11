@@ -48,7 +48,7 @@ buildscript {
     leakCanary = "2.7"
 
     // Logging
-    timber = "4.7.1"
+    timber = "5.0.0"
 
     // Dagger
     dagger = "2.38.1"
