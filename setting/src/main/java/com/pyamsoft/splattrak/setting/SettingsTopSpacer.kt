@@ -16,35 +16,34 @@
 
 package com.pyamsoft.splattrak.setting
 
-import androidx.preference.PreferenceScreen
+import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UnitViewEvent
-import com.pyamsoft.pydroid.ui.arch.PrefUiView
+import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
+import io.cabriole.decorator.LinearBoundsMarginDecoration
 import javax.inject.Inject
 
-class SettingsSpacer
+class SettingsTopSpacer
 @Inject
 internal constructor(
-    private val parent: PreferenceScreen,
-) : PrefUiView<SettingsViewState, UnitViewEvent>(parent) {
+    private val listView: RecyclerView,
+) : UiView<SettingsViewState, UnitViewEvent>() {
 
-  private var space: PreferenceBottomSpace? = null
+  private val topDecoration = LinearBoundsMarginDecoration(topMargin = 0)
 
-  private fun addSpacer(height: Int) {
-    space?.let { preference -> parent.removePreference(preference) }
-    space =
-        PreferenceBottomSpace(height, parent.context).also { preference ->
-          parent.addPreference(preference)
-        }
+  init {
+    doOnInflate { listView.addItemDecoration(topDecoration) }
+
+    doOnTeardown { listView.removeAllItemDecorations() }
   }
 
-  override fun onRender(state: UiRender<SettingsViewState>) {
-    state.mapChanged { it.bottomOffset }.render(viewScope) { handleBottomMargin(it) }
+  override fun render(state: UiRender<SettingsViewState>) {
+    state.mapChanged { it.topOffset }.render(viewScope) { handleTopOffset(it) }
   }
 
-  private fun handleBottomMargin(height: Int) {
-    if (height > 0) {
-      addSpacer(height)
-    }
+  private fun handleTopOffset(height: Int) {
+    topDecoration.setMargin(top = height)
+    listView.invalidateItemDecorations()
   }
 }

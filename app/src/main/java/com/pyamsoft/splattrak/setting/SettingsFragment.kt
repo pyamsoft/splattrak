@@ -29,8 +29,6 @@ import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.settings.AppSettingsFragment
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
-import com.pyamsoft.pydroid.ui.util.applyToolbarOffset
-import com.pyamsoft.pydroid.util.doOnDestroy
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.core.SplatViewModelFactory
 import javax.inject.Inject
@@ -67,7 +65,9 @@ internal class SettingsFragment : AppSettingsFragment() {
     private val viewModel by
         activityViewModels<SettingsViewModel> { factory.requireNotNull().create(requireActivity()) }
 
-    @JvmField @Inject internal var spacer: SettingsSpacer? = null
+    @JvmField @Inject internal var bottomSpacer: SettingsBottomSpacer? = null
+
+    @JvmField @Inject internal var topSpacer: SettingsTopSpacer? = null
 
     private var stateSaver: StateSaver? = null
 
@@ -75,15 +75,18 @@ internal class SettingsFragment : AppSettingsFragment() {
       super.onViewCreated(view, savedInstanceState)
       Injector.obtainFromApplication<SplatComponent>(view.context)
           .plusSettingsComponent()
-          .create(preferenceScreen)
+          .create(preferenceScreen, listView)
           .inject(this)
 
       stateSaver =
           createComponent(
-              savedInstanceState, viewLifecycleOwner, viewModel, this, requireNotNull(spacer)) {}
-
-      // Need to use listView here
-      listView.applyToolbarOffset().also { viewLifecycleOwner.doOnDestroy { it.cancel() } }
+              savedInstanceState,
+              viewLifecycleOwner,
+              viewModel,
+              this,
+              bottomSpacer.requireNotNull(),
+              topSpacer.requireNotNull(),
+          ) {}
     }
 
     override fun onControllerEvent(event: UnitControllerEvent) {}
@@ -97,6 +100,9 @@ internal class SettingsFragment : AppSettingsFragment() {
       super.onDestroyView()
       factory = null
       stateSaver = null
+
+      bottomSpacer = null
+      topSpacer = null
     }
 
     companion object {

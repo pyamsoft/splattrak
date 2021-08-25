@@ -19,6 +19,7 @@ package com.pyamsoft.splattrak.setting
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.preference.PreferenceScreen
+import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.splattrak.core.ViewModelFactoryModule
 import dagger.Binds
 import dagger.BindsInstance
@@ -35,7 +36,11 @@ internal interface SettingsComponent {
   @Subcomponent.Factory
   interface Factory {
 
-    @CheckResult fun create(@BindsInstance parent: PreferenceScreen): SettingsComponent
+    @CheckResult
+    fun create(
+        @BindsInstance parent: PreferenceScreen,
+        @BindsInstance listView: RecyclerView,
+    ): SettingsComponent
   }
 
   @Module
