@@ -24,6 +24,12 @@ import javax.inject.Inject
 class DrilldownBackgroundContainer
 @Inject
 internal constructor(
+    list: DrilldownList,
     imageLoader: ImageLoader,
     parent: ViewGroup,
-) : BackgroundContainer<DrilldownViewState, DrilldownViewEvent>(imageLoader, parent)
+) : BackgroundContainer<DrilldownViewState, DrilldownViewEvent>(imageLoader, parent) {
+
+  init {
+    nest(list)
+  }
+}

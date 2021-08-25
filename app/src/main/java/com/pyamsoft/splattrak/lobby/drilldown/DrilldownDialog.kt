@@ -35,7 +35,6 @@ import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.core.SplatViewModelFactory
 import com.pyamsoft.splattrak.lobby.dialog.DrilldownBackgroundContainer
-import com.pyamsoft.splattrak.lobby.dialog.DrilldownList
 import com.pyamsoft.splattrak.lobby.dialog.DrilldownViewEvent
 import com.pyamsoft.splattrak.lobby.dialog.DrilldownViewModel
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
@@ -51,9 +50,6 @@ internal class DrilldownDialog : AppCompatDialogFragment(), UiController<Nothing
   private var stateSaver: StateSaver? = null
 
   @JvmField @Inject internal var backgroundContainer: DrilldownBackgroundContainer? = null
-
-  // Nested in container
-  @JvmField @Inject internal var nestedList: DrilldownList? = null
 
   override fun onCreateView(
       inflater: LayoutInflater,
@@ -81,12 +77,14 @@ internal class DrilldownDialog : AppCompatDialogFragment(), UiController<Nothing
         .create(viewLifecycleOwner, binding.layoutFrame, gameMode)
         .inject(this)
 
-    val backgroundContainer = requireNotNull(backgroundContainer)
-    backgroundContainer.nest(requireNotNull(nestedList))
-
     stateSaver =
         createComponent(
-            savedInstanceState, viewLifecycleOwner, viewModel, this, backgroundContainer) {
+            savedInstanceState,
+            viewLifecycleOwner,
+            viewModel,
+            this,
+            backgroundContainer.requireNotNull(),
+        ) {
           return@createComponent when (it) {
             is DrilldownViewEvent.ForceRefresh -> viewModel.handleRefresh()
           }
@@ -119,7 +117,6 @@ internal class DrilldownDialog : AppCompatDialogFragment(), UiController<Nothing
     factory = null
 
     backgroundContainer = null
-    nestedList = null
   }
 
   companion object {
