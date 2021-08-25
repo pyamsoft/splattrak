@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
+import com.pyamsoft.splattrak.ui.TopOffset
 
 data class LobbyViewState
 internal constructor(
@@ -29,6 +30,7 @@ internal constructor(
     val schedule: List<ScheduleGroupings>,
     val error: Throwable?,
     val loading: Boolean,
+    val topOffset: Int,
     val bottomOffset: Int,
 ) : UiViewState {
 

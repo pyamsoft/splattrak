@@ -19,11 +19,12 @@ package com.pyamsoft.splattrak.lobby.screen
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.bus.EventConsumer
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.splattrak.splatnet.SplatnetInteractor
 import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
 import com.pyamsoft.splattrak.ui.BottomOffset
+import com.pyamsoft.splattrak.ui.TopOffset
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,7 +34,8 @@ class LobbyViewModel
 @Inject
 internal constructor(
     splatnetInteractor: SplatnetInteractor,
-    private val bottomOffsetBus: EventBus<BottomOffset>,
+    bottomOffsetBus: EventConsumer<BottomOffset>,
+    topOffsetBus: EventConsumer<TopOffset>,
 ) :
     UiViewModel<LobbyViewState, LobbyControllerEvent>(
         LobbyViewState(
@@ -41,7 +43,10 @@ internal constructor(
             schedule = emptyList(),
             loading = false,
             error = null,
-            bottomOffset = 0)) {
+            bottomOffset = 0,
+            topOffset = 0,
+        ),
+    ) {
 
   private val scheduleRunner =
       highlander<ResultWrapper<LobbyData>> {
@@ -58,9 +63,12 @@ internal constructor(
       }
 
   init {
-
     viewModelScope.launch(context = Dispatchers.Default) {
       bottomOffsetBus.onEvent { setState { copy(bottomOffset = it.height) } }
+    }
+
+    viewModelScope.launch(context = Dispatchers.Default) {
+      topOffsetBus.onEvent { setState { copy(topOffset = it.height) } }
     }
 
     performRefresh()

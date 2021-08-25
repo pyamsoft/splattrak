@@ -20,7 +20,6 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
@@ -51,16 +50,17 @@ internal constructor(
 
   private var modelAdapter: LobbyListAdapter? = null
 
-  private var bottomDecoration: RecyclerView.ItemDecoration? = null
+  private val topDecoration = LinearBoundsMarginDecoration(bottomMargin = 0)
+  private val bottomDecoration = LinearBoundsMarginDecoration(bottomMargin = 0)
   private var lastScrollPosition = 0
 
   init {
     doOnInflate {
       binding.lobbyList.layoutManager =
           LinearLayoutManager(binding.lobbyList.context).apply {
-        isItemPrefetchEnabled = true
-        initialPrefetchItemCount = 3
-      }
+            isItemPrefetchEnabled = true
+            initialPrefetchItemCount = 3
+          }
     }
 
     doOnInflate {
@@ -100,12 +100,14 @@ internal constructor(
       LinearMarginDecoration.create(margin = margin).apply {
         binding.lobbyList.addItemDecoration(this)
       }
+
+      binding.lobbyList.apply {
+        addItemDecoration(topDecoration)
+        addItemDecoration(bottomDecoration)
+      }
     }
 
-    doOnTeardown {
-      binding.lobbyList.removeAllItemDecorations()
-      bottomDecoration = null
-    }
+    doOnTeardown { binding.lobbyList.removeAllItemDecorations() }
 
     doOnTeardown {
       binding.lobbyList.adapter = null
@@ -137,15 +139,17 @@ internal constructor(
     state.mapChanged { it.schedule }.render(viewScope) { handleList(it) }
     state.mapChanged { it.loading }.render(viewScope) { handleLoading(it) }
     state.mapChanged { it.bottomOffset }.render(viewScope) { handleBottomOffset(it) }
+    state.mapChanged { it.topOffset }.render(viewScope) { handleTopOffset(it) }
+  }
+
+  private fun handleTopOffset(height: Int) {
+    topDecoration.setMargin(top = height)
+    binding.lobbyList.invalidateItemDecorations()
   }
 
   private fun handleBottomOffset(height: Int) {
-      // Add additional padding to the list bottom to account for the height change in MainContainer
-    bottomDecoration?.also { binding.lobbyList.removeItemDecoration(it) }
-    bottomDecoration =
-        LinearBoundsMarginDecoration(bottomMargin = height).apply {
-      binding.lobbyList.addItemDecoration(this)
-    }
+    bottomDecoration.setMargin(bottom = height)
+    binding.lobbyList.invalidateItemDecorations()
   }
 
   private fun setList(groupings: List<LobbyViewState.ScheduleGroupings>) {

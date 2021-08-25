@@ -22,23 +22,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.requireAppBarActivity
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
-import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutCoordinatorBinding
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.core.SplatViewModelFactory
 import com.pyamsoft.splattrak.lobby.drilldown.DrilldownDialog
-import com.pyamsoft.splattrak.lobby.screen.LobbyAppBarSpacer
 import com.pyamsoft.splattrak.lobby.screen.LobbyContainer
 import com.pyamsoft.splattrak.lobby.screen.LobbyControllerEvent
-import com.pyamsoft.splattrak.lobby.screen.LobbyList
 import com.pyamsoft.splattrak.lobby.screen.LobbyViewEvent
 import com.pyamsoft.splattrak.lobby.screen.LobbyViewModel
 import javax.inject.Inject
@@ -46,18 +45,12 @@ import javax.inject.Inject
 internal class LobbyFragment : Fragment(), UiController<LobbyControllerEvent> {
 
   @JvmField @Inject internal var factory: SplatViewModelFactory? = null
-  private val viewModel by fromViewModelFactory<LobbyViewModel>(activity = true) {
-    factory?.create(requireActivity())
-  }
+  private val viewModel by
+      activityViewModels<LobbyViewModel> { factory.requireNotNull().create(requireActivity()) }
 
   private var stateSaver: StateSaver? = null
 
-  @JvmField @Inject internal var spacer: LobbyAppBarSpacer? = null
-
   @JvmField @Inject internal var container: LobbyContainer? = null
-
-  // Nested in container
-  @JvmField @Inject internal var nestedList: LobbyList? = null
 
   override fun onCreateView(
       inflater: LayoutInflater,
@@ -84,18 +77,14 @@ internal class LobbyFragment : Fragment(), UiController<LobbyControllerEvent> {
             binding.layoutCoordinator)
         .inject(this)
 
-    val container = requireNotNull(container)
-    val nestedList = requireNotNull(nestedList)
-    container.nest(nestedList)
-
     stateSaver =
         createComponent(
             savedInstanceState,
             viewLifecycleOwner,
             viewModel,
             this,
-            requireNotNull(spacer),
-            container) {
+            container.requireNotNull(),
+        ) {
           return@createComponent when (it) {
             is LobbyViewEvent.ViewBattleRotation -> viewModel.handleOpenBattle(it.index)
             is LobbyViewEvent.ForceRefresh -> viewModel.handleRefresh()
@@ -122,9 +111,6 @@ internal class LobbyFragment : Fragment(), UiController<LobbyControllerEvent> {
     factory = null
 
     container = null
-    spacer = null
-
-    nestedList = null
   }
 
   companion object {

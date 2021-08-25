@@ -20,26 +20,22 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.app.requireAppBarActivity
-import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.settings.AppSettingsFragment
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
-import com.pyamsoft.pydroid.ui.util.applyAppBarOffset
+import com.pyamsoft.pydroid.ui.util.applyToolbarOffset
+import com.pyamsoft.pydroid.util.doOnDestroy
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.core.SplatViewModelFactory
 import javax.inject.Inject
 
 internal class SettingsFragment : AppSettingsFragment() {
-
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    view.applyAppBarOffset(requireAppBarActivity(), viewLifecycleOwner)
-  }
 
   override fun provideSettingsFragment(): AppSettingsPreferenceFragment {
     return SettingsPreferenceFragment()
@@ -68,9 +64,8 @@ internal class SettingsFragment : AppSettingsFragment() {
     override val hideUpgradeInformation = true
 
     @JvmField @Inject internal var factory: SplatViewModelFactory? = null
-    private val viewModel by fromViewModelFactory<SettingsViewModel>(activity = true) {
-      factory?.create(requireActivity())
-    }
+    private val viewModel by
+        activityViewModels<SettingsViewModel> { factory.requireNotNull().create(requireActivity()) }
 
     @JvmField @Inject internal var spacer: SettingsSpacer? = null
 
@@ -86,6 +81,9 @@ internal class SettingsFragment : AppSettingsFragment() {
       stateSaver =
           createComponent(
               savedInstanceState, viewLifecycleOwner, viewModel, this, requireNotNull(spacer)) {}
+
+      // Need to use listView here
+      listView.applyToolbarOffset().also { viewLifecycleOwner.doOnDestroy { it.cancel() } }
     }
 
     override fun onControllerEvent(event: UnitControllerEvent) {}

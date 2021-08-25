@@ -19,17 +19,21 @@ package com.pyamsoft.splattrak.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.appbar.AppBarLayout
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
+import com.pyamsoft.pydroid.arch.asFactory
 import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.arch.createSavedStateViewModelFactory
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.app.AppBarActivity
 import com.pyamsoft.pydroid.ui.app.AppBarActivityProvider
-import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
+import com.pyamsoft.pydroid.ui.app.ToolbarActivity
+import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.changelog.buildChangeLog
@@ -43,11 +47,16 @@ import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.lobby.LobbyFragment
 import com.pyamsoft.splattrak.setting.SettingsFragment
 import com.pyamsoft.splattrak.ui.SnackbarContainer
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 internal class MainActivity :
-    ChangeLogActivity(), AppBarActivity, AppBarActivityProvider, UiController<MainControllerEvent> {
+    ChangeLogActivity(),
+    AppBarActivity,
+    AppBarActivityProvider,
+    ToolbarActivity,
+    ToolbarActivityProvider,
+    UiController<MainControllerEvent> {
 
   override val checkForUpdates = false
 
@@ -80,11 +89,10 @@ internal class MainActivity :
   private var stateSaver: StateSaver? = null
 
   private var capturedAppBar: AppBarLayout? = null
+  private var capturedToolbar: Toolbar? = null
 
   @JvmField @Inject internal var factory: MainViewModel.Factory? = null
-  private val viewModel by fromViewModelFactory<MainViewModel> {
-    createSavedStateViewModelFactory(factory)
-  }
+  private val viewModel by viewModels<MainViewModel> { factory.requireNotNull().asFactory(this) }
 
   @JvmField @Inject internal var toolbar: MainToolbar? = null
 
@@ -98,12 +106,24 @@ internal class MainActivity :
     capturedAppBar = bar
   }
 
-  override fun requireAppBar(func: (AppBarLayout) -> Unit) {
-    requireNotNull(capturedAppBar).let(func)
+  override fun setToolbar(toolbar: Toolbar?) {
+    capturedToolbar = toolbar
   }
 
-  override fun withAppBar(func: (AppBarLayout) -> Unit) {
-    capturedAppBar?.let(func)
+  override fun <T> requireAppBar(func: (AppBarLayout) -> T): T {
+    return requireNotNull(capturedAppBar).let(func)
+  }
+
+  override fun <T> requireToolbar(func: (Toolbar) -> T): T {
+    return capturedToolbar.requireNotNull().let(func)
+  }
+
+  override fun <T> withAppBar(func: (AppBarLayout) -> T): T? {
+    return capturedAppBar?.let(func)
+  }
+
+  override fun <T> withToolbar(func: (Toolbar) -> T): T? {
+    return capturedToolbar?.let(func)
   }
 
   override fun onControllerEvent(event: MainControllerEvent) {
@@ -209,19 +229,23 @@ internal class MainActivity :
   }
 
   private fun inflateComponents(savedInstanceState: Bundle?) {
-    val container = requireNotNull(container)
-    val navigation = requireNotNull(navigation)
-    val snackbar = requireNotNull(snackbar)
-    val toolbar = requireNotNull(toolbar)
-
     stateSaver =
         createComponent(
-            savedInstanceState, this, viewModel, this, container, toolbar, navigation, snackbar) {
+            savedInstanceState,
+            this,
+            viewModel,
+            this,
+            container.requireNotNull(),
+            toolbar.requireNotNull(),
+            navigation.requireNotNull(),
+            snackbar.requireNotNull(),
+        ) {
           return@createComponent when (it) {
             is MainViewEvent.OpenLobby -> viewModel.handleSelectPage(MainPage.Lobby, force = false)
             is MainViewEvent.OpenSettings ->
                 viewModel.handleSelectPage(MainPage.Settings, force = false)
             is MainViewEvent.BottomBarMeasured -> viewModel.handleConsumeBottomBarHeight(it.height)
+            is MainViewEvent.TopBarMeasured -> viewModel.handleConsumeTopBarHeight(it.height)
           }
         }
   }
@@ -257,5 +281,6 @@ internal class MainActivity :
     snackbar = null
 
     capturedAppBar = null
+    capturedToolbar = null
   }
 }

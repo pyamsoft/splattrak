@@ -21,9 +21,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.ui.databinding.ListitemFrameBinding
-import com.pyamsoft.pydroid.ui.util.teardownAdapter
 import com.pyamsoft.splattrak.lobby.databinding.LobbyListItemHolderBinding
 import com.pyamsoft.splattrak.lobby.screen.list.BaseLobbyViewHolder
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyDisclaimerViewHolder

@@ -23,13 +23,14 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
-import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.core.SplatViewModelFactory
@@ -45,7 +46,7 @@ import timber.log.Timber
 internal class DrilldownDialog : AppCompatDialogFragment(), UiController<Nothing> {
 
   @JvmField @Inject internal var factory: SplatViewModelFactory? = null
-  private val viewModel by fromViewModelFactory<DrilldownViewModel> { factory?.create(this) }
+  private val viewModel by viewModels<DrilldownViewModel> { factory.requireNotNull().create(this) }
 
   private var stateSaver: StateSaver? = null
 

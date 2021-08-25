@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.arch.UiSavedStateViewModel
 import com.pyamsoft.pydroid.arch.UiSavedStateViewModelProvider
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.splattrak.ui.BottomOffset
+import com.pyamsoft.splattrak.ui.TopOffset
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -37,14 +38,17 @@ internal constructor(
     @Assisted savedState: UiSavedState,
     @Named("app_name") appNameRes: Int,
     private val bottomOffsetBus: EventBus<BottomOffset>,
+    private val topOffsetBus: EventBus<TopOffset>,
 ) :
     UiSavedStateViewModel<MainViewState, MainControllerEvent>(
         savedState,
         MainViewState(
             page = null,
             appNameRes = appNameRes,
+            topBarHeight = 0,
             bottomBarHeight = 0,
-        )) {
+        ),
+    ) {
 
   fun handleLoadDefaultPage() {
     viewModelScope.launch(context = Dispatchers.Default) {
@@ -68,6 +72,14 @@ internal constructor(
       setState(
           stateChange = { copy(bottomBarHeight = height) },
           andThen = { bottomOffsetBus.send(BottomOffset(it.bottomBarHeight)) })
+    }
+  }
+
+  fun handleConsumeTopBarHeight(height: Int) {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      setState(
+          stateChange = { copy(topBarHeight = height) },
+          andThen = { topOffsetBus.send(TopOffset(it.topBarHeight)) })
     }
   }
 

@@ -26,12 +26,17 @@ import javax.inject.Inject
 class LobbyContainer
 @Inject
 internal constructor(
+    list: LobbyList,
     parent: ViewGroup,
 ) : BaseUiView<LobbyViewState, LobbyViewEvent, LobbyContainerBinding>(parent) {
 
   override val viewBinding = LobbyContainerBinding::inflate
 
   override val layoutRoot by boundView { lobbyContainer }
+
+  init {
+    nest(list)
+  }
 
   override fun onRender(state: UiRender<LobbyViewState>) {
     state.mapChanged { it.bottomOffset }.render(viewScope) { handleBottomBarHeight(it) }

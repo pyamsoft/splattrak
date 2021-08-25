@@ -16,15 +16,14 @@
 
 package com.pyamsoft.splattrak.main
 
-import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewOutlineProvider
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.marginTop
 import androidx.core.view.updateLayoutParams
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import androidx.lifecycle.LifecycleOwner
@@ -33,13 +32,9 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.ui.app.AppBarActivityProvider
 import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
-import com.pyamsoft.pydroid.ui.privacy.addPrivacy
-import com.pyamsoft.pydroid.ui.privacy.removePrivacy
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
-import com.pyamsoft.pydroid.util.asDp
+import com.pyamsoft.pydroid.ui.util.doOnLayoutChanged
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
-import com.pyamsoft.splattrak.core.PRIVACY_POLICY_URL
-import com.pyamsoft.splattrak.core.TERMS_CONDITIONS_URL
 import com.pyamsoft.splattrak.main.databinding.MainToolbarBinding
 import com.pyamsoft.splattrak.ui.withRoundedBackground
 import javax.inject.Inject
@@ -49,7 +44,6 @@ class MainToolbar
 @Inject
 internal constructor(
     @Named("app_name") appNameRes: Int,
-    owner: LifecycleOwner,
     toolbarActivityProvider: ToolbarActivityProvider,
     theming: ThemeProvider,
     appBarProvider: AppBarActivityProvider,
@@ -78,16 +72,12 @@ internal constructor(
     doOnInflate {
       inflateToolbar(toolbarActivityProvider, theming, appNameRes)
 
-      layoutRoot.doOnApplyWindowInsets(owner) { v, insets, padding ->
-        v.updateLayoutParams<MarginLayoutParams> {
-          topMargin =
-              padding.top +
-                  insets.getInsets(WindowInsetsCompat.Type.systemBars()).top +
-                  8.asDp(v.context)
-        }
-      }
-
-      binding.mainToolbar.addPrivacy(viewScope, PRIVACY_POLICY_URL, TERMS_CONDITIONS_URL)
+      binding.mainAppbar
+          .doOnApplyWindowInsets { v, insets, _ ->
+            val toolbarTopMargin = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            v.updateLayoutParams<ViewGroup.MarginLayoutParams> { this.topMargin = toolbarTopMargin }
+          }
+          .also { doOnTeardown { it.cancel() } }
     }
 
     doOnInflate { animateToolbar() }
@@ -97,20 +87,20 @@ internal constructor(
       titleAnimator = null
     }
 
-    doOnTeardown {
-      binding.mainToolbar.removePrivacy()
-      toolbarActivityProvider.setToolbar(null)
-    }
+    doOnTeardown { toolbarActivityProvider.setToolbar(null) }
 
     doOnInflate {
-      val listener =
-          View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            binding.mainAppbar.withRoundedBackground(applyAllCorners = true)
-            binding.mainToolbar.elevation = 0F
-          }
-      binding.mainAppbar.addOnLayoutChangeListener(listener)
+      binding.mainAppbar
+          .doOnLayoutChanged { v, _, _, _, _, _, _, _, _ ->
+            binding.apply {
+              mainAppbar.withRoundedBackground(applyAllCorners = true)
+              mainToolbar.elevation = 0F
+            }
 
-      doOnTeardown { binding.mainAppbar.removeOnLayoutChangeListener(listener) }
+            // Need to include the margin here when measuring top
+            publish(MainViewEvent.TopBarMeasured(v.height + v.marginTop))
+          }
+          .also { doOnTeardown { it.cancel() } }
     }
   }
 

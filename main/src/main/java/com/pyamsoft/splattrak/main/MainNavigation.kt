@@ -28,7 +28,6 @@ import androidx.core.view.doOnLayout
 import androidx.core.view.marginBottom
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.util.asDp
@@ -42,7 +41,6 @@ import timber.log.Timber
 class MainNavigation
 @Inject
 internal constructor(
-    owner: LifecycleOwner,
     parent: ViewGroup,
 ) : BaseUiView<MainViewState, MainViewEvent, MainNavigationBinding>(parent) {
 
@@ -73,32 +71,33 @@ internal constructor(
     doOnInflate {
       layoutRoot.doOnLayout { view ->
         val initialBottomMargin = view.marginBottom
-        view.doOnApplyWindowInsets(owner) { v, insets, _ ->
-          // Ensure this happens last
-          v.post {
+        view
+            .doOnApplyWindowInsets { v, insets, _ ->
+              // Float above the bottom nav
+              v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                this.bottomMargin =
+                    initialBottomMargin +
+                        insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+              }
 
-            // Float above the bottom nav
-            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-              this.bottomMargin =
-                  initialBottomMargin +
-                      insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
+              // Remove padding or the bar is too big
+              binding.apply {
+                mainBottomBar.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+                mainBottomNavigationMenu.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+              }
+
+              // Publish the measured height
+              // Make sure we are laid out before grabbing the height
+              v.post { publish(MainViewEvent.BottomBarMeasured(v.height)) }
             }
-
-            // Remove padding or the bar is too big
-            v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
-
-            // Publish the measured height
-            // Make sure we are laid out before grabbing the height
-            v.post { publish(MainViewEvent.BottomBarMeasured(v.height)) }
-          }
-        }
+            .also { doOnTeardown { it.cancel() } }
       }
     }
 
     doOnInflate {
-      binding.mainBottomNavigationMenu.setOnNavigationItemSelectedListener { item ->
+      binding.mainBottomNavigationMenu.setOnItemSelectedListener { item ->
         Timber.d("Click nav item: $item")
-        return@setOnNavigationItemSelectedListener when (item.itemId) {
+        return@setOnItemSelectedListener when (item.itemId) {
           R.id.menu_item_nav_lobby -> select(MainViewEvent.OpenLobby)
           R.id.menu_item_nav_settings -> select(MainViewEvent.OpenSettings)
           else -> false
@@ -107,7 +106,7 @@ internal constructor(
     }
 
     doOnTeardown {
-      binding.mainBottomNavigationMenu.setOnNavigationItemSelectedListener(null)
+      binding.mainBottomNavigationMenu.setOnItemSelectedListener(null)
       binding.mainBottomNavigationMenu.removeBadge(R.id.menu_item_nav_lobby)
     }
 

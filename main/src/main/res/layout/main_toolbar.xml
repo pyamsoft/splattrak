@@ -17,6 +17,7 @@
 <merge>
 
     <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/main_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,7 +31,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:animateLayoutChanges="true"
-            android:theme="@style/ThemeOverlay.Splat.Toolbar" />
+            android:theme="@style/ThemeOverlay.Splat.Toolbar"
+            app:titleCentered="true" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

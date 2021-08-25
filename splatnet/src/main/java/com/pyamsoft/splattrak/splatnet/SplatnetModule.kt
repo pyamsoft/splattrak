@@ -89,7 +89,7 @@ private class OkHttpClientLazyCallFactory(context: Context, debug: Boolean) : Ca
   private class AlwaysCachingInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-      val cacheControl = CacheControl.Builder().maxAge(1, TimeUnit.DAYS).build()
+      val cacheControl = CacheControl.Builder().maxAge(6, TimeUnit.HOURS).build()
 
       val response = chain.proceed(chain.request())
       val cachingStrategy = response.header(CACHE_CONTROL_HEADER)
