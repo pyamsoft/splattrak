@@ -29,8 +29,6 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.requireAppBarActivity
-import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.databinding.LayoutCoordinatorBinding
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.splattrak.SplatComponent
@@ -70,8 +68,6 @@ internal class LobbyFragment : Fragment(), UiController<LobbyControllerEvent> {
     Injector.obtainFromApplication<SplatComponent>(view.context)
         .plusLobbyComponent()
         .create(
-            requireAppBarActivity(),
-            requireToolbarActivity(),
             requireActivity(),
             viewLifecycleOwner,
             binding.layoutCoordinator)

@@ -21,5 +21,4 @@ import com.pyamsoft.pydroid.arch.UiViewState
 data class SettingsViewState
 internal constructor(
     val bottomOffset: Int,
-    val topOffset: Int,
 ) : UiViewState

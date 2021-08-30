@@ -20,20 +20,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.activity.viewModels
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.google.android.material.appbar.AppBarLayout
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.asFactory
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.app.AppBarActivity
-import com.pyamsoft.pydroid.ui.app.AppBarActivityProvider
-import com.pyamsoft.pydroid.ui.app.ToolbarActivity
-import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.changelog.buildChangeLog
@@ -47,15 +41,11 @@ import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.lobby.LobbyFragment
 import com.pyamsoft.splattrak.setting.SettingsFragment
 import com.pyamsoft.splattrak.ui.SnackbarContainer
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 internal class MainActivity :
     ChangeLogActivity(),
-    AppBarActivity,
-    AppBarActivityProvider,
-    ToolbarActivity,
-    ToolbarActivityProvider,
     UiController<MainControllerEvent> {
 
   override val checkForUpdates = false
@@ -88,43 +78,14 @@ internal class MainActivity :
 
   private var stateSaver: StateSaver? = null
 
-  private var capturedAppBar: AppBarLayout? = null
-  private var capturedToolbar: Toolbar? = null
-
   @JvmField @Inject internal var factory: MainViewModel.Factory? = null
   private val viewModel by viewModels<MainViewModel> { factory.requireNotNull().asFactory(this) }
-
-  @JvmField @Inject internal var toolbar: MainToolbar? = null
 
   @JvmField @Inject internal var navigation: MainNavigation? = null
 
   @JvmField @Inject internal var container: MainContainer? = null
 
   @JvmField @Inject internal var snackbar: MainSnackbar? = null
-
-  override fun setAppBar(bar: AppBarLayout?) {
-    capturedAppBar = bar
-  }
-
-  override fun setToolbar(toolbar: Toolbar?) {
-    capturedToolbar = toolbar
-  }
-
-  override fun <T> requireAppBar(func: (AppBarLayout) -> T): T {
-    return requireNotNull(capturedAppBar).let(func)
-  }
-
-  override fun <T> requireToolbar(func: (Toolbar) -> T): T {
-    return capturedToolbar.requireNotNull().let(func)
-  }
-
-  override fun <T> withAppBar(func: (AppBarLayout) -> T): T? {
-    return capturedAppBar?.let(func)
-  }
-
-  override fun <T> withToolbar(func: (Toolbar) -> T): T? {
-    return capturedToolbar?.let(func)
-  }
 
   override fun onControllerEvent(event: MainControllerEvent) {
     return when (event) {
@@ -140,7 +101,7 @@ internal class MainActivity :
 
     Injector.obtainFromApplication<SplatComponent>(this)
         .plusMainComponent()
-        .create(this, this, this, binding.layoutCoordinator, this, this)
+        .create(this, this, this, binding.layoutCoordinator)
         .inject(this)
 
     stableLayoutHideNavigation()
@@ -236,7 +197,6 @@ internal class MainActivity :
             viewModel,
             this,
             container.requireNotNull(),
-            toolbar.requireNotNull(),
             navigation.requireNotNull(),
             snackbar.requireNotNull(),
         ) {
@@ -245,7 +205,6 @@ internal class MainActivity :
             is MainViewEvent.OpenSettings ->
                 viewModel.handleSelectPage(MainPage.Settings, force = false)
             is MainViewEvent.BottomBarMeasured -> viewModel.handleConsumeBottomBarHeight(it.height)
-            is MainViewEvent.TopBarMeasured -> viewModel.handleConsumeTopBarHeight(it.height)
           }
         }
   }
@@ -275,12 +234,8 @@ internal class MainActivity :
     stateSaver = null
     factory = null
 
-    toolbar = null
     container = null
     navigation = null
     snackbar = null
-
-    capturedAppBar = null
-    capturedToolbar = null
   }
 }

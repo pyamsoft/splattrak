@@ -25,7 +25,6 @@ data class MainViewState
 internal constructor(
     val page: MainPage?,
     @StringRes val appNameRes: Int,
-    val topBarHeight: Int,
     val bottomBarHeight: Int,
 ) : UiViewState
 
@@ -36,8 +35,6 @@ sealed class MainViewEvent : UiViewEvent {
   object OpenSettings : MainViewEvent()
 
   data class BottomBarMeasured internal constructor(val height: Int) : MainViewEvent()
-
-  data class TopBarMeasured internal constructor(val height: Int) : MainViewEvent()
 }
 
 sealed class MainControllerEvent : UiControllerEvent {

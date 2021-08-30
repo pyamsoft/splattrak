@@ -18,6 +18,7 @@ package com.pyamsoft.splattrak.lobby.screen
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -25,6 +26,7 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
+import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.splattrak.lobby.databinding.LobbyListBinding
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemComponent
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemViewState
@@ -50,7 +52,7 @@ internal constructor(
 
   private var modelAdapter: LobbyListAdapter? = null
 
-  private val topDecoration = LinearBoundsMarginDecoration(bottomMargin = 0)
+  private val topDecoration = LinearBoundsMarginDecoration(topMargin = 0)
   private val bottomDecoration = LinearBoundsMarginDecoration(bottomMargin = 0)
   private var lastScrollPosition = 0
 
@@ -116,6 +118,15 @@ internal constructor(
 
       modelAdapter = null
     }
+
+    doOnInflate {
+      binding.lobbyList
+          .doOnApplyWindowInsets { _, insets, _ ->
+            val toolbarTopMargin = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            handleTopOffset(toolbarTopMargin)
+          }
+          .also { doOnTeardown { it.cancel() } }
+    }
   }
 
   @CheckResult
@@ -139,7 +150,6 @@ internal constructor(
     state.mapChanged { it.schedule }.render(viewScope) { handleList(it) }
     state.mapChanged { it.loading }.render(viewScope) { handleLoading(it) }
     state.mapChanged { it.bottomOffset }.render(viewScope) { handleBottomOffset(it) }
-    state.mapChanged { it.topOffset }.render(viewScope) { handleTopOffset(it) }
   }
 
   private fun handleTopOffset(height: Int) {

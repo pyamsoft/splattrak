@@ -16,11 +16,13 @@
 
 package com.pyamsoft.splattrak.setting
 
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
+import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import io.cabriole.decorator.LinearBoundsMarginDecoration
 import javax.inject.Inject
 
@@ -36,11 +38,18 @@ internal constructor(
     doOnInflate { listView.addItemDecoration(topDecoration) }
 
     doOnTeardown { listView.removeAllItemDecorations() }
+
+    doOnInflate {
+      listView
+          .doOnApplyWindowInsets { _, insets, _ ->
+            val toolbarTopMargin = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            handleTopOffset(toolbarTopMargin)
+          }
+          .also { doOnTeardown { it.cancel() } }
+    }
   }
 
-  override fun render(state: UiRender<SettingsViewState>) {
-    state.mapChanged { it.topOffset }.render(viewScope) { handleTopOffset(it) }
-  }
+  override fun render(state: UiRender<SettingsViewState>) {}
 
   private fun handleTopOffset(height: Int) {
     topDecoration.setMargin(top = height)

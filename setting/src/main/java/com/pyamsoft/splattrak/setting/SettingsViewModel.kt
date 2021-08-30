@@ -21,31 +21,20 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.bus.EventConsumer
 import com.pyamsoft.splattrak.ui.BottomOffset
-import com.pyamsoft.splattrak.ui.TopOffset
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SettingsViewModel
-@Inject
-internal constructor(
-    bottomOffsetBus: EventConsumer<BottomOffset>,
-    topOffsetBus: EventConsumer<TopOffset>,
-) :
+class SettingsViewModel @Inject internal constructor(bottomOffsetBus: EventConsumer<BottomOffset>) :
     UiViewModel<SettingsViewState, UnitControllerEvent>(
         SettingsViewState(
             bottomOffset = 0,
-            topOffset = 0,
         ),
     ) {
 
   init {
     viewModelScope.launch(context = Dispatchers.Default) {
       bottomOffsetBus.onEvent { setState { copy(bottomOffset = it.height) } }
-    }
-
-    viewModelScope.launch(context = Dispatchers.Default) {
-      topOffsetBus.onEvent { setState { copy(topOffset = it.height) } }
     }
   }
 }

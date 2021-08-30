@@ -24,7 +24,6 @@ import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.splattrak.splatnet.SplatnetInteractor
 import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
 import com.pyamsoft.splattrak.ui.BottomOffset
-import com.pyamsoft.splattrak.ui.TopOffset
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,7 +34,6 @@ class LobbyViewModel
 internal constructor(
     splatnetInteractor: SplatnetInteractor,
     bottomOffsetBus: EventConsumer<BottomOffset>,
-    topOffsetBus: EventConsumer<TopOffset>,
 ) :
     UiViewModel<LobbyViewState, LobbyControllerEvent>(
         LobbyViewState(
@@ -44,7 +42,6 @@ internal constructor(
             loading = false,
             error = null,
             bottomOffset = 0,
-            topOffset = 0,
         ),
     ) {
 
@@ -65,10 +62,6 @@ internal constructor(
   init {
     viewModelScope.launch(context = Dispatchers.Default) {
       bottomOffsetBus.onEvent { setState { copy(bottomOffset = it.height) } }
-    }
-
-    viewModelScope.launch(context = Dispatchers.Default) {
-      topOffsetBus.onEvent { setState { copy(topOffset = it.height) } }
     }
 
     performRefresh()
