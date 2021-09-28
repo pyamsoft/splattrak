@@ -41,12 +41,10 @@ import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.lobby.LobbyFragment
 import com.pyamsoft.splattrak.setting.SettingsFragment
 import com.pyamsoft.splattrak.ui.SnackbarContainer
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
-internal class MainActivity :
-    ChangeLogActivity(),
-    UiController<MainControllerEvent> {
+internal class MainActivity : ChangeLogActivity(), UiController<MainControllerEvent> {
 
   override val checkForUpdates = false
 

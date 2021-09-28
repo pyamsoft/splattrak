@@ -18,7 +18,6 @@ package com.pyamsoft.splattrak.ui
 
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Enforcer
-import com.pyamsoft.splattrak.ui.BottomOffset
 import javax.inject.Inject
 import javax.inject.Singleton
 

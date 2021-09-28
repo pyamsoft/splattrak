@@ -62,8 +62,9 @@ internal class SettingsFragment : AppSettingsFragment() {
     override val hideUpgradeInformation = true
 
     @JvmField @Inject internal var factory: SplatViewModelFactory? = null
-    private val viewModel by
-        activityViewModels<SettingsViewModel> { factory.requireNotNull().create(requireActivity()) }
+    private val viewModel by activityViewModels<SettingsViewModel> {
+      factory.requireNotNull().create(requireActivity())
+    }
 
     @JvmField @Inject internal var bottomSpacer: SettingsBottomSpacer? = null
 

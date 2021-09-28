@@ -43,8 +43,9 @@ import javax.inject.Inject
 internal class LobbyFragment : Fragment(), UiController<LobbyControllerEvent> {
 
   @JvmField @Inject internal var factory: SplatViewModelFactory? = null
-  private val viewModel by
-      activityViewModels<LobbyViewModel> { factory.requireNotNull().create(requireActivity()) }
+  private val viewModel by activityViewModels<LobbyViewModel> {
+    factory.requireNotNull().create(requireActivity())
+  }
 
   private var stateSaver: StateSaver? = null
 
@@ -67,10 +68,7 @@ internal class LobbyFragment : Fragment(), UiController<LobbyControllerEvent> {
     val binding = LayoutCoordinatorBinding.bind(view)
     Injector.obtainFromApplication<SplatComponent>(view.context)
         .plusLobbyComponent()
-        .create(
-            requireActivity(),
-            viewLifecycleOwner,
-            binding.layoutCoordinator)
+        .create(requireActivity(), viewLifecycleOwner, binding.layoutCoordinator)
         .inject(this)
 
     stateSaver =
