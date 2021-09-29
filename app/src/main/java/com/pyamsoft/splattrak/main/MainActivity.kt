@@ -55,7 +55,7 @@ internal class MainActivity : ChangeLogActivity(), UiController<MainControllerEv
   override val versionName = BuildConfig.VERSION_NAME
 
   override val fragmentContainerId: Int
-    get() = requireNotNull(container).id()
+    get() = container.requireNotNull().id()
 
   override val snackbarRoot: ViewGroup
     get() {
@@ -69,7 +69,7 @@ internal class MainActivity : ChangeLogActivity(), UiController<MainControllerEv
         }
       }
 
-      val fallbackContainer = requireNotNull(snackbar?.container())
+      val fallbackContainer = snackbar.requireNotNull().container()
       Timber.d("Return activity snackbar container: $fallbackContainer")
       return fallbackContainer
     }

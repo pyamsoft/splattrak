@@ -24,4 +24,11 @@ class LobbyItemNextContainer
 @Inject
 internal constructor(
     parent: ViewGroup,
-) : LobbyItemContainer<LobbyItemViewState.Data>(parent)
+    nextInfo: LobbyItemNextInfo,
+    nextStages: LobbyItemNextStages,
+) : LobbyItemContainer<LobbyItemViewState.Data>(parent) {
+
+  init {
+    nest(nextInfo, nextStages)
+  }
+}

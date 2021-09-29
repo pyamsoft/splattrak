@@ -20,6 +20,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.util.doOnDestroy
 import com.pyamsoft.splattrak.lobby.databinding.DrilldownListItemHolderBinding
 import javax.inject.Inject
@@ -33,19 +34,12 @@ internal constructor(
 
   @Inject @JvmField internal var container: DrilldownItemContainer? = null
 
-  @Inject @JvmField internal var info: DrilldownItemInfo? = null
-
-  @Inject @JvmField internal var stages: DrilldownItemStages? = null
-
   private val viewBinder: ViewBinder<DrilldownItemViewState>
 
   init {
     factory.create(binding.drilldownListItem).inject(this)
 
-    val nextContainer = requireNotNull(container)
-    nextContainer.nest(requireNotNull(info), requireNotNull(stages))
-
-    viewBinder = createViewBinder(nextContainer) {}
+    viewBinder = createViewBinder(container.requireNotNull()) {}
 
     owner.doOnDestroy { teardown() }
   }
@@ -58,7 +52,5 @@ internal constructor(
     viewBinder.teardown()
 
     container = null
-    info = null
-    stages = null
   }
 }

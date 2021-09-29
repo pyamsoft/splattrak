@@ -24,4 +24,11 @@ class DrilldownItemContainer
 @Inject
 internal constructor(
     parent: ViewGroup,
-) : LobbyItemContainer<DrilldownItemViewState>(parent)
+    info: DrilldownItemInfo,
+    stages: DrilldownItemStages,
+) : LobbyItemContainer<DrilldownItemViewState>(parent) {
+
+    init {
+        nest(info, stages)
+    }
+}

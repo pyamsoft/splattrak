@@ -20,6 +20,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.databinding.ListitemFrameBinding
 import com.pyamsoft.pydroid.util.doOnDestroy
 import com.pyamsoft.splattrak.ui.NintendoDisclaimer
@@ -39,7 +40,7 @@ internal constructor(
   init {
     factory.create(owner, binding.listitemFrame).inject(this)
 
-    viewBinder = createViewBinder(requireNotNull(disclaimer)) {}
+    viewBinder = createViewBinder(disclaimer.requireNotNull()) {}
 
     owner.doOnDestroy { teardown() }
   }
@@ -50,5 +51,7 @@ internal constructor(
 
   override fun teardown() {
     viewBinder.teardown()
+
+    disclaimer = null
   }
 }

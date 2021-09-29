@@ -19,6 +19,7 @@ package com.pyamsoft.splattrak.lobby.screen.list
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.util.doOnDestroy
 import com.pyamsoft.splattrak.lobby.databinding.LobbyListItemHolderBinding
 import com.pyamsoft.splattrak.lobby.screen.LobbyListAdapter
@@ -38,42 +39,16 @@ internal constructor(
 
   @Inject @JvmField internal var backgroundContainer: LobbyItemBackgroundContainer? = null
 
-  @Inject @JvmField internal var name: LobbyItemName? = null
-
-  @Inject @JvmField internal var currentContainer: LobbyItemLargeContainer? = null
-
-  @Inject @JvmField internal var currentInfo: LobbyItemCurrentInfo? = null
-
-  @Inject @JvmField internal var currentStages: LobbyItemCurrentStages? = null
-
-  @Inject @JvmField internal var nextContainer: LobbyItemNextContainer? = null
-
-  @Inject @JvmField internal var nextCountdown: LobbyItemNextCountdown? = null
-
-  @Inject @JvmField internal var nextInfo: LobbyItemNextInfo? = null
-
-  @Inject @JvmField internal var nextStages: LobbyItemNextStages? = null
-
   private val viewBinder: ViewBinder<LobbyItemViewState.Data>
 
   init {
     factory.create(owner, binding.lobbyListItem).inject(this)
 
-    val currentContainer = requireNotNull(currentContainer)
-    currentContainer.nest(requireNotNull(currentInfo), requireNotNull(currentStages))
-
-    val nextContainer = requireNotNull(nextContainer)
-    nextContainer.nest(requireNotNull(nextInfo), requireNotNull(nextStages))
-
-    val backgroundContainer = requireNotNull(backgroundContainer)
-    backgroundContainer.nest(
-        requireNotNull(name), currentContainer, requireNotNull(nextCountdown), nextContainer)
-
     viewBinder =
         createViewBinder(
-            requireNotNull(clickHandler),
-            requireNotNull(background),
-            backgroundContainer,
+            clickHandler.requireNotNull(),
+            background.requireNotNull(),
+            backgroundContainer.requireNotNull(),
         ) {
           return@createViewBinder when (it) {
             is LobbyItemViewEvent.OnClick -> callback.onClick(bindingAdapterPosition)
@@ -91,16 +66,8 @@ internal constructor(
   override fun teardown() {
     viewBinder.teardown()
 
+    clickHandler = null
     background = null
-    name = null
-
-    currentContainer = null
-    currentInfo = null
-    currentStages = null
-
-    nextCountdown = null
-    nextContainer = null
-    nextInfo = null
-    nextStages = null
+    backgroundContainer = null
   }
 }

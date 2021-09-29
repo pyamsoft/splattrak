@@ -27,12 +27,14 @@ import androidx.core.content.getSystemService
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorCompat
 import androidx.core.view.isVisible
+import com.pyamsoft.pydroid.core.requireNotNull
 
 private val overshootInterpolator by lazy(LazyThreadSafetyMode.NONE) { OvershootInterpolator(1.4F) }
 
 @CheckResult
 private fun animatingHeight(activityContext: Context): Int {
-  val windowManager = requireNotNull(activityContext.getSystemService<WindowManager>())
+  // Make sure we use the Activity context to get the system service here instead of application context.
+  val windowManager = activityContext.getSystemService<WindowManager>().requireNotNull()
   return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
     windowManager.currentWindowMetrics.bounds.bottom
   } else {

@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UiSavedStateViewModel
 import com.pyamsoft.pydroid.arch.UiSavedStateViewModelProvider
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.splattrak.ui.BottomOffset
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -60,7 +61,7 @@ internal constructor(
     setState(
         stateChange = { copy(page = page) },
         andThen = { newState ->
-          publishNewSelection(requireNotNull(newState.page), oldPage, force)
+          publishNewSelection(newState.page.requireNotNull(), oldPage, force)
         })
   }
 

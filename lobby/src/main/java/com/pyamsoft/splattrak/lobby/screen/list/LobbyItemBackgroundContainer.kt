@@ -26,4 +26,13 @@ class LobbyItemBackgroundContainer
 internal constructor(
     imageLoader: ImageLoader,
     parent: ViewGroup,
-) : BackgroundContainer<LobbyItemViewState.Data, LobbyItemViewEvent>(imageLoader, parent)
+    name: LobbyItemName,
+    currentContainer: LobbyItemLargeContainer,
+    nextCountdown: LobbyItemNextCountdown,
+    nextContainer: LobbyItemNextContainer,
+) : BackgroundContainer<LobbyItemViewState.Data, LobbyItemViewEvent>(imageLoader, parent) {
+
+  init {
+    nest(name, currentContainer, nextCountdown, nextContainer)
+  }
+}

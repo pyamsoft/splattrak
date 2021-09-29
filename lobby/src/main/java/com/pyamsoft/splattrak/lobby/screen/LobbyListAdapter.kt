@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.databinding.ListitemFrameBinding
 import com.pyamsoft.splattrak.lobby.databinding.LobbyListItemHolderBinding
 import com.pyamsoft.splattrak.lobby.screen.list.BaseLobbyViewHolder
@@ -47,7 +48,7 @@ internal constructor(
   override fun getItemId(position: Int): Long {
     val item = getItem(position)
     return if (item.isDisclaimer) 0
-    else requireNotNull(item.data).battle.mode().key().hashCode().toLong()
+    else item.data.requireNotNull().battle.mode().key().hashCode().toLong()
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseLobbyViewHolder {
@@ -93,8 +94,8 @@ internal constructor(
               return false
             }
 
-            val oldKey = requireNotNull(oldItem.data).battle.mode().key()
-            val newKey = requireNotNull(newItem.data).battle.mode().key()
+            val oldKey = oldItem.data.requireNotNull().battle.mode().key()
+            val newKey = newItem.data.requireNotNull().battle.mode().key()
             return oldKey == newKey
           }
 

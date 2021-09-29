@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
@@ -131,7 +132,7 @@ internal constructor(
 
   @CheckResult
   private fun usingAdapter(): LobbyListAdapter {
-    return requireNotNull(modelAdapter)
+    return modelAdapter.requireNotNull()
   }
 
   override fun onRefresh() {

@@ -25,9 +25,15 @@ class LobbyItemLargeContainer
 @Inject
 internal constructor(
     parent: ViewGroup,
+    currentInfo: LobbyItemCurrentInfo,
+    currentStages: LobbyItemCurrentStages,
 ) : BaseUiView<LobbyItemViewState.Data, Nothing, LobbyItemLargeContainerBinding>(parent) {
 
   override val viewBinding = LobbyItemLargeContainerBinding::inflate
 
   override val layoutRoot by boundView { lobbyItemLargeContainer }
+
+  init {
+    nest(currentInfo, currentStages)
+  }
 }
