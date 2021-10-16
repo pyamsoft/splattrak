@@ -54,7 +54,7 @@ internal class MainActivity : ChangeLogActivity(), UiController<MainControllerEv
 
   override val versionName = BuildConfig.VERSION_NAME
 
-  override val fragmentContainerId: Int
+  private val fragmentContainerId: Int
     get() = container.requireNotNull().id()
 
   override val snackbarRoot: ViewGroup
