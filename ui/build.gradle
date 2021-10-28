@@ -45,6 +45,11 @@ android {
   buildFeatures {
     viewBinding true
     buildConfig false
+    compose true
+  }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion "$compose_version"
   }
 }
 
@@ -65,6 +70,18 @@ dependencies {
   coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$desugar"
 
   kapt "com.google.dagger:dagger-compiler:$dagger"
+
+  // Compose
+  api "androidx.activity:activity-compose:$composeActivity"
+  api "androidx.compose.compiler:compiler:$compose_version"
+  api "androidx.compose.ui:ui:$compose_version"
+  api "androidx.compose.material:material:$compose_version"
+  api "androidx.compose.animation:animation:$compose_version"
+  api "androidx.compose.ui:ui-tooling:$compose_version"
+
+  api "com.google.accompanist:accompanist-insets:$accompanist"
+
+  api "io.coil-kt:coil-compose-base:$coil"
 
   // AndroidX
   api "androidx.fragment:fragment:$fragment"

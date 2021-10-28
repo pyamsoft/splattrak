@@ -21,19 +21,18 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import coil.ImageLoader
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.databinding.ListitemFrameBinding
-import com.pyamsoft.splattrak.lobby.databinding.LobbyListItemHolderBinding
+import com.pyamsoft.splattrak.lobby.databinding.ComposeListItemBinding
 import com.pyamsoft.splattrak.lobby.screen.list.BaseLobbyViewHolder
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyDisclaimerViewHolder
-import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemComponent
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemViewHolder
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemViewState
 
 class LobbyListAdapter
 internal constructor(
+    private val imageLoader: ImageLoader,
     private val owner: LifecycleOwner,
-    private val factory: LobbyItemComponent.Factory,
     private val callback: Callback,
 ) : ListAdapter<LobbyItemViewState, BaseLobbyViewHolder>(DIFFER) {
 
@@ -53,12 +52,11 @@ internal constructor(
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseLobbyViewHolder {
     val inflater = LayoutInflater.from(parent.context)
+    val binding = ComposeListItemBinding.inflate(inflater, parent, false)
     return if (viewType == VIEW_TYPE_ITEM) {
-      val binding = LobbyListItemHolderBinding.inflate(inflater, parent, false)
-      LobbyItemViewHolder(binding, owner, factory, callback)
+      LobbyItemViewHolder(binding, owner, imageLoader, callback)
     } else {
-      val binding = ListitemFrameBinding.inflate(inflater, parent, false)
-      LobbyDisclaimerViewHolder(binding, owner, factory)
+      LobbyDisclaimerViewHolder(binding, owner)
     }
   }
 

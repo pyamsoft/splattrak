@@ -67,6 +67,7 @@ internal interface SplatComponent {
         @Named("debug") @BindsInstance debug: Boolean,
         @BindsInstance theming: Theming,
         @BindsInstance imageLoader: ImageLoader,
+        @BindsInstance coilImageLoader: () -> coil.ImageLoader,
     ): SplatComponent
   }
 
@@ -80,6 +81,15 @@ internal interface SplatComponent {
       @JvmStatic
       internal fun provideContext(application: Application): Context {
         return application
+      }
+
+      @Provides
+      @JvmStatic
+      @Singleton
+      internal fun provideCoilImageLoader(
+          lazyImageLoader: () -> coil.ImageLoader
+      ): coil.ImageLoader {
+        return lazyImageLoader()
       }
 
       @Provides

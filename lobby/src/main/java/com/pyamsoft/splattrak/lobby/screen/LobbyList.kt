@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import coil.ImageLoader
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.core.requireNotNull
@@ -29,7 +30,6 @@ import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.splattrak.lobby.databinding.LobbyListBinding
-import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemComponent
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemViewState
 import io.cabriole.decorator.LinearBoundsMarginDecoration
 import io.cabriole.decorator.LinearMarginDecoration
@@ -39,9 +39,9 @@ import timber.log.Timber
 class LobbyList
 @Inject
 internal constructor(
-    private val factory: LobbyItemComponent.Factory,
     owner: LifecycleOwner,
     parent: ViewGroup,
+    imageLoader: ImageLoader,
 ) :
     BaseUiView<LobbyViewState, LobbyViewEvent, LobbyListBinding>(parent),
     SwipeRefreshLayout.OnRefreshListener,
@@ -67,7 +67,7 @@ internal constructor(
     }
 
     doOnInflate {
-      modelAdapter = LobbyListAdapter(owner, factory, callback = this)
+      modelAdapter = LobbyListAdapter(imageLoader, owner, callback = this)
       binding.lobbyList.adapter = modelAdapter
     }
 

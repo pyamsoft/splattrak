@@ -17,57 +17,35 @@
 package com.pyamsoft.splattrak.lobby.screen.list
 
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.ViewBinder
-import com.pyamsoft.pydroid.arch.createViewBinder
-import com.pyamsoft.pydroid.core.requireNotNull
+import coil.ImageLoader
 import com.pyamsoft.pydroid.util.doOnDestroy
-import com.pyamsoft.splattrak.lobby.databinding.LobbyListItemHolderBinding
+import com.pyamsoft.splattrak.lobby.databinding.ComposeListItemBinding
 import com.pyamsoft.splattrak.lobby.screen.LobbyListAdapter
-import javax.inject.Inject
+import com.pyamsoft.splattrak.lobby.screen.LobbyListItem
 
 class LobbyItemViewHolder
 internal constructor(
-    binding: LobbyListItemHolderBinding,
+    private val binding: ComposeListItemBinding,
     owner: LifecycleOwner,
-    factory: LobbyItemComponent.Factory,
-    callback: LobbyListAdapter.Callback,
+    private val imageLoader: ImageLoader,
+    private val callback: LobbyListAdapter.Callback,
 ) : BaseLobbyViewHolder(binding.root) {
 
-  @Inject @JvmField internal var clickHandler: LobbyItemClickHandler? = null
-
-  @Inject @JvmField internal var background: LobbyItemBackground? = null
-
-  @Inject @JvmField internal var backgroundContainer: LobbyItemBackgroundContainer? = null
-
-  private val viewBinder: ViewBinder<LobbyItemViewState.Data>
-
   init {
-    factory.create(owner, binding.lobbyListItem).inject(this)
-
-    viewBinder =
-        createViewBinder(
-            clickHandler.requireNotNull(),
-            background.requireNotNull(),
-            backgroundContainer.requireNotNull(),
-        ) {
-          return@createViewBinder when (it) {
-            is LobbyItemViewEvent.OnClick -> callback.onClick(bindingAdapterPosition)
-            is LobbyItemViewEvent.OnCountdown -> callback.onCountdown(bindingAdapterPosition)
-          }
-        }
-
     owner.doOnDestroy { teardown() }
   }
 
   override fun bindState(state: LobbyItemViewState) {
-    state.data?.also { viewBinder.bindState(it) }
+    binding.composeListItem.setContent {
+      LobbyListItem(
+          state = state,
+          imageLoader = imageLoader,
+          onClick = { callback.onClick(bindingAdapterPosition) },
+      )
+    }
   }
 
   override fun teardown() {
-    viewBinder.teardown()
-
-    clickHandler = null
-    background = null
-    backgroundContainer = null
+    binding.composeListItem.disposeComposition()
   }
 }

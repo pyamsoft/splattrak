@@ -18,7 +18,9 @@ package com.pyamsoft.splattrak
 
 import android.app.Application
 import androidx.annotation.CheckResult
+import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.ModuleProvider
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.util.isDebugMode
@@ -30,21 +32,38 @@ class SplatTrak : Application() {
 
   private val component by lazy {
     val url = "https://github.com/pyamsoft/splattrak"
+    val lazyImageLoader = { ImageLoader(this) }
     val parameters =
         PYDroid.Parameters(
-            url, "$url/issues", PRIVACY_POLICY_URL, TERMS_CONDITIONS_URL, BuildConfig.VERSION_CODE)
+            imageLoader = lazyImageLoader,
+            viewSourceUrl = url,
+            bugReportUrl = "$url/issues",
+            privacyPolicyUrl = PRIVACY_POLICY_URL,
+            termsConditionsUrl = TERMS_CONDITIONS_URL,
+            version = BuildConfig.VERSION_CODE,
+        )
 
-    return@lazy createComponent(PYDroid.init(this, parameters))
+    return@lazy createComponent(
+        PYDroid.init(
+            this,
+            parameters,
+        ),
+        lazyImageLoader,
+    )
   }
 
   @CheckResult
-  private fun createComponent(provider: ModuleProvider): SplatComponent {
+  private fun createComponent(
+      provider: ModuleProvider,
+      imageLoader: () -> ImageLoader,
+  ): SplatComponent {
     return DaggerSplatComponent.factory()
         .create(
             this,
             isDebugMode(),
             provider.get().theming(),
             provider.get().imageLoader(),
+            imageLoader,
         )
         .also { addLibraries() }
   }

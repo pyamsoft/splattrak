@@ -16,42 +16,34 @@
 
 package com.pyamsoft.splattrak.lobby.screen.list
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.UnitViewState
-import com.pyamsoft.pydroid.arch.ViewBinder
-import com.pyamsoft.pydroid.arch.createViewBinder
-import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.databinding.ListitemFrameBinding
 import com.pyamsoft.pydroid.util.doOnDestroy
-import com.pyamsoft.splattrak.ui.NintendoDisclaimer
-import javax.inject.Inject
+import com.pyamsoft.splattrak.lobby.databinding.ComposeListItemBinding
+import com.pyamsoft.splattrak.ui.NotNintendo
 
 class LobbyDisclaimerViewHolder
 internal constructor(
-    binding: ListitemFrameBinding,
+    private val binding: ComposeListItemBinding,
     owner: LifecycleOwner,
-    factory: LobbyItemComponent.Factory,
 ) : BaseLobbyViewHolder(binding.root) {
 
-  @Inject @JvmField internal var disclaimer: NintendoDisclaimer? = null
-
-  private val viewBinder: ViewBinder<UnitViewState>
-
   init {
-    factory.create(owner, binding.listitemFrame).inject(this)
-
-    viewBinder = createViewBinder(disclaimer.requireNotNull()) {}
-
     owner.doOnDestroy { teardown() }
   }
 
   override fun bindState(state: LobbyItemViewState) {
-    viewBinder.bindState(UnitViewState)
+    binding.composeListItem.setContent {
+      NotNintendo(
+          modifier = Modifier.padding(8.dp).fillMaxWidth(),
+      )
+    }
   }
 
   override fun teardown() {
-    viewBinder.teardown()
-
-    disclaimer = null
+    binding.composeListItem.disposeComposition()
   }
 }

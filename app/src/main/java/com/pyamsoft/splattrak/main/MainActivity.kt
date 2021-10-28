@@ -57,23 +57,6 @@ internal class MainActivity : ChangeLogActivity(), UiController<MainControllerEv
   private val fragmentContainerId: Int
     get() = container.requireNotNull().id()
 
-  override val snackbarRoot: ViewGroup
-    get() {
-      val fm = supportFragmentManager
-      val fragment = fm.findFragmentById(fragmentContainerId)
-      if (fragment is SnackbarContainer) {
-        val container = fragment.container()
-        if (container != null) {
-          Timber.d("Return fragment snackbar container: $fragment $container")
-          return container
-        }
-      }
-
-      val fallbackContainer = snackbar.requireNotNull().container()
-      Timber.d("Return activity snackbar container: $fallbackContainer")
-      return fallbackContainer
-    }
-
   private var stateSaver: StateSaver? = null
 
   @JvmField @Inject internal var factory: MainViewModel.Factory? = null
