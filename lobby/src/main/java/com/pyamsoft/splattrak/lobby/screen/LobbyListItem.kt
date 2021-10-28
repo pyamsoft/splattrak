@@ -32,7 +32,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,6 +53,7 @@ import coil.compose.rememberImagePainter
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.splattrak.lobby.R
 import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemViewState
+import com.pyamsoft.splattrak.lobby.screen.list.SplatCountdownTimer
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 import com.pyamsoft.splattrak.splatnet.api.SplatMap
@@ -55,6 +61,9 @@ import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.splatnet.api.SplatRuleset
 import com.pyamsoft.splattrak.ui.createNewTestImageLoader
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun LobbyListItem(
@@ -62,6 +71,7 @@ internal fun LobbyListItem(
     state: LobbyItemViewState,
     imageLoader: ImageLoader,
     onClick: () -> Unit,
+    onCountdownCompleted: () -> Unit,
 ) {
   val battle = state.data.requireNotNull().battle
   val name = battle.mode().name()
@@ -91,13 +101,11 @@ internal fun LobbyListItem(
             imageLoader = imageLoader,
             rotation = rotation,
         )
-        LobbyUpNext(
-            modifier = Modifier.padding(horizontal = 8.dp),
-        )
         NextBattle(
             modifier = Modifier.fillMaxWidth().padding(8.dp),
             imageLoader = imageLoader,
             rotation = rotation,
+            onCountdownCompleted = onCountdownCompleted,
         )
       }
     }
@@ -109,8 +117,15 @@ private fun NextBattle(
     modifier: Modifier = Modifier,
     imageLoader: ImageLoader,
     rotation: List<SplatMatch>,
+    onCountdownCompleted: () -> Unit,
 ) {
   val match = remember(rotation) { rotation[1] }
+  LobbyUpNext(
+      modifier = Modifier.padding(horizontal = 8.dp),
+      match = match,
+      onCountdownCompleted = onCountdownCompleted,
+  )
+
   Column(
       modifier = modifier,
   ) {
@@ -156,9 +171,12 @@ private fun CurrentBattle(
 @Composable
 private fun LobbyUpNext(
     modifier: Modifier = Modifier,
+    match: SplatMatch,
+    onCountdownCompleted: () -> Unit
 ) {
   Row(
       modifier = modifier,
+      verticalAlignment = Alignment.CenterVertically,
   ) {
     Surface(
         color = colorResource(R.color.splatNext),
@@ -175,7 +193,44 @@ private fun LobbyUpNext(
     Spacer(
         modifier = Modifier.weight(1F),
     )
+    Countdown(
+        match = match,
+        onCountdownCompleted = onCountdownCompleted,
+    )
   }
+}
+
+@Composable
+private fun Countdown(
+    modifier: Modifier = Modifier,
+    match: SplatMatch,
+    onCountdownCompleted: () -> Unit
+) {
+  val scope = rememberCoroutineScope()
+
+  // Countdown text
+  var text by remember(match.id()) { mutableStateOf("") }
+
+  DisposableEffect(match.id()) {
+    val nextStartTime = match.start()
+    val timeUntilStart = LocalDateTime.now().until(nextStartTime, ChronoUnit.SECONDS)
+    val countdown =
+        SplatCountdownTimer(timeUntilStart) { display, isComplete ->
+          text = display
+          if (isComplete) {
+            onCountdownCompleted()
+          }
+        }
+
+    scope.launch(context = Dispatchers.IO) { countdown.start() }
+    return@DisposableEffect onDispose { countdown.cancel() }
+  }
+
+  Text(
+      modifier = modifier,
+      text = text,
+      style = MaterialTheme.typography.body1,
+  )
 }
 
 @Composable
@@ -422,5 +477,6 @@ private fun PreviewLobbyListItem() {
                   )),
       imageLoader = createNewTestImageLoader(context),
       onClick = {},
+      onCountdownCompleted = {},
   )
 }

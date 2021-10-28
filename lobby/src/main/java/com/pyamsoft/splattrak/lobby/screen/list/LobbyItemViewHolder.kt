@@ -41,6 +41,7 @@ internal constructor(
           state = state,
           imageLoader = imageLoader,
           onClick = { callback.onClick(bindingAdapterPosition) },
+          onCountdownCompleted = { callback.onCountdown(bindingAdapterPosition) },
       )
     }
   }

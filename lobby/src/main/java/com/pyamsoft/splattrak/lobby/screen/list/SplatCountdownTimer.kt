@@ -18,7 +18,6 @@ package com.pyamsoft.splattrak.lobby.screen.list
 
 import androidx.annotation.CheckResult
 import java.time.Duration
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -33,7 +32,6 @@ import kotlinx.coroutines.withContext
 
 internal class SplatCountdownTimer
 internal constructor(
-    private val scope: CoroutineScope,
     private val totalSeconds: Long,
     onUpdate: (String, Boolean) -> Unit,
 ) {
@@ -41,27 +39,28 @@ internal constructor(
   private var updater: ((String, Boolean) -> Unit)? = onUpdate
   private var timer: Job? = null
 
-  fun start() {
-    timer?.cancel()
-    timer =
-        scope.launch(context = Dispatchers.IO) {
-          createTimer(totalSeconds).collect { remainingSeconds ->
-            withContext(context = Dispatchers.Main) {
-              if (remainingSeconds <= 0) {
-                updater?.invoke("Starting Now!", true)
-              } else {
-                val timeTo = Duration.ofSeconds(remainingSeconds)
-                val totalSeconds = timeTo.seconds
-                val hours = totalSeconds / 3600
-                val minutes = (totalSeconds % 3600) / 60
-                val seconds = totalSeconds % 60
-                val formattedString = "%d:%02d:%02d".format(hours, minutes, seconds)
-                updater?.invoke(formattedString, false)
+  suspend fun start() =
+      withContext(context = Dispatchers.IO) {
+        timer?.cancel()
+        timer =
+            launch(context = Dispatchers.IO) {
+              createTimer(totalSeconds).collect { remainingSeconds ->
+                withContext(context = Dispatchers.Main) {
+                  if (remainingSeconds <= 0) {
+                    updater?.invoke("Starting Now!", true)
+                  } else {
+                    val timeTo = Duration.ofSeconds(remainingSeconds)
+                    val totalSeconds = timeTo.seconds
+                    val hours = totalSeconds / 3600
+                    val minutes = (totalSeconds % 3600) / 60
+                    val seconds = totalSeconds % 60
+                    val formattedString = "%d:%02d:%02d".format(hours, minutes, seconds)
+                    updater?.invoke(formattedString, false)
+                  }
+                }
               }
             }
-          }
-        }
-  }
+      }
 
   fun cancel() {
     timer?.cancel()

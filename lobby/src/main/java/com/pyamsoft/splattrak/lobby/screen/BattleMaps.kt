@@ -76,7 +76,8 @@ internal fun SmallBattleMaps(
     imageLoader: ImageLoader,
 ) {
   Row(
-      modifier = modifier.height(120.dp),
+      modifier = modifier.height(100.dp),
+      verticalAlignment = Alignment.CenterVertically,
   ) {
     BattleMaps(
         modifier = Modifier.weight(1F),
