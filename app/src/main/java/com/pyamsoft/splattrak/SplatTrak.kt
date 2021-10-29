@@ -68,7 +68,6 @@ class SplatTrak : Application() {
             this,
             isDebugMode(),
             provider.get().theming(),
-            provider.get().imageLoader(),
             imageLoader,
         )
         .also { addLibraries() }

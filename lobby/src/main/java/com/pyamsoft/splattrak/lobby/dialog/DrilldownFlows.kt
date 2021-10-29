@@ -16,18 +16,14 @@
 
 package com.pyamsoft.splattrak.lobby.dialog
 
-import com.pyamsoft.pydroid.arch.UiViewEvent
+import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 
+@Stable
 data class DrilldownViewState
 internal constructor(
     val battle: SplatBattle?,
     val error: Throwable?,
     val loading: Boolean,
 ) : UiViewState
-
-sealed class DrilldownViewEvent : UiViewEvent {
-
-  object ForceRefresh : DrilldownViewEvent()
-}

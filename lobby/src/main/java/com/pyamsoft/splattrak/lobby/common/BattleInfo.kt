@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby.screen
+package com.pyamsoft.splattrak.lobby.common
 
 import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Row

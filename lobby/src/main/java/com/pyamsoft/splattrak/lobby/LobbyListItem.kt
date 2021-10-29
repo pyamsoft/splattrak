@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby.screen
+package com.pyamsoft.splattrak.lobby
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -44,7 +44,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
-import com.pyamsoft.splattrak.lobby.R
+import com.pyamsoft.splattrak.lobby.common.BackgroundDarkWrapper
+import com.pyamsoft.splattrak.lobby.common.BackgroundStripeWrapper
+import com.pyamsoft.splattrak.lobby.common.BattleInfo
+import com.pyamsoft.splattrak.lobby.common.BigBattleMaps
+import com.pyamsoft.splattrak.lobby.common.SmallBattleMaps
+import com.pyamsoft.splattrak.lobby.common.decideBackgroundColor
 import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch

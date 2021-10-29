@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby.dialog.list
+package com.pyamsoft.splattrak.lobby
 
-import android.view.ViewGroup
-import com.pyamsoft.splattrak.lobby.item.BaseLobbyInfo
-import com.pyamsoft.splattrak.splatnet.api.SplatMatch
-import javax.inject.Inject
+import androidx.compose.runtime.Stable
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 
-class DrilldownItemInfo
-@Inject
+@Stable
+data class LobbyViewState
 internal constructor(
-    parent: ViewGroup,
-) : BaseLobbyInfo<DrilldownItemViewState>(parent) {
+    val schedule: List<SplatBattle>,
+    val error: Throwable?,
+    val loading: Boolean,
+) : UiViewState
 
-  override fun isLarge(): Boolean {
-    return false
-  }
+sealed class LobbyControllerEvent : UiControllerEvent {
 
-  override fun getMatch(state: DrilldownItemViewState): SplatMatch {
-    return state.match
-  }
+  data class OpenBattleRotation
+  internal constructor(
+      val battle: SplatBattle,
+  ) : LobbyControllerEvent()
 }

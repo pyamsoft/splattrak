@@ -23,8 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import coil.ImageLoader
-import com.pyamsoft.splattrak.lobby.screen.BattleInfo
-import com.pyamsoft.splattrak.lobby.screen.SmallBattleMaps
+import com.pyamsoft.splattrak.lobby.common.BattleInfo
+import com.pyamsoft.splattrak.lobby.common.SmallBattleMaps
 import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.ui.createNewTestImageLoader

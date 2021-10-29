@@ -22,7 +22,6 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.splattrak.lobby.LobbyComponent
-import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemComponent
 import com.pyamsoft.splattrak.lobby.drilldown.DrilldownComponent
 import com.pyamsoft.splattrak.main.MainComponent
 import com.pyamsoft.splattrak.splatnet.SplatnetModule
@@ -52,7 +51,6 @@ internal interface SplatComponent {
         @BindsInstance application: Application,
         @Named("debug") @BindsInstance debug: Boolean,
         @BindsInstance theming: Theming,
-        @BindsInstance imageLoader: ImageLoader,
         @BindsInstance coilImageLoader: () -> coil.ImageLoader,
     ): SplatComponent
   }

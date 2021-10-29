@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby.screen
+package com.pyamsoft.splattrak.lobby.common
 
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorRes

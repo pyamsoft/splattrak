@@ -42,8 +42,8 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.pyamsoft.splattrak.lobby.screen.BackgroundStripeWrapper
-import com.pyamsoft.splattrak.lobby.screen.decideBackgroundColor
+import com.pyamsoft.splattrak.lobby.common.BackgroundStripeWrapper
+import com.pyamsoft.splattrak.lobby.common.decideBackgroundColor
 import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.splatnet.api.key
