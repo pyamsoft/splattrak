@@ -149,7 +149,7 @@ private fun BattleMap(
       Surface(
           color = Color.Transparent,
           contentColor = Color.White,
-          shape = MaterialTheme.shapes.medium,
+          shape = MaterialTheme.shapes.small,
       ) {
         Image(
             modifier = Modifier.matchParentSize(),
