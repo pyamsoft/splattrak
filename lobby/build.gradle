@@ -74,5 +74,6 @@ dependencies {
   implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist"
 
   implementation project(':splatnet')
+  implementation project(':main')
   api project(':ui')
 }

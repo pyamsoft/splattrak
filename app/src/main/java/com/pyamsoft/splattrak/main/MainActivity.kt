@@ -54,9 +54,9 @@ internal class MainActivity : ChangeLogActivity() {
 
   @JvmField @Inject internal var imageLoader: ImageLoader? = null
 
-  @JvmField @Inject internal var themeFactory: MainViewModel.Factory? = null
-  private val themeViewModel by
-      viewModels<MainViewModel> { themeFactory.requireNotNull().asFactory(this) }
+  @JvmField @Inject internal var factory: MainViewModel.Factory? = null
+  private val viewModel by
+      viewModels<MainViewModel> { factory.requireNotNull().asFactory(this) }
 
   private val navigator by
       lazy(LazyThreadSafetyMode.NONE) { FragmentNavigator(this, fragmentContainerId()) }
@@ -81,12 +81,13 @@ internal class MainActivity : ChangeLogActivity() {
     // from it that are then used to render Activity level views. Fragment transactions happen as
     // normal and then Fragments host ComposeViews too.
     val binding = ActivityMainBinding.inflate(layoutInflater).apply { viewBinding = this }
+    setContentView(binding.root)
 
     // Snackbar respects window offsets and hosts snackbar composables
     // Because these are not in a nice Scaffold, we cannot take advantage of Coordinator style
     // actions (a FAB will not move out of the way for example)
     binding.mainComposeBottom.setContent {
-      val state by themeViewModel.compose()
+      val state by viewModel.compose()
       val page by navigator.currentPage()
 
       val snackbarHostState = remember { SnackbarHostState() }
@@ -101,6 +102,7 @@ internal class MainActivity : ChangeLogActivity() {
               imageLoader = imageLoader.requireNotNull(),
               onLoadLobby = { navigator.handleSelectPage(MainPage.Lobby) },
               onLoadSettings = { navigator.handleSelectPage(MainPage.Settings) },
+              onHeightMeasured = { viewModel.handleMeasureBottomNavHeight(it) },
           )
           RatingScreen(
               snackbarHostState = snackbarHostState,
@@ -112,7 +114,7 @@ internal class MainActivity : ChangeLogActivity() {
       }
     }
 
-    themeViewModel.handleSyncDarkTheme(this)
+    viewModel.handleSyncDarkTheme(this)
 
     navigator.restore()
   }
@@ -142,7 +144,7 @@ internal class MainActivity : ChangeLogActivity() {
     super.onDestroy()
     viewBinding?.apply { this.mainComposeBottom.disposeComposition() }
     viewBinding = null
-    themeFactory = null
+    factory = null
     imageLoader = null
   }
 }

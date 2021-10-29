@@ -54,7 +54,7 @@ class FragmentNavigator(
   }
 
   fun restore() {
-    if (getExistingFragment() != null) {
+    if (getExistingFragment() == null) {
       handleSelectPage(DEFAULT_PAGE, force = true)
     }
   }

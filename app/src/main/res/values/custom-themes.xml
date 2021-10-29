@@ -26,7 +26,6 @@
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
 
-        <item name="android:windowBackground">@color/windowBackground</item>
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
         <item name="android:statusBarColor">@color/statusBarColor</item>
         <item name="android:windowLightStatusBar">@bool/light_bars</item>

@@ -19,7 +19,7 @@ package com.pyamsoft.splattrak.main
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.ui.theme.Theming
 
-data class MainViewState
-internal constructor(
+data class MainViewState(
     val theme: Theming.Mode,
+    val bottomNavHeight: Int,
 ) : UiViewState

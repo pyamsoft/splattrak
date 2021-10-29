@@ -39,6 +39,7 @@ internal constructor(
         savedState,
         MainViewState(
             theme = Theming.Mode.SYSTEM,
+            bottomNavHeight = 0,
         ),
     ) {
 
@@ -47,6 +48,10 @@ internal constructor(
       val theme = restoreSavedState(KEY_THEME) { Theming.Mode.SYSTEM }
       setState { copy(theme = theme) }
     }
+  }
+
+  fun handleMeasureBottomNavHeight(height: Int) {
+    setState { if (bottomNavHeight == height) this else copy(bottomNavHeight = height) }
   }
 
   fun handleSyncDarkTheme(activity: Activity) {

@@ -76,6 +76,7 @@ fun NotNintendo(
             MaterialTheme.typography.caption.copy(
                 fontSize = 10.sp,
                 textAlign = TextAlign.Center,
+                color = MaterialTheme.colors.onSurface,
             ),
         onClick = {
           onTextClicked(

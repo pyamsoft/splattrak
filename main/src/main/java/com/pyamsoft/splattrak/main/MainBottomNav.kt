@@ -16,6 +16,8 @@
 
 package com.pyamsoft.splattrak.main
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,9 +26,12 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
@@ -37,17 +42,25 @@ fun MainBottomNav(
     modifier: Modifier = Modifier,
     page: MainPage,
     imageLoader: ImageLoader,
+    onHeightMeasured: (Int) -> Unit,
     onLoadLobby: () -> Unit,
     onLoadSettings: () -> Unit,
 ) {
   // Can't use BottomAppBar since we can't modify its Shape
   Surface(
-      modifier = modifier.padding(16.dp).navigationBarsPadding(bottom = true),
-      shape = RoundedCornerShape(4.dp),
+      modifier =
+          modifier
+              .padding(vertical = 16.dp, horizontal = 64.dp)
+              .navigationBarsPadding(bottom = true)
+              .onSizeChanged { onHeightMeasured(it.height) },
+      shape = RoundedCornerShape(8.dp),
       color = MaterialTheme.colors.primary,
       contentColor = Color.White,
   ) {
-    BottomNavigation {
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colors.primary,
+        contentColor = Color.White,
+    ) {
       Item(
           current = page,
           target = MainPage.Lobby,
@@ -75,18 +88,27 @@ private fun RowScope.Item(
       selected = current == target,
       onClick = onClick,
       icon = {
-        Icon(
-            painter =
-                rememberImagePainter(
-                    data =
-                        when (target) {
-                          is MainPage.Lobby -> R.drawable.ic_lobby_24dp
-                          is MainPage.Settings -> R.drawable.ic_settings_24dp
-                        },
-                    imageLoader = imageLoader,
-                ),
-            contentDescription = target.name,
-        )
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+          Icon(
+              painter =
+                  rememberImagePainter(
+                      data =
+                          when (target) {
+                            is MainPage.Lobby -> R.drawable.ic_lobby_24dp
+                            is MainPage.Settings -> R.drawable.ic_settings_24dp
+                          },
+                      imageLoader = imageLoader,
+                  ),
+              contentDescription = target.name,
+          )
+          Text(
+              text = target.name,
+              style = MaterialTheme.typography.body2,
+          )
+        }
       },
   )
 }

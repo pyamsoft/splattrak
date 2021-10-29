@@ -31,6 +31,7 @@ import androidx.fragment.app.activityViewModels
 import coil.ImageLoader
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ViewWindowInsetObserver
+import com.pyamsoft.pydroid.arch.asFactory
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
@@ -40,6 +41,7 @@ import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.SplatTrakTheme
 import com.pyamsoft.splattrak.core.SplatViewModelFactory
 import com.pyamsoft.splattrak.lobby.drilldown.DrilldownDialog
+import com.pyamsoft.splattrak.main.MainViewModel
 import javax.inject.Inject
 
 internal class LobbyFragment : Fragment() {
@@ -47,6 +49,12 @@ internal class LobbyFragment : Fragment() {
   @JvmField @Inject internal var factory: SplatViewModelFactory? = null
   private val viewModel by
       activityViewModels<LobbyViewModel> { factory.requireNotNull().create(requireActivity()) }
+
+  @JvmField @Inject internal var mainFactory: MainViewModel.Factory? = null
+  private val mainViewModel by
+      activityViewModels<MainViewModel> {
+        mainFactory.requireNotNull().asFactory(requireActivity())
+      }
 
   @JvmField @Inject internal var imageLoader: ImageLoader? = null
   @JvmField @Inject internal var theming: Theming? = null
@@ -72,12 +80,14 @@ internal class LobbyFragment : Fragment() {
 
       setContent {
         val state by viewModel.compose()
+        val mainState by mainViewModel.compose()
 
         SplatTrakTheme(themeProvider) {
           CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
             LobbyScreen(
                 modifier = Modifier.fillMaxSize(),
                 state = state,
+                mainState = mainState,
                 imageLoader = imageLoader.requireNotNull(),
                 onItemClicked = { viewModel.handleOpenBattle(it) },
                 onItemCountdownCompleted = { viewModel.handleRefresh() },
@@ -109,6 +119,7 @@ internal class LobbyFragment : Fragment() {
     windowInsetObserver?.stop()
     windowInsetObserver = null
 
+    mainFactory = null
     factory = null
     imageLoader = null
     theming = null

@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.splattrak.lobby.LobbyComponent
 import com.pyamsoft.splattrak.lobby.drilldown.DrilldownComponent
 import com.pyamsoft.splattrak.main.MainComponent
+import com.pyamsoft.splattrak.setting.SettingsComponent
 import com.pyamsoft.splattrak.splatnet.SplatnetModule
 import dagger.BindsInstance
 import dagger.Component
@@ -36,6 +37,8 @@ import javax.inject.Singleton
 internal interface SplatComponent {
 
   @CheckResult fun plusMainComponent(): MainComponent.Factory
+
+  @CheckResult fun plusSettingsComponent(): SettingsComponent.Factory
 
   @CheckResult fun plusLobbyComponent(): LobbyComponent.Factory
 

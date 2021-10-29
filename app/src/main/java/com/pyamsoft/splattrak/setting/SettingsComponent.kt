@@ -14,8 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.ui
+package com.pyamsoft.splattrak.setting
 
-import androidx.compose.ui.unit.dp
+import androidx.annotation.CheckResult
+import dagger.Subcomponent
 
-val BOTTOM_FLOATING_SPACE = 168.dp
+@Subcomponent
+internal interface SettingsComponent {
+
+  fun inject(fragment: AppSettings)
+
+  @Subcomponent.Factory
+  interface Factory {
+
+    @CheckResult fun create(): SettingsComponent
+  }
+}
