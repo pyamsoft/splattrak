@@ -122,7 +122,6 @@ dependencies {
 
   implementation project(':lobby')
   implementation project(':main')
-  implementation project(':setting')
   implementation project(':splatnet')
   implementation project(':ui')
 }

@@ -63,7 +63,7 @@ internal fun BigBattleMaps(
         imageLoader = imageLoader,
     ) {
       Spacer(
-          modifier = Modifier.height(8.dp).fillMaxWidth(),
+          modifier = Modifier.height(16.dp).fillMaxWidth(),
       )
     }
   }

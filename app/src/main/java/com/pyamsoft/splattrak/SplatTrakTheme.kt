@@ -18,8 +18,10 @@ package com.pyamsoft.splattrak
 
 import androidx.annotation.CheckResult
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Shapes
 import androidx.compose.material.Typography
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
@@ -28,6 +30,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
 
@@ -74,6 +77,14 @@ private fun themeTypography(): Typography {
 }
 
 @Composable
+@CheckResult
+private fun themeShapes(): Shapes {
+  return Shapes(
+      medium = RoundedCornerShape(16.dp),
+  )
+}
+
+@Composable
 fun SplatTrakTheme(
     themeProvider: ThemeProvider,
     content: @Composable () -> Unit,
@@ -98,6 +109,7 @@ fun SplatTrakTheme(
   MaterialTheme(
       colors = themeColors(isDarkMode),
       typography = themeTypography(),
+      shapes = themeShapes(),
       content = content,
   )
 }

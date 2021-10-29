@@ -38,11 +38,6 @@ import javax.inject.Singleton
 @Component(modules = [SplatComponent.SplatProvider::class, SplatnetModule::class, UiModule::class])
 internal interface SplatComponent {
 
-  /** Not actually used, just here so graph can compile */
-  @CheckResult
-  @Suppress("FunctionName")
-  fun `$$daggerRequiredDrilldownItemComponent`(): DrilldownItemComponent.Factory
-
   @CheckResult fun plusMainComponent(): MainComponent.Factory
 
   @CheckResult fun plusLobbyComponent(): LobbyComponent.Factory

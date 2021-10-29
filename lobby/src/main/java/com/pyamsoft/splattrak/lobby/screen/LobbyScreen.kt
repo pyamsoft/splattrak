@@ -17,12 +17,13 @@
 package com.pyamsoft.splattrak.lobby.screen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -65,13 +66,6 @@ fun LobbyScreen(
 }
 
 @Composable
-private fun EmptyBox(modifier: Modifier = Modifier) {
-  Box(modifier = modifier) {
-    // EMPTY
-  }
-}
-
-@Composable
 private fun BattleList(
     schedule: List<SplatBattle>,
     imageLoader: ImageLoader,
@@ -83,7 +77,7 @@ private fun BattleList(
       verticalArrangement = Arrangement.spacedBy(16.dp),
   ) {
     item {
-      EmptyBox(
+      Spacer(
           modifier = Modifier.fillMaxWidth().statusBarsHeight(),
       )
     }
@@ -108,13 +102,13 @@ private fun BattleList(
 
     // Space to float the bottom nav
     item {
-      EmptyBox(
+      Spacer(
           modifier = Modifier.fillMaxWidth().height(BOTTOM_FLOATING_SPACE),
       )
     }
 
     item {
-      EmptyBox(
+      Spacer(
           modifier = Modifier.fillMaxWidth().navigationBarsHeight(),
       )
     }
@@ -126,16 +120,18 @@ private fun BattleList(
 private fun PreviewLobbyScreen() {
   val context = LocalContext.current
 
-  LobbyScreen(
-      state =
-          LobbyViewState(
-              schedule = emptyList(),
-              error = null,
-              loading = false,
-          ),
-      imageLoader = createNewTestImageLoader(context),
-      onRefresh = {},
-      onItemClicked = {},
-      onItemCountdownCompleted = {},
-  )
+  Surface {
+    LobbyScreen(
+        state =
+            LobbyViewState(
+                schedule = emptyList(),
+                error = null,
+                loading = false,
+            ),
+        imageLoader = createNewTestImageLoader(context),
+        onRefresh = {},
+        onItemClicked = {},
+        onItemCountdownCompleted = {},
+    )
+  }
 }

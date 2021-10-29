@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/lobby" />
             <option value="$PROJECT_DIR$/main" />
-            <option value="$PROJECT_DIR$/setting" />
             <option value="$PROJECT_DIR$/splatnet" />
             <option value="$PROJECT_DIR$/ui" />
           </set>
