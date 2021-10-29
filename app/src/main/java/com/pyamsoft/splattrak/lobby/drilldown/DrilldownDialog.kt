@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
@@ -32,6 +33,7 @@ import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
 import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
+import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.core.SplatViewModelFactory
 import com.pyamsoft.splattrak.lobby.dialog.DrilldownBackgroundContainer
@@ -121,15 +123,21 @@ internal class DrilldownDialog : AppCompatDialogFragment(), UiController<Nothing
 
   companion object {
 
-    const val TAG = "DrilldownDialog"
+    private const val TAG = "DrilldownDialog"
     private const val KEY_GAME_MODE = "key_game_mode"
 
     @JvmStatic
     @CheckResult
-    fun newInstance(mode: SplatGameMode): DialogFragment {
+    private fun newInstance(mode: SplatGameMode): DialogFragment {
       return DrilldownDialog().apply {
         arguments = Bundle().apply { putString(KEY_GAME_MODE, mode.mode().name) }
       }
     }
+
+      @JvmStatic
+      @CheckResult
+      fun show(activity: FragmentActivity, mode: SplatGameMode) {
+          newInstance(mode).show(activity, TAG)
+      }
   }
 }

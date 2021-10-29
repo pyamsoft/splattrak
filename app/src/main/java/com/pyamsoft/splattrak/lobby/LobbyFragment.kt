@@ -21,42 +21,75 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.UiController
-import com.pyamsoft.pydroid.arch.createComponent
+import coil.ImageLoader
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.ViewWindowInsetObserver
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.databinding.LayoutCoordinatorBinding
-import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.theme.ThemeProvider
+import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.splattrak.R
 import com.pyamsoft.splattrak.SplatComponent
+import com.pyamsoft.splattrak.SplatTrakTheme
 import com.pyamsoft.splattrak.core.SplatViewModelFactory
 import com.pyamsoft.splattrak.lobby.drilldown.DrilldownDialog
-import com.pyamsoft.splattrak.lobby.screen.LobbyContainer
 import com.pyamsoft.splattrak.lobby.screen.LobbyControllerEvent
-import com.pyamsoft.splattrak.lobby.screen.LobbyViewEvent
+import com.pyamsoft.splattrak.lobby.screen.LobbyScreen
 import com.pyamsoft.splattrak.lobby.screen.LobbyViewModel
 import javax.inject.Inject
 
-internal class LobbyFragment : Fragment(), UiController<LobbyControllerEvent> {
+internal class LobbyFragment : Fragment() {
 
   @JvmField @Inject internal var factory: SplatViewModelFactory? = null
-  private val viewModel by activityViewModels<LobbyViewModel> {
-    factory.requireNotNull().create(requireActivity())
-  }
+  private val viewModel by
+      activityViewModels<LobbyViewModel> { factory.requireNotNull().create(requireActivity()) }
 
-  private var stateSaver: StateSaver? = null
+  @JvmField @Inject internal var imageLoader: ImageLoader? = null
+  @JvmField @Inject internal var theming: Theming? = null
 
-  @JvmField @Inject internal var container: LobbyContainer? = null
+  // Watches the window insets
+  private var windowInsetObserver: ViewWindowInsetObserver? = null
 
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?,
-  ): View? {
-    return inflater.inflate(R.layout.layout_coordinator, container, false)
+  ): View {
+    val act = requireActivity()
+    Injector.obtainFromApplication<SplatComponent>(act).plusLobbyComponent().create().inject(this)
+
+    val themeProvider = ThemeProvider { theming.requireNotNull().isDarkTheme(act) }
+    return ComposeView(act).apply {
+      id = R.id.screen_lobby
+
+      val observer = ViewWindowInsetObserver(this)
+      val windowInsets = observer.start()
+      windowInsetObserver = observer
+
+      setContent {
+        val state by viewModel.compose()
+
+        SplatTrakTheme(themeProvider) {
+          CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
+            LobbyScreen(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                imageLoader = imageLoader.requireNotNull(),
+                onItemClicked = { viewModel.handleOpenBattle(it) },
+                onItemCountdownCompleted = { viewModel.handleRefresh() },
+                onRefresh = { viewModel.handleRefresh() },
+            )
+          }
+        }
+      }
+    }
   }
 
   override fun onViewCreated(
@@ -64,47 +97,24 @@ internal class LobbyFragment : Fragment(), UiController<LobbyControllerEvent> {
       savedInstanceState: Bundle?,
   ) {
     super.onViewCreated(view, savedInstanceState)
-
-    val binding = LayoutCoordinatorBinding.bind(view)
-    Injector.obtainFromApplication<SplatComponent>(view.context)
-        .plusLobbyComponent()
-        .create(requireActivity(), viewLifecycleOwner, binding.layoutCoordinator)
-        .inject(this)
-
-    stateSaver =
-        createComponent(
-            savedInstanceState,
-            viewLifecycleOwner,
-            viewModel,
-            this,
-            container.requireNotNull(),
-        ) {
-          return@createComponent when (it) {
-            is LobbyViewEvent.ViewBattleRotation -> viewModel.handleOpenBattle(it.index)
-            is LobbyViewEvent.ForceRefresh -> viewModel.handleRefresh()
-          }
-        }
-  }
-
-  override fun onControllerEvent(event: LobbyControllerEvent) {
-    return when (event) {
-      is LobbyControllerEvent.OpenBattleRotation ->
-          DrilldownDialog.newInstance(event.battle.mode())
-              .show(requireActivity(), DrilldownDialog.TAG)
+    viewModel.bindController(viewLifecycleOwner) { event ->
+      return@bindController when (event) {
+        is LobbyControllerEvent.OpenBattleRotation ->
+            DrilldownDialog.show(requireActivity(), event.battle.mode())
+      }
     }
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    stateSaver?.saveState(outState)
-    super.onSaveInstanceState(outState)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    stateSaver = null
-    factory = null
+    (view as? ComposeView)?.disposeComposition()
 
-    container = null
+    windowInsetObserver?.stop()
+    windowInsetObserver = null
+
+    factory = null
+    imageLoader = null
+    theming = null
   }
 
   companion object {

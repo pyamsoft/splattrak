@@ -24,7 +24,6 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.splattrak.lobby.LobbyComponent
 import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemComponent
 import com.pyamsoft.splattrak.lobby.drilldown.DrilldownComponent
-import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemComponent
 import com.pyamsoft.splattrak.main.MainComponent
 import com.pyamsoft.splattrak.setting.SettingsComponent
 import com.pyamsoft.splattrak.splatnet.SplatnetModule
@@ -39,11 +38,6 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [SplatComponent.SplatProvider::class, SplatnetModule::class, UiModule::class])
 internal interface SplatComponent {
-
-  /** Not actually used, just here so graph can compile */
-  @CheckResult
-  @Suppress("FunctionName")
-  fun `$$daggerRequiredLobbyItemComponent`(): LobbyItemComponent.Factory
 
   /** Not actually used, just here so graph can compile */
   @CheckResult

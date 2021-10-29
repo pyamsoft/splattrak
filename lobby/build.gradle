@@ -71,6 +71,8 @@ dependencies {
 
   kapt "com.google.dagger:dagger-compiler:$dagger"
 
+  implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist"
+
   implementation project(':splatnet')
   api project(':ui')
 }

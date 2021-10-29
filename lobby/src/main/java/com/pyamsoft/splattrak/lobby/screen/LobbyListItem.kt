@@ -50,15 +50,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
-import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.splattrak.lobby.R
-import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemViewState
-import com.pyamsoft.splattrak.lobby.screen.list.SplatCountdownTimer
+import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
-import com.pyamsoft.splattrak.splatnet.api.SplatMap
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
-import com.pyamsoft.splattrak.splatnet.api.SplatRuleset
 import com.pyamsoft.splattrak.ui.createNewTestImageLoader
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -68,12 +64,11 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun LobbyListItem(
     modifier: Modifier = Modifier,
-    state: LobbyItemViewState,
+    battle: SplatBattle,
     imageLoader: ImageLoader,
     onClick: () -> Unit,
     onCountdownCompleted: () -> Unit,
 ) {
-  val battle = state.data.requireNotNull().battle
   val name = battle.mode().name()
   val mode = battle.mode().mode()
   val rotation = battle.rotation()
@@ -153,7 +148,7 @@ private fun CurrentBattle(
       imageLoader = imageLoader,
   ) {
     Column(
-        modifier = modifier,
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
       BattleInfo(
           modifier = Modifier.fillMaxWidth(),
@@ -184,7 +179,7 @@ private fun LobbyUpNext(
         shape = MaterialTheme.shapes.medium,
     ) {
       Text(
-          modifier = Modifier.padding(4.dp),
+          modifier = Modifier.padding(8.dp),
           text = stringResource(R.string.up_next),
           style = MaterialTheme.typography.body1,
           textAlign = TextAlign.Center,
@@ -326,155 +321,8 @@ private fun BackgroundDarkWrapper(
 private fun PreviewLobbyListItem() {
   val context = LocalContext.current
 
-  val currentMatch =
-      object : SplatMatch {
-        override fun id(): Long {
-          return 1
-        }
-
-        override fun start(): LocalDateTime {
-          return LocalDateTime.now()
-        }
-
-        override fun end(): LocalDateTime {
-          return LocalDateTime.now().plusHours(1)
-        }
-
-        override fun stageA(): SplatMap {
-          return object : SplatMap {
-            override fun id(): String {
-              return "A"
-            }
-
-            override fun name(): String {
-              return "Stage A"
-            }
-
-            override fun imageUrl(): String {
-              return ""
-            }
-          }
-        }
-
-        override fun stageB(): SplatMap {
-          return object : SplatMap {
-            override fun id(): String {
-              return "B"
-            }
-
-            override fun name(): String {
-              return "Stage B"
-            }
-
-            override fun imageUrl(): String {
-              return ""
-            }
-          }
-        }
-
-        override fun rules(): SplatRuleset {
-          return object : SplatRuleset {
-            override fun key(): String {
-              return "Current"
-            }
-
-            override fun name(): String {
-              return "Turf War"
-            }
-          }
-        }
-      }
-
-  val nextMatch =
-      object : SplatMatch {
-        override fun id(): Long {
-          return 2
-        }
-
-        override fun start(): LocalDateTime {
-          return LocalDateTime.now()
-        }
-
-        override fun end(): LocalDateTime {
-          return LocalDateTime.now().plusHours(1)
-        }
-
-        override fun stageA(): SplatMap {
-          return object : SplatMap {
-            override fun id(): String {
-              return "A"
-            }
-
-            override fun name(): String {
-              return "Stage A"
-            }
-
-            override fun imageUrl(): String {
-              return ""
-            }
-          }
-        }
-
-        override fun stageB(): SplatMap {
-          return object : SplatMap {
-            override fun id(): String {
-              return "B"
-            }
-
-            override fun name(): String {
-              return "Stage B"
-            }
-
-            override fun imageUrl(): String {
-              return ""
-            }
-          }
-        }
-
-        override fun rules(): SplatRuleset {
-          return object : SplatRuleset {
-            override fun key(): String {
-              return "Next"
-            }
-
-            override fun name(): String {
-              return "Turf War Again"
-            }
-          }
-        }
-      }
-
   LobbyListItem(
-      state =
-          LobbyItemViewState(
-              isDisclaimer = false,
-              data =
-                  LobbyItemViewState.Data(
-                      currentMatch = currentMatch,
-                      nextMatch = nextMatch,
-                      battle =
-                          object : SplatBattle {
-                            override fun mode(): SplatGameMode {
-                              return object : SplatGameMode {
-                                override fun key(): String {
-                                  return "test"
-                                }
-
-                                override fun name(): String {
-                                  return "TEST"
-                                }
-
-                                override fun mode(): SplatGameMode.Mode {
-                                  return SplatGameMode.Mode.REGULAR
-                                }
-                              }
-                            }
-
-                            override fun rotation(): List<SplatMatch> {
-                              return listOf(currentMatch, nextMatch)
-                            }
-                          },
-                  )),
+      battle = TestData.battle,
       imageLoader = createNewTestImageLoader(context),
       onClick = {},
       onCountdownCompleted = {},

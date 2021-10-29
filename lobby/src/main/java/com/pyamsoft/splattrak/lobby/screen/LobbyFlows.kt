@@ -16,36 +16,18 @@
 
 package com.pyamsoft.splattrak.lobby.screen
 
+import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiControllerEvent
-import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
-import com.pyamsoft.splattrak.splatnet.api.SplatMatch
-import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
 
+@Stable
 data class LobbyViewState
 internal constructor(
-    internal val rawSchedule: SplatSchedule?,
-    val schedule: List<ScheduleGroupings>,
+    val schedule: List<SplatBattle>,
     val error: Throwable?,
     val loading: Boolean,
-    val bottomOffset: Int,
-) : UiViewState {
-
-  data class ScheduleGroupings
-  internal constructor(
-      val currentMatch: SplatMatch,
-      val nextMatch: SplatMatch,
-      val battle: SplatBattle,
-  )
-}
-
-sealed class LobbyViewEvent : UiViewEvent {
-
-  data class ViewBattleRotation internal constructor(val index: Int) : LobbyViewEvent()
-
-  object ForceRefresh : LobbyViewEvent()
-}
+) : UiViewState
 
 sealed class LobbyControllerEvent : UiControllerEvent {
 

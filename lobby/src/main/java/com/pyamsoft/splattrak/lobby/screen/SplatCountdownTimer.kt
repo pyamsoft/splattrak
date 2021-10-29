@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby.screen.list
+package com.pyamsoft.splattrak.lobby.screen
 
 import androidx.annotation.CheckResult
 import java.time.Duration

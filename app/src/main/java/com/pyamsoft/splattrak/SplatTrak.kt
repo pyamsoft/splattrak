@@ -20,7 +20,6 @@ import android.app.Application
 import androidx.annotation.CheckResult
 import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
-import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.ModuleProvider
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.util.isDebugMode
@@ -41,6 +40,13 @@ class SplatTrak : Application() {
             privacyPolicyUrl = PRIVACY_POLICY_URL,
             termsConditionsUrl = TERMS_CONDITIONS_URL,
             version = BuildConfig.VERSION_CODE,
+            logger = createLogger(),
+            theme = { themeProvider, content ->
+              SplatTrakTheme(
+                  themeProvider = themeProvider,
+                  content = content,
+              )
+            },
         )
 
     return@lazy createComponent(
