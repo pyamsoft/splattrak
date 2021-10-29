@@ -25,7 +25,6 @@ import com.pyamsoft.splattrak.lobby.LobbyComponent
 import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemComponent
 import com.pyamsoft.splattrak.lobby.drilldown.DrilldownComponent
 import com.pyamsoft.splattrak.main.MainComponent
-import com.pyamsoft.splattrak.setting.SettingsComponent
 import com.pyamsoft.splattrak.splatnet.SplatnetModule
 import com.pyamsoft.splattrak.ui.UiModule
 import dagger.BindsInstance
@@ -49,8 +48,6 @@ internal interface SplatComponent {
   @CheckResult fun plusLobbyComponent(): LobbyComponent.Factory
 
   @CheckResult fun plusDrilldownComponent(): DrilldownComponent.Factory
-
-  @CheckResult fun plusSettingsComponent(): SettingsComponent.Factory
 
   @Component.Factory
   interface Factory {

@@ -34,6 +34,7 @@ import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
+import com.pyamsoft.splattrak.ui.BOTTOM_FLOATING_SPACE
 import com.pyamsoft.splattrak.ui.NotNintendo
 import com.pyamsoft.splattrak.ui.createNewTestImageLoader
 
@@ -99,12 +100,16 @@ private fun BattleList(
       )
     }
 
-    item { NotNintendo() }
+    item {
+      NotNintendo(
+          modifier = Modifier.fillMaxWidth(),
+      )
+    }
 
     // Space to float the bottom nav
     item {
       EmptyBox(
-          modifier = Modifier.fillMaxWidth().height(168.dp),
+          modifier = Modifier.fillMaxWidth().height(BOTTOM_FLOATING_SPACE),
       )
     }
 

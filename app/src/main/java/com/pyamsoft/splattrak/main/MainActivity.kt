@@ -18,7 +18,6 @@ package com.pyamsoft.splattrak.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -39,8 +38,7 @@ import com.pyamsoft.splattrak.BuildConfig
 import com.pyamsoft.splattrak.R
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.lobby.LobbyFragment
-import com.pyamsoft.splattrak.setting.SettingsFragment
-import com.pyamsoft.splattrak.ui.SnackbarContainer
+import com.pyamsoft.splattrak.setting.AppSettings
 import javax.inject.Inject
 import timber.log.Timber
 
@@ -107,10 +105,10 @@ internal class MainActivity : ChangeLogActivity(), UiController<MainControllerEv
 
   private fun pushSettings(previousPage: MainPage?, force: Boolean) {
     commitPage(
-        SettingsFragment.newInstance(),
+        AppSettings.newInstance(),
         MainPage.Settings,
         previousPage,
-        SettingsFragment.TAG,
+        AppSettings.TAG,
         force)
   }
 
