@@ -14,13 +14,19 @@
   ~ limitations under the License.
   -->
 
-<merge>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/background_container"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/main_fragment_container_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="8dp" />
+        android:layout_height="match_parent" />
 
-</merge>
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/main_compose_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal" />
+
+</FrameLayout>

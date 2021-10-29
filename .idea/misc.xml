@@ -27,6 +27,7 @@
         <entry key="../../../../../layout/compose-model-1635540316055.xml" value="0.20925925925925926" />
         <entry key="../../../../../layout/compose-model-1635540324531.xml" value="0.20925925925925926" />
         <entry key="../../../../../layout/compose-model-1635540350216.xml" value="0.20925925925925926" />
+        <entry key="../../../../../layout/compose-model-1635547367646.xml" value="0.12129629629629629" />
         <entry key="app/src/main/res/drawable/dialog_background.xml" value="0.19895833333333332" />
         <entry key="lobby/src/main/res/drawable/current_container_background.xml" value="0.12129629629629629" />
         <entry key="lobby/src/main/res/layout/background_container.xml" value="0.16170534813319878" />
@@ -37,7 +38,9 @@
         <entry key="lobby/src/main/res/layout/lobby_item_name.xml" value="0.1" />
         <entry key="lobby/src/main/res/layout/lobby_item_small_container.xml" value="0.16170534813319878" />
         <entry key="lobby/src/main/res/layout/lobby_list_item_holder.xml" value="0.16170534813319878" />
+        <entry key="main/src/main/res/layout/main_navigation.xml" value="0.16170534813319878" />
         <entry key="main/src/main/res/layout/main_toolbar.xml" value="0.19635416666666666" />
+        <entry key="main/src/main/res/menu/navigation_menu.xml" value="0.32407407407407407" />
         <entry key="ui/src/main/res/drawable-nodpi/repeating_stripes.xml" value="0.19895833333333332" />
         <entry key="ui/src/main/res/font/splatoon_2.xml" value="0.1" />
       </map>

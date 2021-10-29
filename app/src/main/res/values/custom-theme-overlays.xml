@@ -20,16 +20,12 @@
         <item name="dialogCornerRadius">16dp</item>
 
         <item name="android:windowBackground">@drawable/dialog_background</item>
-
-        <item name="fontFamily">@font/splatoon_2</item>
     </style>
 
     <style name="Custom.ThemeOverlay.Splat.Dialog.Alert" parent="@style/Base.ThemeOverlay.Splat.Dialog.Alert">
         <item name="dialogCornerRadius">16dp</item>
 
         <item name="android:windowBackground">@drawable/dialog_background</item>
-
-        <item name="fontFamily">@font/splatoon_2</item>
     </style>
 
 </resources>

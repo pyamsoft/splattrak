@@ -20,16 +20,4 @@
         <item name="android:windowLightNavigationBar">false</item>
     </style>
 
-    <style name="Theme.Splat.Splash" parent="@style/Custom.Theme.Splat.Splash">
-        <item name="android:windowLightNavigationBar">false</item>
-    </style>
-
-    <style name="Theme.Splat.Preferences" parent="@style/Custom.Theme.Splat.Preferences">
-        <item name="android:windowLightNavigationBar">false</item>
-    </style>
-
-    <style name="Theme.Splat.BottomSheet" parent="@style/Custom.Theme.Splat.BottomSheet">
-        <item name="android:windowLightNavigationBar">@bool/light_bars</item>
-    </style>
-
 </resources>

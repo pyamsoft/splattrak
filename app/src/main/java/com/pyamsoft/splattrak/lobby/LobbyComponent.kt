@@ -19,7 +19,6 @@ package com.pyamsoft.splattrak.lobby
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import com.pyamsoft.splattrak.core.ViewModelFactoryModule
-import com.pyamsoft.splattrak.ui.ThemeProviderModule
 import dagger.Binds
 import dagger.Module
 import dagger.Subcomponent
@@ -31,7 +30,6 @@ import dagger.multibindings.IntoMap
         [
             LobbyComponent.ComponentModule::class,
             ViewModelFactoryModule::class,
-            ThemeProviderModule::class,
         ])
 internal interface LobbyComponent {
 

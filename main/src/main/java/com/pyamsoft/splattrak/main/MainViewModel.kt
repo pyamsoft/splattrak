@@ -16,89 +16,54 @@
 
 package com.pyamsoft.splattrak.main
 
-import androidx.annotation.CheckResult
+import android.app.Activity
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UiSavedStateViewModel
 import com.pyamsoft.pydroid.arch.UiSavedStateViewModelProvider
-import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.splattrak.ui.BottomOffset
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
+import com.pyamsoft.pydroid.ui.theme.Theming
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import javax.inject.Named
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class MainViewModel
 @AssistedInject
 internal constructor(
     @Assisted savedState: UiSavedState,
-    @Named("app_name") appNameRes: Int,
-    private val bottomOffsetBus: EventBus<BottomOffset>,
+    private val theming: Theming,
 ) :
-    UiSavedStateViewModel<MainViewState, MainControllerEvent>(
+    UiSavedStateViewModel<MainViewState, UnitControllerEvent>(
         savedState,
         MainViewState(
-            page = null,
-            appNameRes = appNameRes,
-            bottomBarHeight = 0,
+            theme = Theming.Mode.SYSTEM,
         ),
     ) {
 
-  fun handleLoadDefaultPage() {
+  init {
     viewModelScope.launch(context = Dispatchers.Default) {
-      val page = restoreSavedState(KEY_PAGE) { MainPage.Lobby.asString() }.asPage()
-      Timber.d("Loading initial page: $page")
-      handleSelectPage(page, force = true)
+      val theme = restoreSavedState(KEY_THEME) { Theming.Mode.SYSTEM }
+      setState { copy(theme = theme) }
     }
   }
 
-  fun handleSelectPage(page: MainPage, force: Boolean) {
-    val oldPage = state.page
+  fun handleSyncDarkTheme(activity: Activity) {
     setState(
-        stateChange = { copy(page = page) },
-        andThen = { newState ->
-          publishNewSelection(newState.page.requireNotNull(), oldPage, force)
-        })
-  }
-
-  fun handleConsumeBottomBarHeight(height: Int) {
-    viewModelScope.launch(context = Dispatchers.Default) {
-      setState(
-          stateChange = { copy(bottomBarHeight = height) },
-          andThen = { bottomOffsetBus.send(BottomOffset(it.bottomBarHeight)) })
-    }
-  }
-
-  private suspend inline fun publishNewSelection(
-      newPage: MainPage,
-      oldPage: MainPage?,
-      force: Boolean,
-  ) {
-    Timber.d("Publish selection: $oldPage -> $newPage")
-    putSavedState(KEY_PAGE, newPage.asString())
-    publish(MainControllerEvent.PushPage(newPage, oldPage, force))
+        stateChange = {
+          val isDark = theming.isDarkTheme(activity)
+          return@setState copy(
+              theme = if (isDark) Theming.Mode.DARK else Theming.Mode.LIGHT,
+          )
+        },
+        andThen = { newState -> putSavedState(KEY_THEME, newState.theme.name) },
+    )
   }
 
   companion object {
 
-    @CheckResult
-    private fun MainPage.asString(): String {
-      return this::class.java.name
-    }
-
-    @CheckResult
-    private fun String.asPage(): MainPage =
-        when (this) {
-          MainPage.Lobby::class.java.name -> MainPage.Lobby
-          MainPage.Settings::class.java.name -> MainPage.Settings
-          else -> throw IllegalStateException("Cannot convert to MainPage: $this")
-        }
-
-    private const val KEY_PAGE = "page"
+    private const val KEY_THEME = "theme"
   }
 
   @AssistedFactory

@@ -51,17 +51,20 @@ fun LobbyScreen(
   val isLoading = state.loading
   val schedule = state.schedule
 
-  SwipeRefresh(
+  Surface(
       modifier = modifier,
-      state = rememberSwipeRefreshState(isRefreshing = isLoading),
-      onRefresh = onRefresh,
   ) {
-    BattleList(
-        schedule = schedule,
-        imageLoader = imageLoader,
-        onItemClicked = onItemClicked,
-        onItemCountdownCompleted = onItemCountdownCompleted,
-    )
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = isLoading),
+        onRefresh = onRefresh,
+    ) {
+      BattleList(
+          schedule = schedule,
+          imageLoader = imageLoader,
+          onItemClicked = onItemClicked,
+          onItemCountdownCompleted = onItemCountdownCompleted,
+      )
+    }
   }
 }
 
@@ -120,18 +123,16 @@ private fun BattleList(
 private fun PreviewLobbyScreen() {
   val context = LocalContext.current
 
-  Surface {
-    LobbyScreen(
-        state =
-            LobbyViewState(
-                schedule = emptyList(),
-                error = null,
-                loading = false,
-            ),
-        imageLoader = createNewTestImageLoader(context),
-        onRefresh = {},
-        onItemClicked = {},
-        onItemCountdownCompleted = {},
-    )
-  }
+  LobbyScreen(
+      state =
+          LobbyViewState(
+              schedule = emptyList(),
+              error = null,
+              loading = false,
+          ),
+      imageLoader = createNewTestImageLoader(context),
+      onRefresh = {},
+      onItemClicked = {},
+      onItemCountdownCompleted = {},
+  )
 }

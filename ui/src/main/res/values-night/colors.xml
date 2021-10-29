@@ -19,5 +19,4 @@
     <color name="dialogBackground">#FF2d2d2d</color>
 
     <color name="navigationBarColor">@color/transparent</color>
-    <color name="bottomSheetNavigationBarColor">#FF353535</color>
 </resources>

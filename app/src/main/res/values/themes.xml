@@ -18,10 +18,4 @@
 
     <style name="Theme.Splat" parent="@style/Custom.Theme.Splat" />
 
-    <style name="Theme.Splat.Splash" parent="@style/Custom.Theme.Splat.Splash" />
-
-    <style name="Theme.Splat.Preferences" parent="@style/Custom.Theme.Splat.Preferences" />
-
-    <style name="Theme.Splat.BottomSheet" parent="@style/Custom.Theme.Splat.BottomSheet" />
-
 </resources>

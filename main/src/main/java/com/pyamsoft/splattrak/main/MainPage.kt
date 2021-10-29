@@ -16,7 +16,7 @@
 
 package com.pyamsoft.splattrak.main
 
-sealed class MainPage {
-  object Lobby : MainPage()
-  object Settings : MainPage()
+sealed class MainPage(val name: String) {
+  object Lobby : MainPage("Lobby")
+  object Settings : MainPage("Settings")
 }

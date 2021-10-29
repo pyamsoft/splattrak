@@ -16,7 +16,6 @@
 
 package com.pyamsoft.splattrak.ui
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -50,7 +49,9 @@ private inline fun AnnotatedString.Builder.withStringAnnotation(
 fun NotNintendo(
     modifier: Modifier = Modifier,
 ) {
-  Box(modifier = modifier) {
+  Surface(
+      modifier = modifier,
+  ) {
     val text = buildAnnotatedString {
       append(
           "This Application is not affiliated with Nintendo. All product names, logos, and brands are property of their respective owners.")
@@ -75,7 +76,6 @@ fun NotNintendo(
             MaterialTheme.typography.caption.copy(
                 fontSize = 10.sp,
                 textAlign = TextAlign.Center,
-                color = MaterialTheme.colors.onSurface,
             ),
         onClick = {
           onTextClicked(
@@ -102,5 +102,5 @@ private fun onTextClicked(text: AnnotatedString, uriHandler: UriHandler, start: 
 @Preview
 @Composable
 private fun PreviewNotNintendo() {
-  Surface { NotNintendo() }
+  NotNintendo()
 }

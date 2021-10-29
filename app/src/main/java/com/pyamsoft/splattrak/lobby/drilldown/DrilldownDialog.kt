@@ -105,10 +105,6 @@ internal class DrilldownDialog : AppCompatDialogFragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
     makeFullscreen()
-
-    viewModel.bindController(viewLifecycleOwner) { event ->
-      // TODO
-    }
   }
 
   override fun onDestroyView() {

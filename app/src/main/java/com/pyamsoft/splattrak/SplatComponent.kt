@@ -19,13 +19,11 @@ package com.pyamsoft.splattrak
 import android.app.Application
 import android.content.Context
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.splattrak.lobby.LobbyComponent
 import com.pyamsoft.splattrak.lobby.drilldown.DrilldownComponent
 import com.pyamsoft.splattrak.main.MainComponent
 import com.pyamsoft.splattrak.splatnet.SplatnetModule
-import com.pyamsoft.splattrak.ui.UiModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -34,7 +32,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [SplatComponent.SplatProvider::class, SplatnetModule::class, UiModule::class])
+@Component(modules = [SplatComponent.SplatProvider::class, SplatnetModule::class])
 internal interface SplatComponent {
 
   @CheckResult fun plusMainComponent(): MainComponent.Factory

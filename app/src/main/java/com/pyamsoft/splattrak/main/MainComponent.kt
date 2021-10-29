@@ -16,16 +16,10 @@
 
 package com.pyamsoft.splattrak.main
 
-import android.app.Activity
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
-import androidx.savedstate.SavedStateRegistryOwner
-import com.pyamsoft.splattrak.ui.ThemeProviderModule
-import dagger.BindsInstance
 import dagger.Subcomponent
 
-@Subcomponent(modules = [ThemeProviderModule::class])
+@Subcomponent
 internal interface MainComponent {
 
   fun inject(activity: MainActivity)
@@ -33,12 +27,6 @@ internal interface MainComponent {
   @Subcomponent.Factory
   interface Factory {
 
-    @CheckResult
-    fun create(
-        @BindsInstance savedStateRegistryOwner: SavedStateRegistryOwner,
-        @BindsInstance activity: Activity,
-        @BindsInstance owner: LifecycleOwner,
-        @BindsInstance parent: ViewGroup,
-    ): MainComponent
+    @CheckResult fun create(): MainComponent
   }
 }
