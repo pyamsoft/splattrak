@@ -42,11 +42,13 @@ import timber.log.Timber
 
 internal class MainActivity : ChangeLogActivity() {
 
-  override val checkForUpdates = false
+  override val checkForUpdates = true
 
   override val applicationIcon = R.mipmap.ic_launcher
 
-  override val changelog: ChangeLogBuilder = buildChangeLog {}
+  override val changelog: ChangeLogBuilder = buildChangeLog {
+    feature("Convert to Jetpack Compose")
+  }
 
   override val versionName = BuildConfig.VERSION_NAME
 
