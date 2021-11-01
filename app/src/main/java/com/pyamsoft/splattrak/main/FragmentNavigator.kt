@@ -19,11 +19,9 @@ package com.pyamsoft.splattrak.main
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
@@ -40,7 +38,7 @@ class FragmentNavigator(
 
   private val fragmentManager = activity.supportFragmentManager
 
-  private var currentPage: MainPage by mutableStateOf(DEFAULT_PAGE)
+  private val currentPage: MutableState<MainPage> = mutableStateOf(DEFAULT_PAGE)
 
   @CheckResult
   private fun getExistingFragment(): Fragment? {
@@ -50,7 +48,7 @@ class FragmentNavigator(
   @Composable
   @CheckResult
   fun currentPage(): State<MainPage> {
-    return remember { mutableStateOf(currentPage) }
+    return currentPage
   }
 
   fun restore() {
@@ -118,7 +116,7 @@ class FragmentNavigator(
         Timber.d("Commit fragment: $tag")
       }
 
-      currentPage = newPage
+      currentPage.value = newPage
       fragmentManager.commitNow(activity) {
         decideAnimationForPage(previousPage, newPage)
         replace(fragmentContainerId, fragment, tag)
