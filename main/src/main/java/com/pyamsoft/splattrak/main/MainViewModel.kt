@@ -45,7 +45,8 @@ internal constructor(
 
   init {
     viewModelScope.launch(context = Dispatchers.Default) {
-      val theme = restoreSavedState(KEY_THEME) { Theming.Mode.SYSTEM }
+      val rawTheme = restoreSavedState(KEY_THEME) { Theming.Mode.SYSTEM.name }
+      val theme = Theming.Mode.valueOf(rawTheme)
       setState { copy(theme = theme) }
     }
   }

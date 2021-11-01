@@ -17,9 +17,15 @@
 package com.pyamsoft.splattrak.main
 
 import androidx.annotation.CheckResult
+import androidx.annotation.IdRes
+import androidx.fragment.app.FragmentActivity
+import com.pyamsoft.pydroid.ui.navigator.Navigator
+import dagger.Binds
+import dagger.BindsInstance
+import dagger.Module
 import dagger.Subcomponent
 
-@Subcomponent
+@Subcomponent(modules = [MainComponent.MainModule::class])
 internal interface MainComponent {
 
   fun inject(activity: MainActivity)
@@ -27,6 +33,18 @@ internal interface MainComponent {
   @Subcomponent.Factory
   interface Factory {
 
-    @CheckResult fun create(): MainComponent
+    @CheckResult
+    fun create(
+        @BindsInstance activity: FragmentActivity,
+        @BindsInstance @IdRes fragmentContainerId: Int,
+    ): MainComponent
+  }
+
+  @Module
+  abstract class MainModule {
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindNavigator(impl: SplatNavigator): Navigator<MainPage>
   }
 }

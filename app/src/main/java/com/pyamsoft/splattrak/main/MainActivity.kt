@@ -19,8 +19,6 @@ package com.pyamsoft.splattrak.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.annotation.CheckResult
-import androidx.annotation.IdRes
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -32,6 +30,7 @@ import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.changelog.buildChangeLog
+import com.pyamsoft.pydroid.ui.navigator.Navigator
 import com.pyamsoft.pydroid.util.stableLayoutHideNavigation
 import com.pyamsoft.splattrak.BuildConfig
 import com.pyamsoft.splattrak.R
@@ -39,6 +38,7 @@ import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.SplatTrakTheme
 import com.pyamsoft.splattrak.databinding.ActivityMainBinding
 import javax.inject.Inject
+import timber.log.Timber
 
 internal class MainActivity : ChangeLogActivity() {
 
@@ -55,18 +55,13 @@ internal class MainActivity : ChangeLogActivity() {
   @JvmField @Inject internal var imageLoader: ImageLoader? = null
 
   @JvmField @Inject internal var factory: MainViewModel.Factory? = null
-  private val viewModel by
-      viewModels<MainViewModel> { factory.requireNotNull().asFactory(this) }
+  private val viewModel by viewModels<MainViewModel> { factory.requireNotNull().asFactory(this) }
 
-  private val navigator by
-      lazy(LazyThreadSafetyMode.NONE) { FragmentNavigator(this, fragmentContainerId()) }
+  @JvmField @Inject internal var navigator: Navigator<MainPage>? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     setTheme(R.style.Theme_Splat)
     super.onCreate(savedInstanceState)
-
-    Injector.obtainFromApplication<SplatComponent>(this).plusMainComponent().create().inject(this)
-
     stableLayoutHideNavigation()
 
     // NOTE(Peter):
@@ -83,12 +78,20 @@ internal class MainActivity : ChangeLogActivity() {
     val binding = ActivityMainBinding.inflate(layoutInflater).apply { viewBinding = this }
     setContentView(binding.root)
 
+    Injector.obtainFromApplication<SplatComponent>(this)
+        .plusMainComponent()
+        .create(
+            this,
+            binding.mainFragmentContainerView.id,
+        )
+        .inject(this)
+
     // Snackbar respects window offsets and hosts snackbar composables
     // Because these are not in a nice Scaffold, we cannot take advantage of Coordinator style
     // actions (a FAB will not move out of the way for example)
     binding.mainComposeBottom.setContent {
       val state by viewModel.compose()
-      val page by navigator.currentPage()
+      val page by navigator.requireNotNull().currentScreenState()
 
       val snackbarHostState = remember { SnackbarHostState() }
 
@@ -100,8 +103,8 @@ internal class MainActivity : ChangeLogActivity() {
           MainBottomNav(
               page = page,
               imageLoader = imageLoader.requireNotNull(),
-              onLoadLobby = { navigator.handleSelectPage(MainPage.Lobby) },
-              onLoadSettings = { navigator.handleSelectPage(MainPage.Settings) },
+              onLoadLobby = { navigate(MainPage.Lobby) },
+              onLoadSettings = { navigate(MainPage.Settings) },
               onHeightMeasured = { viewModel.handleMeasureBottomNavHeight(it) },
           )
           RatingScreen(
@@ -116,13 +119,15 @@ internal class MainActivity : ChangeLogActivity() {
 
     viewModel.handleSyncDarkTheme(this)
 
-    navigator.restore()
+    navigator.requireNotNull().restore(savedInstanceState)
   }
 
-  @IdRes
-  @CheckResult
-  private fun fragmentContainerId(): Int {
-    return viewBinding.requireNotNull().mainFragmentContainerView.id
+  private fun navigate(page: MainPage) {
+    if (navigator.requireNotNull().select(page.asScreen())) {
+      Timber.d("Navigated to $page")
+    } else {
+      Timber.w("Did not navigate to $page")
+    }
   }
 
   override fun onNewIntent(intent: Intent) {
@@ -146,5 +151,6 @@ internal class MainActivity : ChangeLogActivity() {
     viewBinding = null
     factory = null
     imageLoader = null
+    navigator = null
   }
 }
