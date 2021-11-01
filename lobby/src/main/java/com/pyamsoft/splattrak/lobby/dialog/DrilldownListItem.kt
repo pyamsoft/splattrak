@@ -27,7 +27,7 @@ import com.pyamsoft.splattrak.lobby.common.BattleInfo
 import com.pyamsoft.splattrak.lobby.common.SmallBattleMaps
 import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
-import com.pyamsoft.splattrak.ui.createNewTestImageLoader
+import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 
 @Composable
 internal fun DrilldownListItem(

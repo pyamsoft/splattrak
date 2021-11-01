@@ -40,7 +40,7 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.splattrak.main.MainViewState
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.ui.NotNintendo
-import com.pyamsoft.splattrak.ui.createNewTestImageLoader
+import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 
 @Composable
 fun LobbyScreen(

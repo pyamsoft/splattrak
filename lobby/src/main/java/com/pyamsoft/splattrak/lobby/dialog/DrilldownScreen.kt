@@ -47,7 +47,7 @@ import com.pyamsoft.splattrak.lobby.common.decideBackgroundColor
 import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.splatnet.api.key
-import com.pyamsoft.splattrak.ui.createNewTestImageLoader
+import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 
 @Composable
 fun DrilldownScreen(

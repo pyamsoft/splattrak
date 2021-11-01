@@ -45,7 +45,7 @@ import com.pyamsoft.splattrak.lobby.R
 import com.pyamsoft.splattrak.splatnet.api.SplatMap
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.splatnet.api.SplatRuleset
-import com.pyamsoft.splattrak.ui.createNewTestImageLoader
+import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 import java.time.LocalDateTime
 
 @Composable

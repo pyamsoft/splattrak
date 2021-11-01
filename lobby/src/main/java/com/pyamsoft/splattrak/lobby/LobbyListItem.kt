@@ -53,7 +53,7 @@ import com.pyamsoft.splattrak.lobby.common.decideBackgroundColor
 import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
-import com.pyamsoft.splattrak.ui.createNewTestImageLoader
+import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import kotlinx.coroutines.Dispatchers
