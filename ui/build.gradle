@@ -86,9 +86,6 @@ dependencies {
   // AndroidX
   api "androidx.appcompat:appcompat:$appCompat"
   api "androidx.fragment:fragment:$fragment"
-  api "androidx.recyclerview:recyclerview:$recyclerView"
-  api "androidx.constraintlayout:constraintlayout:$constraintLayout"
-  api "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefresh"
 
   // Material Design
   api "com.google.android.material:material:$materialDesign"
