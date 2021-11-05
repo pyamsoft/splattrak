@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':setting'
+rootProject.name = "SplatTrak"
+
 include ':lobby'
 include ':main'
-
 include ':splatnet'
 include ':ui'
 include ':core'
 include ':app'
-rootProject.name = "SplatTrak"

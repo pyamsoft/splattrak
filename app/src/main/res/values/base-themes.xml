@@ -18,9 +18,4 @@
 
     <style name="Base.Theme.Splat" parent="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
 
-    <style name="Base.Theme.Splat.Preferences" parent="@style/PreferenceThemeOverlay.v14.Material" />
-
-    <style name="Base.Theme.Splat.BottomSheet" parent="@style/Theme.MaterialComponents.Light.BottomSheetDialog" />
-
-
 </resources>

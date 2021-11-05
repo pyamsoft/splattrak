@@ -45,6 +45,11 @@ android {
   buildFeatures {
     viewBinding true
     buildConfig false
+    compose true
+  }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion "$compose_version"
   }
 }
 
@@ -66,6 +71,9 @@ dependencies {
 
   kapt "com.google.dagger:dagger-compiler:$dagger"
 
+  implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist"
+
   implementation project(':splatnet')
+  implementation project(':main')
   api project(':ui')
 }

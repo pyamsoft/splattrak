@@ -22,41 +22,81 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
-import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.UiController
-import com.pyamsoft.pydroid.arch.createComponent
+import coil.ImageLoader
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.ViewWindowInsetObserver
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
-import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
+import com.pyamsoft.pydroid.ui.theme.ThemeProvider
+import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.splattrak.SplatComponent
+import com.pyamsoft.splattrak.SplatTrakTheme
 import com.pyamsoft.splattrak.core.SplatViewModelFactory
-import com.pyamsoft.splattrak.lobby.dialog.DrilldownBackgroundContainer
-import com.pyamsoft.splattrak.lobby.dialog.DrilldownViewEvent
+import com.pyamsoft.splattrak.lobby.dialog.DrilldownScreen
 import com.pyamsoft.splattrak.lobby.dialog.DrilldownViewModel
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
-import com.pyamsoft.splattrak.ui.R as R2
 import javax.inject.Inject
-import timber.log.Timber
 
-internal class DrilldownDialog : AppCompatDialogFragment(), UiController<Nothing> {
+internal class DrilldownDialog : AppCompatDialogFragment() {
 
   @JvmField @Inject internal var factory: SplatViewModelFactory? = null
   private val viewModel by viewModels<DrilldownViewModel> { factory.requireNotNull().create(this) }
 
-  private var stateSaver: StateSaver? = null
+  @JvmField @Inject internal var imageLoader: ImageLoader? = null
+  @JvmField @Inject internal var theming: Theming? = null
 
-  @JvmField @Inject internal var backgroundContainer: DrilldownBackgroundContainer? = null
+  // Watches the window insets
+  private var windowInsetObserver: ViewWindowInsetObserver? = null
 
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?,
-  ): View? {
-    return inflater.inflate(R.layout.layout_frame, container, false)
+  ): View {
+    val rawGameMode =
+        requireArguments().getString(KEY_GAME_MODE)
+            ?: throw IllegalStateException("Missing required GAME_MODE")
+    val gameMode = SplatGameMode.Mode.valueOf(rawGameMode)
+
+    val act = requireActivity()
+    Injector.obtainFromApplication<SplatComponent>(act)
+        .plusDrilldownComponent()
+        .create(gameMode)
+        .inject(this)
+
+    val themeProvider = ThemeProvider { theming.requireNotNull().isDarkTheme(act) }
+    return ComposeView(act).apply {
+      id = com.pyamsoft.splattrak.R.id.screen_lobby
+
+      val observer = ViewWindowInsetObserver(this)
+      val windowInsets = observer.start()
+      windowInsetObserver = observer
+
+      setContent {
+        val state by viewModel.compose()
+
+        SplatTrakTheme(themeProvider) {
+          CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
+            DrilldownScreen(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                imageLoader = imageLoader.requireNotNull(),
+                onRefresh = { viewModel.handleRefresh() },
+            )
+          }
+        }
+      }
+    }
   }
 
   override fun onViewCreated(
@@ -65,71 +105,36 @@ internal class DrilldownDialog : AppCompatDialogFragment(), UiController<Nothing
   ) {
     super.onViewCreated(view, savedInstanceState)
     makeFullscreen()
-
-    val rawGameMode =
-        requireArguments().getString(KEY_GAME_MODE)
-            ?: throw IllegalStateException("Missing required GAME_MODE")
-    val gameMode = SplatGameMode.Mode.valueOf(rawGameMode)
-
-    val binding = LayoutFrameBinding.bind(view)
-    Injector.obtainFromApplication<SplatComponent>(view.context)
-        .plusDrilldownComponent()
-        .create(viewLifecycleOwner, binding.layoutFrame, gameMode)
-        .inject(this)
-
-    stateSaver =
-        createComponent(
-            savedInstanceState,
-            viewLifecycleOwner,
-            viewModel,
-            this,
-            backgroundContainer.requireNotNull(),
-        ) {
-          return@createComponent when (it) {
-            is DrilldownViewEvent.ForceRefresh -> viewModel.handleRefresh()
-          }
-        }
-
-    handleBackground(view, gameMode)
-  }
-
-  private fun handleBackground(view: View, mode: SplatGameMode.Mode) {
-    view.setBackgroundResource(
-        when (mode) {
-          SplatGameMode.Mode.REGULAR -> R2.color.splatRegular
-          SplatGameMode.Mode.LEAGUE -> R2.color.splatLeague
-          SplatGameMode.Mode.RANKED -> R2.color.splatRanked
-        })
-  }
-
-  override fun onControllerEvent(event: Nothing) {
-    Timber.w("There should not be any ControllerEvents here!")
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    stateSaver?.saveState(outState)
-    super.onSaveInstanceState(outState)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    stateSaver = null
-    factory = null
+    (view as? ComposeView)?.disposeComposition()
 
-    backgroundContainer = null
+    windowInsetObserver?.stop()
+    windowInsetObserver = null
+
+    factory = null
+    imageLoader = null
+    theming = null
   }
 
   companion object {
 
-    const val TAG = "DrilldownDialog"
+    private const val TAG = "DrilldownDialog"
     private const val KEY_GAME_MODE = "key_game_mode"
 
     @JvmStatic
     @CheckResult
-    fun newInstance(mode: SplatGameMode): DialogFragment {
+    private fun newInstance(mode: SplatGameMode): DialogFragment {
       return DrilldownDialog().apply {
         arguments = Bundle().apply { putString(KEY_GAME_MODE, mode.mode().name) }
       }
+    }
+
+    @JvmStatic
+    fun show(activity: FragmentActivity, mode: SplatGameMode) {
+      newInstance(mode).show(activity, TAG)
     }
   }
 }

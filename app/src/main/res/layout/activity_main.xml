@@ -14,10 +14,19 @@
   ~ limitations under the License.
   -->
 
-<resources>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <style name="Theme.Splat" parent="@style/Custom.Theme.Splat">
-        <item name="android:windowLightNavigationBar">false</item>
-    </style>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/main_fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-</resources>
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/main_compose_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal" />
+
+</FrameLayout>

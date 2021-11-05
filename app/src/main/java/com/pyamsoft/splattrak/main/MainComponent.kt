@@ -16,16 +16,16 @@
 
 package com.pyamsoft.splattrak.main
 
-import android.app.Activity
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
-import androidx.savedstate.SavedStateRegistryOwner
-import com.pyamsoft.splattrak.ui.ThemeProviderModule
+import androidx.annotation.IdRes
+import androidx.fragment.app.FragmentActivity
+import com.pyamsoft.pydroid.ui.navigator.Navigator
+import dagger.Binds
 import dagger.BindsInstance
+import dagger.Module
 import dagger.Subcomponent
 
-@Subcomponent(modules = [ThemeProviderModule::class])
+@Subcomponent(modules = [MainComponent.MainModule::class])
 internal interface MainComponent {
 
   fun inject(activity: MainActivity)
@@ -35,10 +35,16 @@ internal interface MainComponent {
 
     @CheckResult
     fun create(
-        @BindsInstance savedStateRegistryOwner: SavedStateRegistryOwner,
-        @BindsInstance activity: Activity,
-        @BindsInstance owner: LifecycleOwner,
-        @BindsInstance parent: ViewGroup,
+        @BindsInstance activity: FragmentActivity,
+        @BindsInstance @IdRes fragmentContainerId: Int,
     ): MainComponent
+  }
+
+  @Module
+  abstract class MainModule {
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindNavigator(impl: SplatNavigator): Navigator<MainPage>
   }
 }

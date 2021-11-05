@@ -18,9 +18,7 @@
 
     <style name="Custom.Theme.Splat" parent="@style/Base.Theme.Splat">
         <item name="dialogTheme">@style/ThemeOverlay.Splat.Dialog</item>
-        <item name="preferenceTheme">@style/Theme.Splat.Preferences</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Splat.Dialog.Alert</item>
-        <item name="bottomSheetDialogTheme">@style/Theme.Splat.BottomSheet</item>
         <item name="android:datePickerDialogTheme">@style/ThemeOverlay.Splat.Dialog</item>
 
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -28,64 +26,9 @@
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
 
-        <item name="android:windowBackground">@color/windowBackground</item>
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
         <item name="android:statusBarColor">@color/statusBarColor</item>
         <item name="android:windowLightStatusBar">@bool/light_bars</item>
-
-        <item name="fontFamily">@font/splatoon_2</item>
-    </style>
-
-    <style name="Custom.Theme.Splat.Preferences" parent="@style/Base.Theme.Splat.Preferences">
-        <item name="dialogTheme">@style/ThemeOverlay.Splat.Dialog</item>
-        <item name="alertDialogTheme">@style/ThemeOverlay.Splat.Dialog.Alert</item>
-        <item name="bottomSheetDialogTheme">@style/Theme.Splat.BottomSheet</item>
-        <item name="android:datePickerDialogTheme">@style/ThemeOverlay.Splat.Dialog</item>
-
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@color/colorOnPrimary</item>
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorOnSecondary">@color/colorOnSecondary</item>
-
-        <item name="android:windowBackground">@color/windowBackground</item>
-        <item name="android:navigationBarColor">@color/navigationBarColor</item>
-        <item name="android:statusBarColor">@color/statusBarColor</item>
-        <item name="android:windowLightStatusBar">@bool/light_bars</item>
-
-        <item name="fontFamily">@font/splatoon_2</item>
-    </style>
-
-    <style name="Custom.Theme.Splat.Splash" parent="@style/Custom.Theme.Splat">
-        <item name="android:windowBackground">@drawable/splash_screen</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
-
-        <item name="fontFamily">@font/splatoon_2</item>
-    </style>
-
-    <style name="Custom.Theme.Splat.BottomSheet" parent="@style/Base.Theme.Splat.BottomSheet">
-        <item name="bottomSheetStyle">@style/Widget.Splat.BottomSheet</item>
-
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@color/colorOnPrimary</item>
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorOnSecondary">@color/colorOnSecondary</item>
-
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="android:windowLightStatusBar">@bool/light_bars</item>
-        <item name="android:statusBarColor">@color/transparent</item>
-
-        <item name="fontFamily">@font/splatoon_2</item>
-
-        <!-- Push all window content above the keyboard -->
-        <item name="android:windowSoftInputMode">adjustResize</item>
-
-        <!--
-          In dark theme, the nav bar is a different color than colorSurface
-          so we manually adjust
-          the color here to match
-        -->
-        <item name="android:navigationBarColor">@color/bottomSheetNavigationBarColor</item>
     </style>
 
 </resources>

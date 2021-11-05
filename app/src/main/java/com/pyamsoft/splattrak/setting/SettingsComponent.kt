@@ -17,38 +17,16 @@
 package com.pyamsoft.splattrak.setting
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.ViewModel
-import androidx.preference.PreferenceScreen
-import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.splattrak.core.ViewModelFactoryModule
-import dagger.Binds
-import dagger.BindsInstance
-import dagger.Module
 import dagger.Subcomponent
-import dagger.multibindings.ClassKey
-import dagger.multibindings.IntoMap
 
-@Subcomponent(modules = [SettingsComponent.ComponentModule::class, ViewModelFactoryModule::class])
+@Subcomponent
 internal interface SettingsComponent {
 
-  fun inject(fragment: SettingsFragment.SettingsPreferenceFragment)
+  fun inject(fragment: AppSettings)
 
   @Subcomponent.Factory
   interface Factory {
 
-    @CheckResult
-    fun create(
-        @BindsInstance parent: PreferenceScreen,
-        @BindsInstance listView: RecyclerView,
-    ): SettingsComponent
-  }
-
-  @Module
-  abstract class ComponentModule {
-
-    @Binds
-    @IntoMap
-    @ClassKey(SettingsViewModel::class)
-    internal abstract fun bindViewModel(impl: SettingsViewModel): ViewModel
+    @CheckResult fun create(): SettingsComponent
   }
 }

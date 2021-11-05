@@ -14,29 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.splatnet.api
+package com.pyamsoft.splattrak.lobby
 
-import androidx.annotation.CheckResult
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import androidx.compose.runtime.Stable
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 
-interface SplatMatch {
+@Stable
+data class LobbyViewState
+internal constructor(
+    val schedule: List<SplatBattle>,
+    val error: Throwable?,
+    val loading: Boolean,
+) : UiViewState
 
-  @CheckResult fun id(): Long
+sealed class LobbyControllerEvent : UiControllerEvent {
 
-  @CheckResult fun start(): LocalDateTime
-
-  @CheckResult fun end(): LocalDateTime
-
-  @CheckResult fun stageA(): SplatMap
-
-  @CheckResult fun stageB(): SplatMap
-
-  @CheckResult fun rules(): SplatRuleset
-}
-
-@CheckResult
-fun SplatMatch.key(): String {
-  val formatter = DateTimeFormatter.ISO_DATE_TIME
-  return "${this.id()}@${this.start().format(formatter)}-${this.end().format(formatter)}"
+  data class OpenBattleRotation
+  internal constructor(
+      val battle: SplatBattle,
+  ) : LobbyControllerEvent()
 }

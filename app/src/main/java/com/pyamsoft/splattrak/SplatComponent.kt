@@ -19,16 +19,12 @@ package com.pyamsoft.splattrak
 import android.app.Application
 import android.content.Context
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.splattrak.lobby.LobbyComponent
-import com.pyamsoft.splattrak.lobby.dialog.list.DrilldownItemComponent
 import com.pyamsoft.splattrak.lobby.drilldown.DrilldownComponent
-import com.pyamsoft.splattrak.lobby.screen.list.LobbyItemComponent
 import com.pyamsoft.splattrak.main.MainComponent
 import com.pyamsoft.splattrak.setting.SettingsComponent
 import com.pyamsoft.splattrak.splatnet.SplatnetModule
-import com.pyamsoft.splattrak.ui.UiModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -37,26 +33,16 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [SplatComponent.SplatProvider::class, SplatnetModule::class, UiModule::class])
+@Component(modules = [SplatComponent.SplatProvider::class, SplatnetModule::class])
 internal interface SplatComponent {
 
-  /** Not actually used, just here so graph can compile */
-  @CheckResult
-  @Suppress("FunctionName")
-  fun `$$daggerRequiredLobbyItemComponent`(): LobbyItemComponent.Factory
-
-  /** Not actually used, just here so graph can compile */
-  @CheckResult
-  @Suppress("FunctionName")
-  fun `$$daggerRequiredDrilldownItemComponent`(): DrilldownItemComponent.Factory
-
   @CheckResult fun plusMainComponent(): MainComponent.Factory
+
+  @CheckResult fun plusSettingsComponent(): SettingsComponent.Factory
 
   @CheckResult fun plusLobbyComponent(): LobbyComponent.Factory
 
   @CheckResult fun plusDrilldownComponent(): DrilldownComponent.Factory
-
-  @CheckResult fun plusSettingsComponent(): SettingsComponent.Factory
 
   @Component.Factory
   interface Factory {
@@ -66,7 +52,7 @@ internal interface SplatComponent {
         @BindsInstance application: Application,
         @Named("debug") @BindsInstance debug: Boolean,
         @BindsInstance theming: Theming,
-        @BindsInstance imageLoader: ImageLoader,
+        @BindsInstance coilImageLoader: () -> coil.ImageLoader,
     ): SplatComponent
   }
 
@@ -80,6 +66,15 @@ internal interface SplatComponent {
       @JvmStatic
       internal fun provideContext(application: Application): Context {
         return application
+      }
+
+      @Provides
+      @JvmStatic
+      @Singleton
+      internal fun provideCoilImageLoader(
+          lazyImageLoader: () -> coil.ImageLoader
+      ): coil.ImageLoader {
+        return lazyImageLoader()
       }
 
       @Provides

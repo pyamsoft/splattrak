@@ -15,9 +15,5 @@
   -->
 
 <resources>
-    <color name="windowBackground">@color/material_light_background</color>
-    <color name="dialogBackground">@color/white</color>
-
     <color name="navigationBarColor">@color/transparent</color>
-    <color name="bottomSheetNavigationBarColor">@color/white</color>
 </resources>

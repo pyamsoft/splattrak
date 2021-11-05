@@ -15,9 +15,5 @@
   -->
 
 <resources>
-
-    <style name="Theme.Splat" parent="@style/Custom.Theme.Splat">
-        <item name="android:windowLightNavigationBar">false</item>
-    </style>
-
+    <item name="screen_lobby" type="id" />
 </resources>

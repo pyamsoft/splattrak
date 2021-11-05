@@ -16,30 +16,10 @@
 
 package com.pyamsoft.splattrak.main
 
-import androidx.annotation.StringRes
-import com.pyamsoft.pydroid.arch.UiControllerEvent
-import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.ui.theme.Theming
 
-data class MainViewState
-internal constructor(
-    val page: MainPage?,
-    @StringRes val appNameRes: Int,
-    val bottomBarHeight: Int,
+data class MainViewState(
+    val theme: Theming.Mode,
+    val bottomNavHeight: Int,
 ) : UiViewState
-
-sealed class MainViewEvent : UiViewEvent {
-
-  object OpenLobby : MainViewEvent()
-
-  object OpenSettings : MainViewEvent()
-
-  data class BottomBarMeasured internal constructor(val height: Int) : MainViewEvent()
-}
-
-sealed class MainControllerEvent : UiControllerEvent {
-
-  data class PushPage
-  internal constructor(val newPage: MainPage, val oldPage: MainPage?, val force: Boolean) :
-      MainControllerEvent()
-}

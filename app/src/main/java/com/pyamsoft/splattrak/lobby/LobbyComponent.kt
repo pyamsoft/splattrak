@@ -16,16 +16,10 @@
 
 package com.pyamsoft.splattrak.lobby
 
-import android.app.Activity
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import com.pyamsoft.splattrak.core.ViewModelFactoryModule
-import com.pyamsoft.splattrak.lobby.screen.LobbyViewModel
-import com.pyamsoft.splattrak.ui.ThemeProviderModule
 import dagger.Binds
-import dagger.BindsInstance
 import dagger.Module
 import dagger.Subcomponent
 import dagger.multibindings.ClassKey
@@ -36,7 +30,6 @@ import dagger.multibindings.IntoMap
         [
             LobbyComponent.ComponentModule::class,
             ViewModelFactoryModule::class,
-            ThemeProviderModule::class,
         ])
 internal interface LobbyComponent {
 
@@ -45,12 +38,7 @@ internal interface LobbyComponent {
   @Subcomponent.Factory
   interface Factory {
 
-    @CheckResult
-    fun create(
-        @BindsInstance activity: Activity,
-        @BindsInstance owner: LifecycleOwner,
-        @BindsInstance parent: ViewGroup,
-    ): LobbyComponent
+    @CheckResult fun create(): LobbyComponent
   }
 
   @Module

@@ -16,9 +16,7 @@
 
 package com.pyamsoft.splattrak.lobby.drilldown
 
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import com.pyamsoft.splattrak.core.ViewModelFactoryModule
 import com.pyamsoft.splattrak.lobby.dialog.DrilldownViewModel
@@ -45,8 +43,6 @@ internal interface DrilldownComponent {
 
     @CheckResult
     fun create(
-        @BindsInstance owner: LifecycleOwner,
-        @BindsInstance parent: ViewGroup,
         @BindsInstance mode: SplatGameMode.Mode,
     ): DrilldownComponent
   }
