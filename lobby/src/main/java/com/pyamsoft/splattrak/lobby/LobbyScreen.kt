@@ -16,19 +16,29 @@
 
 package com.pyamsoft.splattrak.lobby
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
@@ -50,10 +60,10 @@ fun LobbyScreen(
     imageLoader: ImageLoader,
     onRefresh: () -> Unit,
     onItemClicked: (Int) -> Unit,
-    onItemCountdownCompleted: (Int) -> Unit,
 ) {
   val isLoading = state.loading
   val schedule = state.schedule
+  val error = state.error
 
   Surface(
       modifier = modifier,
@@ -62,12 +72,62 @@ fun LobbyScreen(
         state = rememberSwipeRefreshState(isRefreshing = isLoading),
         onRefresh = onRefresh,
     ) {
-      BattleList(
-          mainState = mainState,
-          schedule = schedule,
-          imageLoader = imageLoader,
-          onItemClicked = onItemClicked,
-          onItemCountdownCompleted = onItemCountdownCompleted,
+      Crossfade(
+          targetState = error,
+      ) { err ->
+        if (err == null) {
+          BattleList(
+              mainState = mainState,
+              schedule = schedule,
+              imageLoader = imageLoader,
+              onItemClicked = onItemClicked,
+              onItemCountdownCompleted = { onRefresh() },
+          )
+        } else {
+          Error(
+              modifier = Modifier.fillMaxSize().verticalScroll(state = rememberScrollState()),
+              error = err,
+              onRefresh = onRefresh,
+          )
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun Error(
+    modifier: Modifier = Modifier,
+    error: Throwable,
+    onRefresh: () -> Unit,
+) {
+  Column(
+      modifier = modifier.padding(16.dp),
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    Text(
+        textAlign = TextAlign.Center,
+        text = error.message ?: "An unexpected error occurred",
+        style =
+            MaterialTheme.typography.body1.copy(
+                color = MaterialTheme.colors.error,
+            ),
+    )
+
+    Text(
+        modifier = Modifier.padding(top = 16.dp),
+        textAlign = TextAlign.Center,
+        text = "Please try again later.",
+        style = MaterialTheme.typography.body2,
+    )
+
+    Button(
+        modifier = Modifier.padding(top = 16.dp),
+        onClick = onRefresh,
+    ) {
+      Text(
+          text = "Refresh",
       )
     }
   }
@@ -148,6 +208,5 @@ private fun PreviewLobbyScreen() {
       imageLoader = createNewTestImageLoader(context),
       onRefresh = {},
       onItemClicked = {},
-      onItemCountdownCompleted = {},
   )
 }

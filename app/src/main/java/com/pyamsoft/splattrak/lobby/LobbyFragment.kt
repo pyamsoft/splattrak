@@ -90,7 +90,6 @@ internal class LobbyFragment : Fragment() {
                 mainState = mainState,
                 imageLoader = imageLoader.requireNotNull(),
                 onItemClicked = { viewModel.handleOpenBattle(it) },
-                onItemCountdownCompleted = { viewModel.handleRefresh() },
                 onRefresh = { viewModel.handleRefresh() },
             )
           }

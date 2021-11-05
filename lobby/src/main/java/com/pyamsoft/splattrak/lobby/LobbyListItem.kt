@@ -54,6 +54,7 @@ import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
+import com.pyamsoft.splattrak.ui.R as R2
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import kotlinx.coroutines.Dispatchers
@@ -172,7 +173,7 @@ private fun LobbyUpNext(
       verticalAlignment = Alignment.CenterVertically,
   ) {
     Surface(
-        color = colorResource(R.color.splatNext),
+        color = colorResource(R2.color.splatNext),
         contentColor = Color.White,
         shape = MaterialTheme.shapes.medium,
     ) {

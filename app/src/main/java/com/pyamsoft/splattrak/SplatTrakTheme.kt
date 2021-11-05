@@ -35,14 +35,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.splattrak.ui.R as R2
 
 @Composable
 @CheckResult
 private fun themeColors(isDarkMode: Boolean): Colors {
-  val primary = colorResource(R.color.colorPrimary)
-  val onPrimary = colorResource(R.color.colorOnPrimary)
-  val secondary = colorResource(R.color.colorSecondary)
-  val onSecondary = colorResource(R.color.colorOnSecondary)
+  val primary = colorResource(R2.color.colorPrimary)
+  val onPrimary = colorResource(R2.color.colorOnPrimary)
+  val secondary = colorResource(R2.color.colorSecondary)
+  val onSecondary = colorResource(R2.color.colorOnSecondary)
   return if (isDarkMode)
       darkColors(
           primary = primary,

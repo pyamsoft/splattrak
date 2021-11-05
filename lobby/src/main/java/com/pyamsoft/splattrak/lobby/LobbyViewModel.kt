@@ -66,14 +66,22 @@ internal constructor(
   private fun performRefresh() {
     viewModelScope.launch(context = Dispatchers.Default) {
       setState(
-          stateChange = { copy(loading = true) },
+          stateChange = {
+            copy(
+                loading = true,
+                error = null,
+                schedule = emptyList(),
+            )
+          },
           andThen = {
             scheduleRunner
                 .call()
-                .onSuccess { data -> setState { copy(schedule = data, loading = false) } }
+                .onSuccess { data -> setState { copy(schedule = data) } }
                 .onFailure { Timber.e(it, "Failed to load Splatoon2.ink lobby list") }
-                .onFailure { setState { copy(error = it, loading = false) } }
-          })
+                .onFailure { setState { copy(error = it) } }
+                .onFinally { setState { copy(loading = false) } }
+          },
+      )
     }
   }
 }

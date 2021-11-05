@@ -30,15 +30,16 @@ import androidx.compose.ui.layout.ContentScale
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.pyamsoft.splattrak.lobby.R
+import com.pyamsoft.splattrak.ui.R as R2
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 
 @ColorRes
 @CheckResult
 internal fun decideBackgroundColor(mode: SplatGameMode.Mode): Int {
   return when (mode) {
-    SplatGameMode.Mode.REGULAR -> R.color.splatRegular
-    SplatGameMode.Mode.LEAGUE -> R.color.splatLeague
-    SplatGameMode.Mode.RANKED -> R.color.splatRanked
+    SplatGameMode.Mode.REGULAR -> R2.color.splatRegular
+    SplatGameMode.Mode.LEAGUE -> R2.color.splatLeague
+    SplatGameMode.Mode.RANKED -> R2.color.splatRanked
   }
 }
 
@@ -83,7 +84,7 @@ internal fun BackgroundStripeWrapper(
   BackgroundWrapper(
       modifier = modifier,
       imageLoader = imageLoader,
-      backgroundRes = R.drawable.repeating_stripes,
+      backgroundRes = R2.drawable.repeating_stripes,
       contentScale = ContentScale.Crop,
       content = content,
   )
