@@ -22,5 +22,5 @@ import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
 
 interface SplatnetInteractor {
 
-  @CheckResult suspend fun schedule(): ResultWrapper<SplatSchedule>
+  @CheckResult suspend fun schedule(force: Boolean): ResultWrapper<SplatSchedule>
 }

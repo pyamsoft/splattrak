@@ -41,35 +41,38 @@ internal constructor(
   private val scheduleCache =
       cachify<ResultWrapper<SplatSchedule>>(
           storage = { listOf(MemoryCacheStorage.create(24, TimeUnit.HOURS)) }) {
-        interactor.schedule()
+        interactor.schedule(true)
       }
 
-  override suspend fun schedule(): ResultWrapper<SplatSchedule> =
+  override suspend fun schedule(force: Boolean): ResultWrapper<SplatSchedule> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        return@withContext try {
-          scheduleCache.call().map { schedule ->
-            val now = LocalDateTime.now()
-            val validRotations =
-                schedule.battles().map { entry ->
-                  SplatBattleImpl(
-                      mode = entry.mode(),
-                      rotation =
-                          entry
-                              .rotation()
-                              .asSequence()
-                              .filter { filterPastMatches(it, now) }
-                              .sortedWith(SORTER)
-                              .toList())
-                }
-
-            return@map SplatScheduleImpl(validRotations)
-          }
-        } catch (e: Throwable) {
-          Timber.e(e, "Error fetching splat lobby schedule")
-          ResultWrapper.failure(e)
+        if (force) {
+          scheduleCache.clear()
         }
+
+        return@withContext scheduleCache
+            .call()
+            .map<SplatSchedule> { s ->
+              val now = LocalDateTime.now()
+              val validRotations =
+                  s.battles().map { entry ->
+                    SplatBattleImpl(
+                        mode = entry.mode(),
+                        rotation =
+                            entry
+                                .rotation()
+                                .asSequence()
+                                .filter { filterPastMatches(it, now) }
+                                .sortedWith(SORTER)
+                                .toList())
+                  }
+
+              return@map SplatScheduleImpl(validRotations)
+            }
+            .onFailure { scheduleCache.clear() }
+            .onFailure { Timber.e(it, "Error fetching splat lobby schedule") }
       }
 
   companion object {

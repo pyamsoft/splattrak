@@ -42,35 +42,34 @@ internal constructor(
         )) {
 
   private val scheduleRunner =
-      highlander<ResultWrapper<LobbyData>> {
-        splatnetInteractor.schedule().map { schedule ->
-          for (entry in schedule.battles()) {
-            if (entry.mode().mode() == expectedMode) {
-              return@map LobbyData.Battle(entry)
-            }
+      highlander<ResultWrapper<LobbyData>, Boolean> { force ->
+        splatnetInteractor.schedule(force).map { schedule ->
+          val entry = schedule.battles().find { it.mode().mode() == expectedMode }
+          return@map if (entry != null) {
+            LobbyData.Battle(entry)
+          } else {
+            val missingBattleError = IllegalStateException("Missing battle: ${expectedMode.name}")
+            Timber.e(missingBattleError, "Failed to find battle")
+            LobbyData.Error(missingBattleError)
           }
-
-          val missingBattleError = IllegalStateException("Missing battle: ${expectedMode.name}")
-          Timber.e(missingBattleError, "Failed to find battle")
-          LobbyData.Error(missingBattleError)
         }
       }
 
   init {
-    performRefresh()
+    performRefresh(false)
   }
 
   fun handleRefresh() {
-    performRefresh()
+    performRefresh(true)
   }
 
-  private fun performRefresh() {
+  private fun performRefresh(force: Boolean) {
     viewModelScope.launch(context = Dispatchers.Default) {
       setState(
           stateChange = { copy(loading = true) },
           andThen = {
             scheduleRunner
-                .call()
+                .call(force)
                 .onSuccess { data ->
                   when (data) {
                     is LobbyData.Battle -> setState { copy(battle = data.battle, loading = false) }

@@ -52,7 +52,9 @@ internal constructor(
   }
 
   fun handleMeasureBottomNavHeight(height: Int) {
-    setState { if (bottomNavHeight == height) this else copy(bottomNavHeight = height) }
+    if (state.bottomNavHeight != height) {
+      setState { copy(bottomNavHeight = height) }
+    }
   }
 
   fun handleSyncDarkTheme(activity: Activity) {

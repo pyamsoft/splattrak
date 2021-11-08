@@ -41,12 +41,12 @@ internal constructor(
     ) {
 
   private val scheduleRunner =
-      highlander<ResultWrapper<List<SplatBattle>>> {
-        splatnetInteractor.schedule().map { it.battles() }
+      highlander<ResultWrapper<List<SplatBattle>>, Boolean> { force ->
+        splatnetInteractor.schedule(force).map { it.battles() }
       }
 
   init {
-    performRefresh()
+    performRefresh(false)
   }
 
   fun handleOpenBattle(index: Int) {
@@ -60,10 +60,10 @@ internal constructor(
   }
 
   fun handleRefresh() {
-    performRefresh()
+    performRefresh(true)
   }
 
-  private fun performRefresh() {
+  private fun performRefresh(force: Boolean) {
     viewModelScope.launch(context = Dispatchers.Default) {
       setState(
           stateChange = {
@@ -75,7 +75,7 @@ internal constructor(
           },
           andThen = {
             scheduleRunner
-                .call()
+                .call(force)
                 .onSuccess { data -> setState { copy(schedule = data) } }
                 .onFailure { Timber.e(it, "Failed to load Splatoon2.ink lobby list") }
                 .onFailure { setState { copy(error = it) } }

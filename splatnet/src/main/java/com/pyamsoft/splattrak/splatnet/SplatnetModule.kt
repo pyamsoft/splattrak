@@ -40,6 +40,7 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import timber.log.Timber
 
 private const val SPLATNET_BASE_URL = "https://splatoon2.ink"
 internal const val SPLATNET_API_URL = "${SPLATNET_BASE_URL}/"
@@ -91,11 +92,22 @@ private class OkHttpClientLazyCallFactory(context: Context, debug: Boolean) : Ca
     override fun intercept(chain: Interceptor.Chain): Response {
       val cacheControl = CacheControl.Builder().maxAge(6, TimeUnit.HOURS).build()
 
+      // Don't cache failure responses
       val response = chain.proceed(chain.request())
-      val cachingStrategy = response.header(CACHE_CONTROL_HEADER)
-      return if (cachingStrategy != CACHE_CONTROL_NO_CACHING) response
-      else {
-        response.newBuilder().header(CACHE_CONTROL_HEADER, cacheControl.toString()).build()
+      return if (!response.isSuccessful) {
+        Timber.w("Do not cache failed responses")
+        response
+      } else {
+        val cachingStrategy = response.header(CACHE_CONTROL_HEADER)
+        // If it has a cache time, don't touch it
+        if (cachingStrategy != CACHE_CONTROL_NO_CACHING) {
+          Timber.d("Response includes cache header, do not touch")
+          response
+        } else {
+          // But if it has no cache time, we cache it for a bit
+          Timber.d("Cache response for time $cacheControl")
+          response.newBuilder().header(CACHE_CONTROL_HEADER, cacheControl.toString()).build()
+        }
       }
     }
 

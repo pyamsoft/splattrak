@@ -38,7 +38,7 @@ internal constructor(
     @InternalApi private val splatnet: Splatnet,
 ) : SplatnetInteractor {
 
-  override suspend fun schedule(): ResultWrapper<SplatSchedule> =
+  override suspend fun schedule(force: Boolean): ResultWrapper<SplatSchedule> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
