@@ -27,12 +27,11 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.pyamsoft.pydroid.arch.asFactory
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
+import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.changelog.buildChangeLog
 import com.pyamsoft.pydroid.ui.navigator.Navigator
 import com.pyamsoft.pydroid.util.stableLayoutHideNavigation
-import com.pyamsoft.splattrak.BuildConfig
 import com.pyamsoft.splattrak.R
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.SplatTrakTheme
@@ -40,17 +39,13 @@ import com.pyamsoft.splattrak.databinding.ActivityMainBinding
 import javax.inject.Inject
 import timber.log.Timber
 
-internal class MainActivity : ChangeLogActivity() {
-
-  override val checkForUpdates = true
+internal class MainActivity : PYDroidActivity() {
 
   override val applicationIcon = R.mipmap.ic_launcher
 
   override val changelog: ChangeLogBuilder = buildChangeLog {
     feature("Convert to Jetpack Compose")
   }
-
-  override val versionName = BuildConfig.VERSION_NAME
 
   private var viewBinding: ActivityMainBinding? = null
 
@@ -112,7 +107,7 @@ internal class MainActivity : ChangeLogActivity() {
           RatingScreen(
               snackbarHostState = snackbarHostState,
           )
-          VersionScreen(
+          VersionCheckScreen(
               snackbarHostState = snackbarHostState,
           )
         }
