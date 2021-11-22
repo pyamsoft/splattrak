@@ -54,7 +54,7 @@ buildscript {
     composeActivity = "1.4.0"
 
     // Us
-    pydroid = "24.2.0"
+    pydroid = "24.3.0"
     cachify = "0.0.23"
     highlander = "0.0.18"
 
