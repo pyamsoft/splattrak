@@ -20,15 +20,23 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.ui.navigator.Navigator
+import com.pyamsoft.splattrak.core.ActivityScope
+import com.pyamsoft.splattrak.lobby.LobbyComponent
+import com.pyamsoft.splattrak.setting.SettingsComponent
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Module
 import dagger.Subcomponent
 
+@ActivityScope
 @Subcomponent(modules = [MainComponent.MainModule::class])
 internal interface MainComponent {
 
   fun inject(activity: MainActivity)
+
+  @CheckResult fun plusSettingsComponent(): SettingsComponent.Factory
+
+  @CheckResult fun plusLobbyComponent(): LobbyComponent.Factory
 
   @Subcomponent.Factory
   interface Factory {

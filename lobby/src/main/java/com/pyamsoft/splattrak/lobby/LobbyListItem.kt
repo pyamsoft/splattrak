@@ -53,8 +53,8 @@ import com.pyamsoft.splattrak.lobby.common.decideBackgroundColor
 import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
-import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 import com.pyamsoft.splattrak.ui.R as R2
+import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import kotlinx.coroutines.Dispatchers
@@ -65,8 +65,8 @@ internal fun LobbyListItem(
     modifier: Modifier = Modifier,
     battle: SplatBattle,
     imageLoader: ImageLoader,
-    onClick: () -> Unit,
-    onCountdownCompleted: () -> Unit,
+    onClick: (SplatBattle) -> Unit,
+    onCountdownCompleted: (SplatBattle) -> Unit,
 ) {
   val name = battle.mode().name()
   val mode = battle.mode().mode()
@@ -75,7 +75,7 @@ internal fun LobbyListItem(
   val backgroundColor = colorResource(backgroundColorResource)
 
   Card(
-      modifier = modifier.clickable { onClick() },
+      modifier = modifier.clickable { onClick(battle) },
       backgroundColor = backgroundColor,
       contentColor = Color.White,
   ) {
@@ -99,7 +99,7 @@ internal fun LobbyListItem(
             modifier = Modifier.fillMaxWidth().padding(8.dp),
             imageLoader = imageLoader,
             rotation = rotation,
-            onCountdownCompleted = onCountdownCompleted,
+            onCountdownCompleted = { onCountdownCompleted(battle) },
         )
       }
     }

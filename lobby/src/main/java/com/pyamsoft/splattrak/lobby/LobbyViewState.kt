@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.main
+package com.pyamsoft.splattrak.lobby
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.splattrak.splatnet.api.SplatBattle
+import javax.inject.Inject
 
-data class MainViewState(
-    val theme: Theming.Mode,
-    val bottomNavHeight: Int,
-) : UiViewState
+interface LobbyViewState : UiViewState {
+  val schedule: List<SplatBattle>
+  val error: Throwable?
+  val loading: Boolean
+}
+
+internal class MutableLobbyViewState @Inject internal constructor(): LobbyViewState {
+  override var schedule by mutableStateOf(emptyList<SplatBattle>())
+  override var error by mutableStateOf<Throwable?>(null)
+  override var loading by mutableStateOf(false)
+}

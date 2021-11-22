@@ -16,14 +16,21 @@
 
 package com.pyamsoft.splattrak.lobby.dialog
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
+import javax.inject.Inject
 
-@Stable
-data class DrilldownViewState
-internal constructor(
-    val battle: SplatBattle?,
-    val error: Throwable?,
-    val loading: Boolean,
-) : UiViewState
+interface DrilldownViewState : UiViewState {
+  val battle: SplatBattle?
+  val error: Throwable?
+  val loading: Boolean
+}
+
+internal class MutableDrilldownViewState @Inject internal constructor() : DrilldownViewState {
+  override var battle by mutableStateOf<SplatBattle?>(null)
+  override var error by mutableStateOf<Throwable?>(null)
+  override var loading by mutableStateOf(false)
+}

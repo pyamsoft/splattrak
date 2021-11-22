@@ -17,23 +17,11 @@
 package com.pyamsoft.splattrak.lobby.drilldown
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.ViewModel
-import com.pyamsoft.splattrak.core.ViewModelFactoryModule
-import com.pyamsoft.splattrak.lobby.dialog.DrilldownViewModel
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
-import dagger.Binds
 import dagger.BindsInstance
-import dagger.Module
 import dagger.Subcomponent
-import dagger.multibindings.ClassKey
-import dagger.multibindings.IntoMap
 
-@Subcomponent(
-    modules =
-        [
-            DrilldownComponent.ComponentModule::class,
-            ViewModelFactoryModule::class,
-        ])
+@Subcomponent
 internal interface DrilldownComponent {
 
   fun inject(fragment: DrilldownDialog)
@@ -45,14 +33,5 @@ internal interface DrilldownComponent {
     fun create(
         @BindsInstance mode: SplatGameMode.Mode,
     ): DrilldownComponent
-  }
-
-  @Module
-  abstract class ComponentModule {
-
-    @Binds
-    @IntoMap
-    @ClassKey(DrilldownViewModel::class)
-    internal abstract fun bindViewModel(impl: DrilldownViewModel): ViewModel
   }
 }

@@ -154,11 +154,11 @@ private fun PreviewDrilldownScreen() {
   Surface {
     DrilldownScreen(
         state =
-            DrilldownViewState(
-                battle = TestData.battle,
-                loading = false,
-                error = null,
-            ),
+            MutableDrilldownViewState().apply {
+              battle = TestData.battle
+              loading = false
+              error = null
+            },
         imageLoader = createNewTestImageLoader(context),
         onRefresh = {},
     )

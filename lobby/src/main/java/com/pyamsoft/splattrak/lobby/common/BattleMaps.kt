@@ -16,6 +16,7 @@
 
 package com.pyamsoft.splattrak.lobby.common
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,17 +56,36 @@ internal fun BigBattleMaps(
     match: SplatMatch,
     imageLoader: ImageLoader,
 ) {
-  Column(
-      modifier = modifier.height(320.dp),
-  ) {
-    BattleMaps(
-        modifier = Modifier.weight(1F),
-        match = match,
-        imageLoader = imageLoader,
+  val configuration = LocalConfiguration.current
+  val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+
+  if (isPortrait) {
+    Column(
+        modifier = modifier.height(320.dp),
     ) {
-      Spacer(
-          modifier = Modifier.height(16.dp).fillMaxWidth(),
-      )
+      BattleMaps(
+          modifier = Modifier.weight(1F),
+          match = match,
+          imageLoader = imageLoader,
+      ) {
+        Spacer(
+            modifier = Modifier.height(16.dp).fillMaxWidth(),
+        )
+      }
+    }
+  } else {
+    Row(
+        modifier = modifier.height(200.dp),
+    ) {
+      BattleMaps(
+          modifier = Modifier.weight(1F),
+          match = match,
+          imageLoader = imageLoader,
+      ) {
+        Spacer(
+            modifier = Modifier.width(16.dp).fillMaxHeight(),
+        )
+      }
     }
   }
 }

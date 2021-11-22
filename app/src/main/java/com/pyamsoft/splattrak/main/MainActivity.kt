@@ -18,13 +18,11 @@ package com.pyamsoft.splattrak.main
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import coil.ImageLoader
 import com.google.accompanist.insets.ProvideWindowInsets
-import com.pyamsoft.pydroid.arch.asFactory
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
@@ -49,18 +47,13 @@ internal class MainActivity : PYDroidActivity() {
 
   private var viewBinding: ActivityMainBinding? = null
 
+  private var injector: MainComponent? = null
+
   @JvmField @Inject internal var imageLoader: ImageLoader? = null
-
-  @JvmField @Inject internal var factory: MainViewModel.Factory? = null
-  private val viewModel by viewModels<MainViewModel> { factory.requireNotNull().asFactory(this) }
-
+  @JvmField @Inject internal var viewModel: MainViewModeler? = null
   @JvmField @Inject internal var navigator: Navigator<MainPage>? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    setTheme(R.style.Theme_Splat)
-    super.onCreate(savedInstanceState)
-    stableLayoutHideNavigation()
-
     // NOTE(Peter):
     // Not full Compose yet
     // Compose has an issue handling Fragments.
@@ -75,48 +68,62 @@ internal class MainActivity : PYDroidActivity() {
     val binding = ActivityMainBinding.inflate(layoutInflater).apply { viewBinding = this }
     setContentView(binding.root)
 
-    Injector.obtainFromApplication<SplatComponent>(this)
-        .plusMainComponent()
-        .create(
-            this,
-            binding.mainFragmentContainerView.id,
-        )
-        .inject(this)
+    injector =
+        Injector.obtainFromApplication<SplatComponent>(this)
+            .plusMainComponent()
+            .create(
+                this,
+                binding.mainFragmentContainerView.id,
+            )
+            .also { c -> c.inject(this) }
+
+    setTheme(R.style.Theme_Splat)
+    super.onCreate(savedInstanceState)
+    stableLayoutHideNavigation()
+
+    val vm = viewModel.requireNotNull()
+
+    vm.restoreState(savedInstanceState)
 
     // Snackbar respects window offsets and hosts snackbar composables
     // Because these are not in a nice Scaffold, we cannot take advantage of Coordinator style
     // actions (a FAB will not move out of the way for example)
     binding.mainComposeBottom.setContent {
-      val state by viewModel.compose()
       val page by navigator.requireNotNull().currentScreenState()
 
       val snackbarHostState = remember { SnackbarHostState() }
 
-      val theme = state.theme
-      SplatTrakTheme(
-          theme = theme,
-      ) {
-        ProvideWindowInsets {
-          MainBottomNav(
-              page = page,
-              imageLoader = imageLoader.requireNotNull(),
-              onLoadLobby = { navigate(MainPage.Lobby) },
-              onLoadSettings = { navigate(MainPage.Settings) },
-              onHeightMeasured = { viewModel.handleMeasureBottomNavHeight(it) },
-          )
-          RatingScreen(
-              snackbarHostState = snackbarHostState,
-          )
-          VersionCheckScreen(
-              snackbarHostState = snackbarHostState,
-          )
+      vm.Render { state ->
+        val theme = state.theme
+        SplatTrakTheme(
+            theme = theme,
+        ) {
+          ProvideWindowInsets {
+            MainBottomNav(
+                page = page,
+                imageLoader = imageLoader.requireNotNull(),
+                onLoadLobby = { navigate(MainPage.Lobby) },
+                onLoadSettings = { navigate(MainPage.Settings) },
+                onHeightMeasured = { vm.handleMeasureBottomNavHeight(it) },
+            )
+            RatingScreen(
+                snackbarHostState = snackbarHostState,
+            )
+            VersionCheckScreen(
+                snackbarHostState = snackbarHostState,
+            )
+          }
         }
       }
     }
 
-    viewModel.handleSyncDarkTheme(this)
+    vm.handleSyncDarkTheme(this)
 
-    navigator.requireNotNull().restore(savedInstanceState)
+    navigator.requireNotNull().restore {
+      if (it.select(MainPage.Lobby.asScreen())) {
+        Timber.d("Default lobby screen loaded")
+      }
+    }
   }
 
   private fun navigate(page: MainPage) {
@@ -142,12 +149,27 @@ internal class MainActivity : PYDroidActivity() {
     }
   }
 
+  override fun getSystemService(name: String): Any? {
+    return when (name) {
+      // Must have super.onCreate() come after defining injector or this will throw
+      MainComponent::class.java.name -> injector.requireNotNull()
+      else -> super.getSystemService(name)
+    }
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    viewModel?.saveState(outState)
+  }
+
   override fun onDestroy() {
     super.onDestroy()
     viewBinding?.apply { this.mainComposeBottom.disposeComposition() }
     viewBinding = null
-    factory = null
     imageLoader = null
     navigator = null
+
+    injector = null
+    viewModel = null
   }
 }

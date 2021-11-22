@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.core
+package com.pyamsoft.splattrak.main
 
-import androidx.annotation.CheckResult
-import dagger.Binds
-import dagger.Module
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.ui.theme.Theming
+import javax.inject.Inject
 
-@Module
-abstract class ViewModelFactoryModule {
+interface MainViewState : UiViewState {
+  val theme: Theming.Mode
+  val bottomNavHeight: Int
+}
 
-  @Binds
-  @CheckResult
-  internal abstract fun bindFactory(impl: SplatViewModelFactoryImpl): SplatViewModelFactory
+class MutableMainViewState @Inject constructor() : MainViewState {
+  override var theme by mutableStateOf(Theming.Mode.SYSTEM)
+  override var bottomNavHeight by mutableStateOf(0)
 }

@@ -14,25 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby
+package com.pyamsoft.splattrak.core
 
-import androidx.compose.runtime.Stable
-import com.pyamsoft.pydroid.arch.UiControllerEvent
-import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.splattrak.splatnet.api.SplatBattle
+import javax.inject.Scope
 
-@Stable
-data class LobbyViewState
-internal constructor(
-    val schedule: List<SplatBattle>,
-    val error: Throwable?,
-    val loading: Boolean,
-) : UiViewState
-
-sealed class LobbyControllerEvent : UiControllerEvent {
-
-  data class OpenBattleRotation
-  internal constructor(
-      val battle: SplatBattle,
-  ) : LobbyControllerEvent()
-}
+@Scope @Retention(AnnotationRetention.RUNTIME) annotation class ActivityScope

@@ -36,7 +36,7 @@ internal constructor(
     @IdRes fragmentContainerId: Int,
 ) : FragmentNavigator<MainPage>(activity, fragmentContainerId) {
 
-  override val defaultScreen: Navigator.Screen<MainPage> = MainPage.Lobby.asScreen()
+  override val blankScreen: MainPage = MainPage.Lobby
 
   override fun performFragmentTransaction(
       container: Int,

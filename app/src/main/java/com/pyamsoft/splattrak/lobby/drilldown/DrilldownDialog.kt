@@ -16,6 +16,7 @@
 
 package com.pyamsoft.splattrak.lobby.drilldown
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,12 +25,11 @@ import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ViewWindowInsetObserver
@@ -39,24 +39,31 @@ import com.pyamsoft.pydroid.ui.app.makeFullscreen
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.splattrak.R
 import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.SplatTrakTheme
-import com.pyamsoft.splattrak.core.SplatViewModelFactory
 import com.pyamsoft.splattrak.lobby.dialog.DrilldownScreen
-import com.pyamsoft.splattrak.lobby.dialog.DrilldownViewModel
+import com.pyamsoft.splattrak.lobby.dialog.DrilldownViewModeler
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 import javax.inject.Inject
 
 internal class DrilldownDialog : AppCompatDialogFragment() {
 
-  @JvmField @Inject internal var factory: SplatViewModelFactory? = null
-  private val viewModel by viewModels<DrilldownViewModel> { factory.requireNotNull().create(this) }
-
+  @JvmField @Inject internal var viewModel: DrilldownViewModeler? = null
   @JvmField @Inject internal var imageLoader: ImageLoader? = null
   @JvmField @Inject internal var theming: Theming? = null
 
   // Watches the window insets
   private var windowInsetObserver: ViewWindowInsetObserver? = null
+
+  private fun handleRefresh() {
+    viewModel
+        .requireNotNull()
+        .handleRefresh(
+            scope = viewLifecycleOwner.lifecycleScope,
+            force = true,
+        )
+  }
 
   override fun onCreateView(
       inflater: LayoutInflater,
@@ -76,23 +83,24 @@ internal class DrilldownDialog : AppCompatDialogFragment() {
 
     val themeProvider = ThemeProvider { theming.requireNotNull().isDarkTheme(act) }
     return ComposeView(act).apply {
-      id = com.pyamsoft.splattrak.R.id.screen_lobby
+      id = R.id.screen_lobby
 
       val observer = ViewWindowInsetObserver(this)
       val windowInsets = observer.start()
       windowInsetObserver = observer
 
+      val vm = viewModel.requireNotNull()
       setContent {
-        val state by viewModel.compose()
-
-        SplatTrakTheme(themeProvider) {
-          CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
-            DrilldownScreen(
-                modifier = Modifier.fillMaxSize(),
-                state = state,
-                imageLoader = imageLoader.requireNotNull(),
-                onRefresh = { viewModel.handleRefresh() },
-            )
+        vm.Render { state ->
+          SplatTrakTheme(themeProvider) {
+            CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
+              DrilldownScreen(
+                  modifier = Modifier.fillMaxSize(),
+                  state = state,
+                  imageLoader = imageLoader.requireNotNull(),
+                  onRefresh = { handleRefresh() },
+              )
+            }
           }
         }
       }
@@ -105,6 +113,23 @@ internal class DrilldownDialog : AppCompatDialogFragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
     makeFullscreen()
+    viewModel.requireNotNull().also { vm ->
+      vm.restoreState(savedInstanceState)
+      vm.handleRefresh(
+          scope = viewLifecycleOwner.lifecycleScope,
+          force = false,
+      )
+    }
+  }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        makeFullscreen()
+    }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    viewModel?.saveState(outState)
   }
 
   override fun onDestroyView() {
@@ -114,7 +139,7 @@ internal class DrilldownDialog : AppCompatDialogFragment() {
     windowInsetObserver?.stop()
     windowInsetObserver = null
 
-    factory = null
+    viewModel = null
     imageLoader = null
     theming = null
   }

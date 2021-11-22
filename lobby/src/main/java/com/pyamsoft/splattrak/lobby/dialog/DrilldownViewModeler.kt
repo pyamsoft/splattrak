@@ -16,30 +16,25 @@
 
 package com.pyamsoft.splattrak.lobby.dialog
 
-import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.splattrak.splatnet.SplatnetInteractor
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class DrilldownViewModel
+class DrilldownViewModeler
 @Inject
 internal constructor(
+    private val state: MutableDrilldownViewState,
     splatnetInteractor: SplatnetInteractor,
     expectedMode: SplatGameMode.Mode,
-) :
-    UiViewModel<DrilldownViewState, Nothing>(
-        DrilldownViewState(
-            battle = null,
-            loading = false,
-            error = null,
-        )) {
+) : AbstractViewModeler<DrilldownViewState>(state) {
 
   private val scheduleRunner =
       highlander<ResultWrapper<LobbyData>, Boolean> { force ->
@@ -55,30 +50,26 @@ internal constructor(
         }
       }
 
-  init {
-    performRefresh(false)
-  }
-
-  fun handleRefresh() {
-    performRefresh(true)
-  }
-
-  private fun performRefresh(force: Boolean) {
-    viewModelScope.launch(context = Dispatchers.Default) {
-      setState(
-          stateChange = { copy(loading = true) },
-          andThen = {
-            scheduleRunner
-                .call(force)
-                .onSuccess { data ->
-                  when (data) {
-                    is LobbyData.Battle -> setState { copy(battle = data.battle, loading = false) }
-                    is LobbyData.Error -> setState { copy(error = data.error, loading = false) }
-                  }
-                }
-                .onFailure { Timber.e(it, "Failed to load Splatoon2.ink lobby list") }
-                .onFailure { setState { copy(error = it, loading = false) } }
-          })
+  fun handleRefresh(scope: CoroutineScope, force: Boolean) {
+    scope.launch(context = Dispatchers.Main) {
+      state.loading = true
+      scheduleRunner
+          .call(force)
+          .onSuccess { data ->
+            when (data) {
+              is LobbyData.Battle -> {
+                Timber.d("Loaded drilldown for battle: ${data.battle}")
+                state.battle = data.battle
+              }
+              is LobbyData.Error -> {
+                Timber.w(data.error, "Error loading battle info")
+                state.error = data.error
+              }
+            }
+          }
+          .onFailure { Timber.e(it, "Failed to load Splatoon2.ink lobby list") }
+          .onFailure { state.error = it }
+          .onFinally { state.loading = false }
     }
   }
 

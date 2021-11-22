@@ -25,7 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -48,6 +48,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.splattrak.main.MainViewState
+import com.pyamsoft.splattrak.main.MutableMainViewState
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.ui.NotNintendo
 import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
@@ -59,7 +60,7 @@ fun LobbyScreen(
     state: LobbyViewState,
     imageLoader: ImageLoader,
     onRefresh: () -> Unit,
-    onItemClicked: (Int) -> Unit,
+    onItemClicked: (SplatBattle) -> Unit,
 ) {
   val isLoading = state.loading
   val schedule = state.schedule
@@ -138,8 +139,8 @@ private fun BattleList(
     mainState: MainViewState,
     schedule: List<SplatBattle>,
     imageLoader: ImageLoader,
-    onItemClicked: (Int) -> Unit,
-    onItemCountdownCompleted: (Int) -> Unit,
+    onItemClicked: (SplatBattle) -> Unit,
+    onItemCountdownCompleted: (SplatBattle) -> Unit,
 ) {
   val bottomNavHeight = mainState.bottomNavHeight
   val density = LocalDensity.current
@@ -155,15 +156,15 @@ private fun BattleList(
       )
     }
 
-    itemsIndexed(
+    items(
         items = schedule,
-        key = { _, item -> item.mode().key() },
-    ) { index, item ->
+        key = { it.mode().key() },
+    ) { item ->
       LobbyListItem(
           battle = item,
           imageLoader = imageLoader,
-          onClick = { onItemClicked(index) },
-          onCountdownCompleted = { onItemCountdownCompleted(index) },
+          onClick = onItemClicked,
+          onCountdownCompleted = onItemCountdownCompleted,
       )
     }
 
@@ -195,16 +196,16 @@ private fun PreviewLobbyScreen() {
 
   LobbyScreen(
       state =
-          LobbyViewState(
-              schedule = emptyList(),
-              error = null,
-              loading = false,
-          ),
+          MutableLobbyViewState().apply {
+            schedule = emptyList()
+            error = null
+            loading = false
+          },
       mainState =
-          MainViewState(
-              theme = Theming.Mode.SYSTEM,
-              bottomNavHeight = 0,
-          ),
+          MutableMainViewState().apply {
+            theme = Theming.Mode.SYSTEM
+            bottomNavHeight = 0
+          },
       imageLoader = createNewTestImageLoader(context),
       onRefresh = {},
       onItemClicked = {},

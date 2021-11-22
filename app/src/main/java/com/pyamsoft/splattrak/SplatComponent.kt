@@ -38,10 +38,6 @@ internal interface SplatComponent {
 
   @CheckResult fun plusMainComponent(): MainComponent.Factory
 
-  @CheckResult fun plusSettingsComponent(): SettingsComponent.Factory
-
-  @CheckResult fun plusLobbyComponent(): LobbyComponent.Factory
-
   @CheckResult fun plusDrilldownComponent(): DrilldownComponent.Factory
 
   @Component.Factory

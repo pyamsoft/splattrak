@@ -23,44 +23,47 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ViewWindowInsetObserver
-import com.pyamsoft.pydroid.arch.asFactory
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.splattrak.R
-import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.SplatTrakTheme
-import com.pyamsoft.splattrak.core.SplatViewModelFactory
 import com.pyamsoft.splattrak.lobby.drilldown.DrilldownDialog
-import com.pyamsoft.splattrak.main.MainViewModel
+import com.pyamsoft.splattrak.main.MainComponent
+import com.pyamsoft.splattrak.main.MainViewModeler
+import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import javax.inject.Inject
 
 internal class LobbyFragment : Fragment() {
 
-  @JvmField @Inject internal var factory: SplatViewModelFactory? = null
-  private val viewModel by
-      activityViewModels<LobbyViewModel> { factory.requireNotNull().create(requireActivity()) }
-
-  @JvmField @Inject internal var mainFactory: MainViewModel.Factory? = null
-  private val mainViewModel by
-      activityViewModels<MainViewModel> {
-        mainFactory.requireNotNull().asFactory(requireActivity())
-      }
-
+  @JvmField @Inject internal var viewModel: LobbyViewModeler? = null
+  @JvmField @Inject internal var mainViewModel: MainViewModeler? = null
   @JvmField @Inject internal var imageLoader: ImageLoader? = null
   @JvmField @Inject internal var theming: Theming? = null
 
   // Watches the window insets
   private var windowInsetObserver: ViewWindowInsetObserver? = null
+
+  private fun handleOpenBattle(battle: SplatBattle) {
+    DrilldownDialog.show(requireActivity(), battle.mode())
+  }
+
+  private fun handleRefresh() {
+    viewModel
+        .requireNotNull()
+        .handleRefresh(
+            scope = viewLifecycleOwner.lifecycleScope,
+            force = true,
+        )
+  }
 
   override fun onCreateView(
       inflater: LayoutInflater,
@@ -68,7 +71,10 @@ internal class LobbyFragment : Fragment() {
       savedInstanceState: Bundle?,
   ): View {
     val act = requireActivity()
-    Injector.obtainFromApplication<SplatComponent>(act).plusLobbyComponent().create().inject(this)
+    Injector.obtainFromActivity<MainComponent>(act).plusLobbyComponent().create().inject(this)
+
+    val mainVM = mainViewModel.requireNotNull()
+    val vm = viewModel.requireNotNull()
 
     val themeProvider = ThemeProvider { theming.requireNotNull().isDarkTheme(act) }
     return ComposeView(act).apply {
@@ -79,19 +85,20 @@ internal class LobbyFragment : Fragment() {
       windowInsetObserver = observer
 
       setContent {
-        val state by viewModel.compose()
-        val mainState by mainViewModel.compose()
-
-        SplatTrakTheme(themeProvider) {
-          CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
-            LobbyScreen(
-                modifier = Modifier.fillMaxSize(),
-                state = state,
-                mainState = mainState,
-                imageLoader = imageLoader.requireNotNull(),
-                onItemClicked = { viewModel.handleOpenBattle(it) },
-                onRefresh = { viewModel.handleRefresh() },
-            )
+        vm.Render { state ->
+          mainVM.Render { mainState ->
+            SplatTrakTheme(themeProvider) {
+              CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
+                LobbyScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    mainState = mainState,
+                    imageLoader = imageLoader.requireNotNull(),
+                    onItemClicked = { handleOpenBattle(it) },
+                    onRefresh = { handleRefresh() },
+                )
+              }
+            }
           }
         }
       }
@@ -103,12 +110,20 @@ internal class LobbyFragment : Fragment() {
       savedInstanceState: Bundle?,
   ) {
     super.onViewCreated(view, savedInstanceState)
-    viewModel.bindController(viewLifecycleOwner) { event ->
-      return@bindController when (event) {
-        is LobbyControllerEvent.OpenBattleRotation ->
-            DrilldownDialog.show(requireActivity(), event.battle.mode())
-      }
+    mainViewModel.requireNotNull().restoreState(savedInstanceState)
+    viewModel.requireNotNull().also { vm ->
+      vm.restoreState(savedInstanceState)
+      vm.handleRefresh(
+          scope = viewLifecycleOwner.lifecycleScope,
+          force = false,
+      )
     }
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    viewModel?.saveState(outState)
+    mainViewModel?.saveState(outState)
   }
 
   override fun onDestroyView() {
@@ -118,10 +133,11 @@ internal class LobbyFragment : Fragment() {
     windowInsetObserver?.stop()
     windowInsetObserver = null
 
-    mainFactory = null
-    factory = null
     imageLoader = null
     theming = null
+
+    viewModel = null
+    mainViewModel = null
   }
 
   companion object {

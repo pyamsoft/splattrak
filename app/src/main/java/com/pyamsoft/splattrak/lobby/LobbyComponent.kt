@@ -17,20 +17,9 @@
 package com.pyamsoft.splattrak.lobby
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.ViewModel
-import com.pyamsoft.splattrak.core.ViewModelFactoryModule
-import dagger.Binds
-import dagger.Module
 import dagger.Subcomponent
-import dagger.multibindings.ClassKey
-import dagger.multibindings.IntoMap
 
-@Subcomponent(
-    modules =
-        [
-            LobbyComponent.ComponentModule::class,
-            ViewModelFactoryModule::class,
-        ])
+@Subcomponent
 internal interface LobbyComponent {
 
   fun inject(fragment: LobbyFragment)
@@ -39,14 +28,5 @@ internal interface LobbyComponent {
   interface Factory {
 
     @CheckResult fun create(): LobbyComponent
-  }
-
-  @Module
-  abstract class ComponentModule {
-
-    @Binds
-    @IntoMap
-    @ClassKey(LobbyViewModel::class)
-    internal abstract fun bindViewModel(impl: LobbyViewModel): ViewModel
   }
 }
