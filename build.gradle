@@ -69,7 +69,7 @@ buildscript {
 
     moshi = "1.12.0"
     retrofit = "2.9.0"
-    okhttp = "4.9.2"
+    okhttp = "4.9.3"
 
     // AndroidX
     core = "1.7.0"
