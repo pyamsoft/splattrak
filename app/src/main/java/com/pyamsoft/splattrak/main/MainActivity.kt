@@ -161,7 +161,7 @@ internal class MainActivity : PYDroidActivity() {
 
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
-    viewBinding?.apply { this.mainComposeBottom?.recompose() }
+    viewBinding?.apply { this.mainComposeBottom.recompose() }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
