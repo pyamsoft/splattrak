@@ -59,34 +59,35 @@ internal fun BigBattleMaps(
   val configuration = LocalConfiguration.current
   val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
+  val content =
+      @Composable
+      { m: Modifier ->
+        BattleMaps(
+            modifier = m,
+            match = match,
+            imageLoader = imageLoader,
+        ) {
+          Spacer(
+              modifier =
+                  Modifier.run {
+                    if (isPortrait) {
+                      height(16.dp).fillMaxWidth()
+                    } else {
+                      width(16.dp).fillMaxHeight()
+                    }
+                  },
+          )
+        }
+      }
+
   if (isPortrait) {
     Column(
         modifier = modifier.height(320.dp),
-    ) {
-      BattleMaps(
-          modifier = Modifier.weight(1F),
-          match = match,
-          imageLoader = imageLoader,
-      ) {
-        Spacer(
-            modifier = Modifier.height(16.dp).fillMaxWidth(),
-        )
-      }
-    }
+    ) { content(Modifier.weight(1F)) }
   } else {
     Row(
         modifier = modifier.height(200.dp),
-    ) {
-      BattleMaps(
-          modifier = Modifier.weight(1F),
-          match = match,
-          imageLoader = imageLoader,
-      ) {
-        Spacer(
-            modifier = Modifier.width(16.dp).fillMaxHeight(),
-        )
-      }
-    }
+    ) { content(Modifier.weight(1F)) }
   }
 }
 
