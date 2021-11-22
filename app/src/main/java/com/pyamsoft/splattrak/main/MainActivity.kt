@@ -17,6 +17,7 @@
 package com.pyamsoft.splattrak.main
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.getValue
@@ -29,6 +30,7 @@ import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.changelog.buildChangeLog
 import com.pyamsoft.pydroid.ui.navigator.Navigator
+import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.util.stableLayoutHideNavigation
 import com.pyamsoft.splattrak.R
 import com.pyamsoft.splattrak.SplatComponent
@@ -155,6 +157,11 @@ internal class MainActivity : PYDroidActivity() {
       MainComponent::class.java.name -> injector.requireNotNull()
       else -> super.getSystemService(name)
     }
+  }
+
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    viewBinding?.apply { this.mainComposeBottom?.recompose() }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.splattrak.lobby
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,7 @@ import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.splattrak.R
 import com.pyamsoft.splattrak.SplatTrakTheme
 import com.pyamsoft.splattrak.lobby.drilldown.DrilldownDialog
@@ -124,6 +126,11 @@ internal class LobbyFragment : Fragment() {
     super.onSaveInstanceState(outState)
     viewModel?.saveState(outState)
     mainViewModel?.saveState(outState)
+  }
+
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    recompose()
   }
 
   override fun onDestroyView() {

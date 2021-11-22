@@ -38,6 +38,7 @@ import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.splattrak.R
 import com.pyamsoft.splattrak.SplatComponent
@@ -125,6 +126,7 @@ internal class DrilldownDialog : AppCompatDialogFragment() {
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
     makeFullscreen()
+    recompose()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
