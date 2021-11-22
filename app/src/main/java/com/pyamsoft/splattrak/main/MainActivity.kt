@@ -97,9 +97,8 @@ internal class MainActivity : PYDroidActivity() {
 
       vm.Render { state ->
         val theme = state.theme
-        SplatTrakTheme(
-            theme = theme,
-        ) {
+        SystemBars(theme)
+        SplatTrakTheme(theme) {
           ProvideWindowInsets {
             MainBottomNav(
                 page = page,
@@ -161,6 +160,7 @@ internal class MainActivity : PYDroidActivity() {
 
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
+    viewModel?.handleSyncDarkTheme(this)
     viewBinding?.apply { this.mainComposeBottom.recompose() }
   }
 
