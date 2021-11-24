@@ -59,11 +59,17 @@ internal constructor(
             when (data) {
               is LobbyData.Battle -> {
                 Timber.d("Loaded drilldown for battle: ${data.battle}")
-                state.battle = data.battle
+                state.apply {
+                  battle = data.battle
+                  error = null
+                }
               }
               is LobbyData.Error -> {
                 Timber.w(data.error, "Error loading battle info")
-                state.error = data.error
+                state.apply {
+                  battle = null
+                  error = data.error
+                }
               }
             }
           }

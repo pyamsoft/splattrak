@@ -19,9 +19,15 @@ package com.pyamsoft.splattrak.main
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.pyamsoft.pydroid.core.requireNotNull
@@ -97,22 +103,35 @@ internal class MainActivity : PYDroidActivity() {
 
       vm.Render { state ->
         val theme = state.theme
+
+        val density = LocalDensity.current
+        val bottomNavHeight = state.bottomNavHeight
+        val bottomOffset =
+            remember(bottomNavHeight) { density.run { bottomNavHeight.toDp() } + 16.dp }
+
         SystemBars(theme)
         SplatTrakTheme(theme) {
           ProvideWindowInsets {
-            MainBottomNav(
-                page = page,
-                imageLoader = imageLoader.requireNotNull(),
-                onLoadLobby = { navigate(MainPage.Lobby) },
-                onLoadSettings = { navigate(MainPage.Settings) },
-                onHeightMeasured = { vm.handleMeasureBottomNavHeight(it) },
-            )
-            RatingScreen(
-                snackbarHostState = snackbarHostState,
-            )
-            VersionCheckScreen(
-                snackbarHostState = snackbarHostState,
-            )
+            // Need to box or else snackbar pushes bottom nav
+            Box(
+                contentAlignment = Alignment.BottomCenter,
+            ) {
+              MainBottomNav(
+                  page = page,
+                  imageLoader = imageLoader.requireNotNull(),
+                  onLoadLobby = { navigate(MainPage.Lobby) },
+                  onLoadSettings = { navigate(MainPage.Settings) },
+                  onHeightMeasured = { vm.handleMeasureBottomNavHeight(it) },
+              )
+              RatingScreen(
+                  modifier = Modifier.padding(bottom = bottomOffset),
+                  snackbarHostState = snackbarHostState,
+              )
+              VersionCheckScreen(
+                  modifier = Modifier.padding(bottom = bottomOffset),
+                  snackbarHostState = snackbarHostState,
+              )
+            }
           }
         }
       }

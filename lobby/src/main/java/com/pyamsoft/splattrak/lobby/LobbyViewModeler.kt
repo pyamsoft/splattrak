@@ -44,9 +44,19 @@ internal constructor(
       state.loading = true
       scheduleRunner
           .call(force)
-          .onSuccess { state.schedule = it }
+          .onSuccess {
+            state.apply {
+              error = null
+              schedule = it
+            }
+          }
           .onFailure { Timber.e(it, "Failed to load Splatoon2.ink lobby list") }
-          .onFailure { state.error = it }
+          .onFailure {
+            state.apply {
+              error = it
+              schedule = emptyList()
+            }
+          }
           .onFinally { state.loading = false }
     }
   }
