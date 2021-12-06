@@ -36,6 +36,7 @@ import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.changelog.buildChangeLog
 import com.pyamsoft.pydroid.ui.navigator.Navigator
+import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.util.stableLayoutHideNavigation
 import com.pyamsoft.splattrak.R
@@ -190,7 +191,7 @@ internal class MainActivity : PYDroidActivity() {
 
   override fun onDestroy() {
     super.onDestroy()
-    viewBinding?.apply { this.mainComposeBottom.disposeComposition() }
+    viewBinding?.apply { this.mainComposeBottom.dispose() }
     viewBinding = null
     imageLoader = null
     navigator = null

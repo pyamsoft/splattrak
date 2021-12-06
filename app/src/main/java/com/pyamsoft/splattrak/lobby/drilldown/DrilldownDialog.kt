@@ -38,6 +38,7 @@ import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.splattrak.R
@@ -136,7 +137,7 @@ internal class DrilldownDialog : AppCompatDialogFragment() {
 
   override fun onDestroyView() {
     super.onDestroyView()
-    (view as? ComposeView)?.disposeComposition()
+    dispose()
 
     windowInsetObserver?.stop()
     windowInsetObserver = null

@@ -34,7 +34,6 @@ class SplatTrak : Application() {
     val lazyImageLoader = { ImageLoader(this) }
     val parameters =
         PYDroid.Parameters(
-            googlePlayLicenseVerificationKey = BuildConfig.LICENSE_KEY,
             imageLoader = lazyImageLoader,
             viewSourceUrl = url,
             bugReportUrl = "$url/issues",
