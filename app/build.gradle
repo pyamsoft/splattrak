@@ -26,8 +26,8 @@ android {
     applicationId "com.pyamsoft.splattrak"
     minSdkVersion rootProject.ext.minSdk
     targetSdkVersion rootProject.ext.maxSdk
-    versionCode 3
-    versionName "20211206-1"
+    versionCode 4
+    versionName "20211207-1"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
