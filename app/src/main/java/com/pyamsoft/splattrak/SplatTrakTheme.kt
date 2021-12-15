@@ -50,6 +50,9 @@ private fun themeColors(isDarkMode: Boolean): Colors {
           onPrimary = onPrimary,
           secondary = secondary,
           onSecondary = onSecondary,
+          // Must be specified for things like Switch color
+          primaryVariant = primary,
+          secondaryVariant = secondary,
       )
   else
       lightColors(
@@ -57,6 +60,9 @@ private fun themeColors(isDarkMode: Boolean): Colors {
           onPrimary = onPrimary,
           secondary = secondary,
           onSecondary = onSecondary,
+          // Must be specified for things like Switch color
+          primaryVariant = primary,
+          secondaryVariant = secondary,
       )
 }
 
