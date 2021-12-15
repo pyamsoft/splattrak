@@ -65,10 +65,10 @@ class SplatTrak : Application() {
   ): SplatComponent {
     return DaggerSplatComponent.factory()
         .create(
-            this,
-            isDebugMode(),
-            provider.get().theming(),
-            imageLoader,
+            application = this,
+            debug = isDebugMode(),
+            theming = provider.get().theming(),
+            imageLoader = imageLoader,
         )
         .also { addLibraries() }
   }

@@ -19,11 +19,10 @@ package com.pyamsoft.splattrak
 import android.app.Application
 import android.content.Context
 import androidx.annotation.CheckResult
+import coil.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.splattrak.lobby.LobbyComponent
 import com.pyamsoft.splattrak.lobby.drilldown.DrilldownComponent
 import com.pyamsoft.splattrak.main.MainComponent
-import com.pyamsoft.splattrak.setting.SettingsComponent
 import com.pyamsoft.splattrak.splatnet.SplatnetModule
 import dagger.BindsInstance
 import dagger.Component
@@ -45,10 +44,10 @@ internal interface SplatComponent {
 
     @CheckResult
     fun create(
-        @BindsInstance application: Application,
-        @Named("debug") @BindsInstance debug: Boolean,
-        @BindsInstance theming: Theming,
-        @BindsInstance coilImageLoader: () -> coil.ImageLoader,
+      @BindsInstance application: Application,
+      @Named("debug") @BindsInstance debug: Boolean,
+      @BindsInstance theming: Theming,
+      @BindsInstance imageLoader: () -> ImageLoader,
     ): SplatComponent
   }
 
@@ -68,8 +67,8 @@ internal interface SplatComponent {
       @JvmStatic
       @Singleton
       internal fun provideCoilImageLoader(
-          lazyImageLoader: () -> coil.ImageLoader
-      ): coil.ImageLoader {
+          lazyImageLoader: () -> ImageLoader
+      ): ImageLoader {
         return lazyImageLoader()
       }
 
