@@ -19,6 +19,7 @@ package com.pyamsoft.splattrak.splatnet
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.pydroid.util.ifNotCancellation
 import com.pyamsoft.splattrak.splatnet.api.*
 import com.pyamsoft.splattrak.splatnet.data.*
 import com.pyamsoft.splattrak.splatnet.network.NetworkSplatMatch
@@ -51,8 +52,10 @@ internal constructor(
                       assembleBattles(SplatGameMode.Mode.LEAGUE, networkSchedule.league),
                       assembleBattles(SplatGameMode.Mode.RANKED, networkSchedule.ranked))))
         } catch (e: Throwable) {
-          Timber.e(e, "Failed to get Lobby schedule")
-          ResultWrapper.failure(e)
+          e.ifNotCancellation {
+            Timber.e(e, "Failed to get Lobby schedule")
+            ResultWrapper.failure(e)
+          }
         }
       }
 
