@@ -51,7 +51,7 @@ buildscript {
     // Us
     pydroid = "24.3.4"
     cachify = "0.0.26"
-    highlander = "0.0.21"
+    highlander = "0.0.22"
 
     // Leak Canary
     leakCanary = "2.8.1"
