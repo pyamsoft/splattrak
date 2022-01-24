@@ -44,15 +44,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
-import com.pyamsoft.splattrak.lobby.common.BackgroundDarkWrapper
-import com.pyamsoft.splattrak.lobby.common.BackgroundStripeWrapper
-import com.pyamsoft.splattrak.lobby.common.BattleInfo
-import com.pyamsoft.splattrak.lobby.common.BigBattleMaps
-import com.pyamsoft.splattrak.lobby.common.SmallBattleMaps
-import com.pyamsoft.splattrak.lobby.common.decideBackgroundColor
-import com.pyamsoft.splattrak.lobby.test.TestData
+import com.pyamsoft.splattrak.ui.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
+import com.pyamsoft.splattrak.ui.card.BackgroundDarkWrapper
+import com.pyamsoft.splattrak.ui.card.BackgroundStripeWrapper
+import com.pyamsoft.splattrak.ui.card.BattleInfo
+import com.pyamsoft.splattrak.ui.card.BigBattleMaps
+import com.pyamsoft.splattrak.ui.card.SmallBattleMaps
+import com.pyamsoft.splattrak.ui.card.decideBackgroundColor
 import com.pyamsoft.splattrak.ui.R as R2
 import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 import java.time.LocalDateTime
@@ -247,11 +247,9 @@ private fun LobbyName(
 @Preview
 @Composable
 private fun PreviewLobbyListItem() {
-  val context = LocalContext.current
-
   LobbyListItem(
       battle = TestData.battle,
-      imageLoader = createNewTestImageLoader(context),
+      imageLoader = createNewTestImageLoader(),
       onClick = {},
       onCountdownCompleted = {},
   )

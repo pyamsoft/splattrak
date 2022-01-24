@@ -93,5 +93,6 @@ dependencies {
   // PYDroid
   api "com.github.pyamsoft.pydroid:ui:$pydroid"
 
+  implementation project(':splatnet')
   api project(':core')
 }

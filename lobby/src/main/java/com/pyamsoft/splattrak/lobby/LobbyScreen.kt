@@ -192,8 +192,6 @@ private fun BattleList(
 @Preview
 @Composable
 private fun PreviewLobbyScreen() {
-  val context = LocalContext.current
-
   LobbyScreen(
       state =
           MutableLobbyViewState().apply {
@@ -206,7 +204,7 @@ private fun PreviewLobbyScreen() {
             theme = Theming.Mode.SYSTEM
             bottomNavHeight = 0
           },
-      imageLoader = createNewTestImageLoader(context),
+      imageLoader = createNewTestImageLoader(),
       onRefresh = {},
       onItemClicked = {},
   )

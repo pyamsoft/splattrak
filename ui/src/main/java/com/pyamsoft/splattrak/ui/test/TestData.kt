@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Peter Kenji Yamanaka
+ * Copyright 2022 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby.test
+package com.pyamsoft.splattrak.ui.test
 
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
@@ -26,7 +26,7 @@ import java.time.LocalDateTime
 /**
  * For tests/previews only
  */
-internal object TestData {
+object TestData {
 
   val currentMatch =
     object : SplatMatch {

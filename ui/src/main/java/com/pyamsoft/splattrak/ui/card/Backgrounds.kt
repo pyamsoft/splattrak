@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Peter Kenji Yamanaka
+ * Copyright 2022 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby.common
+package com.pyamsoft.splattrak.ui.card
 
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorRes
@@ -29,17 +29,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
-import com.pyamsoft.splattrak.lobby.R
-import com.pyamsoft.splattrak.ui.R as R2
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
+import com.pyamsoft.splattrak.ui.R
 
 @ColorRes
 @CheckResult
-internal fun decideBackgroundColor(mode: SplatGameMode.Mode): Int {
+fun decideBackgroundColor(mode: SplatGameMode.Mode): Int {
   return when (mode) {
-    SplatGameMode.Mode.REGULAR -> R2.color.splatRegular
-    SplatGameMode.Mode.LEAGUE -> R2.color.splatLeague
-    SplatGameMode.Mode.RANKED -> R2.color.splatRanked
+    SplatGameMode.Mode.REGULAR -> R.color.splatRegular
+    SplatGameMode.Mode.LEAGUE -> R.color.splatLeague
+    SplatGameMode.Mode.RANKED -> R.color.splatRanked
   }
 }
 
@@ -76,7 +75,7 @@ private fun BackgroundWrapper(
 }
 
 @Composable
-internal fun BackgroundStripeWrapper(
+fun BackgroundStripeWrapper(
     modifier: Modifier = Modifier,
     imageLoader: ImageLoader,
     content: @Composable () -> Unit,
@@ -84,14 +83,14 @@ internal fun BackgroundStripeWrapper(
   BackgroundWrapper(
       modifier = modifier,
       imageLoader = imageLoader,
-      backgroundRes = R2.drawable.repeating_stripes,
+      backgroundRes = R.drawable.repeating_stripes,
       contentScale = ContentScale.Crop,
       content = content,
   )
 }
 
 @Composable
-internal fun BackgroundDarkWrapper(
+fun BackgroundDarkWrapper(
     modifier: Modifier = Modifier,
     imageLoader: ImageLoader,
     content: @Composable () -> Unit,

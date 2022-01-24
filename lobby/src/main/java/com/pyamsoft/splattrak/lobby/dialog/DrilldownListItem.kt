@@ -20,13 +20,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import coil.ImageLoader
-import com.pyamsoft.splattrak.lobby.common.BattleInfo
-import com.pyamsoft.splattrak.lobby.common.SmallBattleMaps
-import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
+import com.pyamsoft.splattrak.ui.card.BattleInfo
+import com.pyamsoft.splattrak.ui.card.SmallBattleMaps
+import com.pyamsoft.splattrak.ui.test.TestData
 import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 
 @Composable
@@ -51,12 +50,10 @@ internal fun DrilldownListItem(
 @Preview
 @Composable
 private fun PreviewDrilldownListItem() {
-  val context = LocalContext.current
-
   Surface {
     DrilldownListItem(
         match = TestData.currentMatch,
-        imageLoader = createNewTestImageLoader(context),
+        imageLoader = createNewTestImageLoader(),
     )
   }
 }

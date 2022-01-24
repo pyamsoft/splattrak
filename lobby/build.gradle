@@ -75,5 +75,5 @@ dependencies {
 
   implementation project(':splatnet')
   implementation project(':main')
-  api project(':ui')
+  implementation project(':ui')
 }

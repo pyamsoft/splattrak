@@ -35,18 +35,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.pyamsoft.splattrak.lobby.common.BackgroundStripeWrapper
-import com.pyamsoft.splattrak.lobby.common.decideBackgroundColor
-import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.splatnet.api.key
+import com.pyamsoft.splattrak.ui.card.BackgroundStripeWrapper
+import com.pyamsoft.splattrak.ui.card.decideBackgroundColor
+import com.pyamsoft.splattrak.ui.test.TestData
 import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 
 @Composable
@@ -149,8 +148,6 @@ private fun BattleList(
 @Preview
 @Composable
 private fun PreviewDrilldownScreen() {
-  val context = LocalContext.current
-
   Surface {
     DrilldownScreen(
         state =
@@ -159,7 +156,7 @@ private fun PreviewDrilldownScreen() {
               loading = false
               error = null
             },
-        imageLoader = createNewTestImageLoader(context),
+        imageLoader = createNewTestImageLoader(),
         onRefresh = {},
     )
   }

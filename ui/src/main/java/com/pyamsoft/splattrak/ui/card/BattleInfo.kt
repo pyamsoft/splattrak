@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Peter Kenji Yamanaka
+ * Copyright 2022 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby.common
+package com.pyamsoft.splattrak.ui.card
 
 import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Row
@@ -56,7 +56,7 @@ private val formatter12 =
     }
 
 @Composable
-internal fun BattleInfo(
+fun BattleInfo(
     modifier: Modifier = Modifier,
     match: SplatMatch,
 ) {

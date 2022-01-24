@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Peter Kenji Yamanaka
+ * Copyright 2022 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby.common
+package com.pyamsoft.splattrak.ui.card
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
@@ -37,22 +37,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
-import com.pyamsoft.splattrak.lobby.R
-import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatMap
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
-import com.pyamsoft.splattrak.splatnet.api.SplatRuleset
+import com.pyamsoft.splattrak.ui.R
+import com.pyamsoft.splattrak.ui.test.TestData
 import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
-import java.time.LocalDateTime
 
 @Composable
-internal fun BigBattleMaps(
+fun BigBattleMaps(
     modifier: Modifier = Modifier,
     match: SplatMatch,
     imageLoader: ImageLoader,
@@ -93,7 +90,7 @@ internal fun BigBattleMaps(
 }
 
 @Composable
-internal fun SmallBattleMaps(
+fun SmallBattleMaps(
     modifier: Modifier = Modifier,
     match: SplatMatch,
     imageLoader: ImageLoader,
@@ -199,11 +196,10 @@ private fun BattleMap(
 @Preview
 @Composable
 private fun PreviewSmallBattleMaps() {
-  val context = LocalContext.current
   Surface {
     SmallBattleMaps(
         match = TestData.currentMatch,
-        imageLoader = createNewTestImageLoader(context),
+        imageLoader = createNewTestImageLoader(),
     )
   }
 }
