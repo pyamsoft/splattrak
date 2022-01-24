@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.pyamsoft.splattrak.lobby.R
+import com.pyamsoft.splattrak.lobby.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatMap
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.splatnet.api.SplatRuleset
@@ -195,72 +196,13 @@ private fun BattleMap(
   }
 }
 
-private val fakeMatch =
-    object : SplatMatch {
-      override fun id(): Long {
-        return 1
-      }
-
-      override fun start(): LocalDateTime {
-        return LocalDateTime.now()
-      }
-
-      override fun end(): LocalDateTime {
-        return LocalDateTime.now().plusHours(1)
-      }
-
-      override fun stageA(): SplatMap {
-        return object : SplatMap {
-          override fun id(): String {
-            return "A"
-          }
-
-          override fun name(): String {
-            return "Stage A"
-          }
-
-          override fun imageUrl(): String {
-            return ""
-          }
-        }
-      }
-
-      override fun stageB(): SplatMap {
-        return object : SplatMap {
-          override fun id(): String {
-            return "B"
-          }
-
-          override fun name(): String {
-            return "Stage B"
-          }
-
-          override fun imageUrl(): String {
-            return ""
-          }
-        }
-      }
-
-      override fun rules(): SplatRuleset {
-        return object : SplatRuleset {
-          override fun key(): String {
-            return "test"
-          }
-
-          override fun name(): String {
-            return "Turf War"
-          }
-        }
-      }
-    }
-
 @Preview
 @Composable
 private fun PreviewSmallBattleMaps() {
   val context = LocalContext.current
   Surface {
     SmallBattleMaps(
-        match = fakeMatch,
+        match = TestData.currentMatch,
         imageLoader = createNewTestImageLoader(context),
     )
   }

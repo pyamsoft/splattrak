@@ -19,8 +19,6 @@ package com.pyamsoft.splattrak.splatnet.api
 import androidx.annotation.CheckResult
 
 interface SplatMap {
-  @CheckResult fun id(): String
-
   @CheckResult fun name(): String
 
   @CheckResult fun imageUrl(): String

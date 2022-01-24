@@ -66,7 +66,8 @@ internal constructor(
                                 .asSequence()
                                 .filter { filterPastMatches(it, now) }
                                 .sortedWith(SORTER)
-                                .toList())
+                                .toList(),
+                    )
                   }
 
               return@map SplatScheduleImpl(validRotations)

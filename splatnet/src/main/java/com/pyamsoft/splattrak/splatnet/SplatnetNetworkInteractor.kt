@@ -50,7 +50,10 @@ internal constructor(
                   listOf(
                       assembleBattles(SplatGameMode.Mode.REGULAR, networkSchedule.regular),
                       assembleBattles(SplatGameMode.Mode.LEAGUE, networkSchedule.league),
-                      assembleBattles(SplatGameMode.Mode.RANKED, networkSchedule.ranked))))
+                      assembleBattles(SplatGameMode.Mode.RANKED, networkSchedule.ranked),
+                  ),
+              ),
+          )
         } catch (e: Throwable) {
           e.ifNotCancellation {
             Timber.e(e, "Failed to get Lobby schedule")
@@ -75,7 +78,11 @@ internal constructor(
         list: List<NetworkSplatMatch>,
     ): SplatBattle {
       val mode = list.first().gameMode
-      val battleMode = SplatGameModeImpl(key = mode.key, name = mode.name, mode = gameMode)
+      val battleMode = SplatGameModeImpl(
+          key = mode.key,
+          name = mode.name,
+          mode = gameMode,
+      )
 
       return SplatBattleImpl(
           mode = battleMode,
@@ -87,19 +94,28 @@ internal constructor(
                     endTime = match.endTime.toLocalDateTime(),
                     stageA =
                         SplatMapImpl(
-                            id = match.stageA.id,
                             name = match.stageA.name,
-                            image = match.stageA.image),
+                            image = match.stageA.image,
+                        ),
                     stageB =
                         SplatMapImpl(
-                            id = match.stageB.id,
                             name = match.stageB.name,
-                            image = match.stageB.image),
+                            image = match.stageB.image,
+                        ),
                     gameMode =
                         SplatGameModeImpl(
-                            key = match.gameMode.key, name = match.gameMode.name, mode = gameMode),
-                    rule = SplatRulesetImpl(key = match.rule.key, name = match.rule.name))
-              })
+                            key = match.gameMode.key,
+                            name = match.gameMode.name,
+                            mode = gameMode,
+                        ),
+                    rule =
+                        SplatRulesetImpl(
+                            key = match.rule.key,
+                            name = match.rule.name,
+                        ),
+                )
+              },
+      )
     }
   }
 }

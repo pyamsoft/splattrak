@@ -44,9 +44,6 @@ internal object TestData {
 
       override fun stageA(): SplatMap {
         return object : SplatMap {
-          override fun id(): String {
-            return "A"
-          }
 
           override fun name(): String {
             return "Stage A"
@@ -60,10 +57,6 @@ internal object TestData {
 
       override fun stageB(): SplatMap {
         return object : SplatMap {
-          override fun id(): String {
-            return "B"
-          }
-
           override fun name(): String {
             return "Stage B"
           }
@@ -103,10 +96,6 @@ internal object TestData {
 
       override fun stageA(): SplatMap {
         return object : SplatMap {
-          override fun id(): String {
-            return "A"
-          }
-
           override fun name(): String {
             return "Stage A"
           }
@@ -119,10 +108,6 @@ internal object TestData {
 
       override fun stageB(): SplatMap {
         return object : SplatMap {
-          override fun id(): String {
-            return "B"
-          }
-
           override fun name(): String {
             return "Stage B"
           }
