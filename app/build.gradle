@@ -122,6 +122,7 @@ dependencies {
   // Dagger
   kapt "com.google.dagger:dagger-compiler:$dagger"
 
+  implementation project(":coop")
   implementation project(':lobby')
   implementation project(':main')
   implementation project(':splatnet')

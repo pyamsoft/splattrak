@@ -37,7 +37,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -47,6 +46,7 @@ import coil.ImageLoader
 import com.pyamsoft.splattrak.ui.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
+import com.pyamsoft.splattrak.ui.SplatCountdownTimer
 import com.pyamsoft.splattrak.ui.card.BackgroundDarkWrapper
 import com.pyamsoft.splattrak.ui.card.BackgroundStripeWrapper
 import com.pyamsoft.splattrak.ui.card.BattleInfo

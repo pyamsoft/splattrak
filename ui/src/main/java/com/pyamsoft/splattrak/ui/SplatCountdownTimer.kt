@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Peter Kenji Yamanaka
+ * Copyright 2022 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby
+package com.pyamsoft.splattrak.ui
 
 import androidx.annotation.CheckResult
 import java.time.Duration
@@ -30,8 +30,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class SplatCountdownTimer
-internal constructor(
+class SplatCountdownTimer(
     private val totalSeconds: Long,
     onUpdate: (String, Boolean) -> Unit,
 ) {
