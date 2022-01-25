@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.ui.navigator.Navigator
+import com.pyamsoft.splattrak.coop.CoopComponent
 import com.pyamsoft.splattrak.core.ActivityScope
 import com.pyamsoft.splattrak.lobby.LobbyComponent
 import com.pyamsoft.splattrak.setting.SettingsComponent
@@ -37,6 +38,8 @@ internal interface MainComponent {
   @CheckResult fun plusSettingsComponent(): SettingsComponent.Factory
 
   @CheckResult fun plusLobbyComponent(): LobbyComponent.Factory
+
+  @CheckResult fun plusCoopComponent(): CoopComponent.Factory
 
   @Subcomponent.Factory
   interface Factory {

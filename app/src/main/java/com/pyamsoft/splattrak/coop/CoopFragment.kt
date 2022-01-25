@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.lobby
+package com.pyamsoft.splattrak.coop
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -39,25 +39,19 @@ import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.splattrak.R
 import com.pyamsoft.splattrak.SplatTrakTheme
-import com.pyamsoft.splattrak.lobby.drilldown.DrilldownDialog
 import com.pyamsoft.splattrak.main.MainComponent
 import com.pyamsoft.splattrak.main.MainViewModeler
-import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import javax.inject.Inject
 
-internal class LobbyFragment : Fragment() {
+internal class CoopFragment : Fragment() {
 
-  @JvmField @Inject internal var viewModel: LobbyViewModeler? = null
+  @JvmField @Inject internal var viewModel: CoopViewModeler? = null
   @JvmField @Inject internal var mainViewModel: MainViewModeler? = null
   @JvmField @Inject internal var imageLoader: ImageLoader? = null
   @JvmField @Inject internal var theming: Theming? = null
 
   // Watches the window insets
   private var windowInsetObserver: ViewWindowInsetObserver? = null
-
-  private fun handleOpenBattle(battle: SplatBattle) {
-    DrilldownDialog.show(requireActivity(), battle.mode())
-  }
 
   private fun handleRefresh() {
     viewModel
@@ -74,7 +68,7 @@ internal class LobbyFragment : Fragment() {
       savedInstanceState: Bundle?,
   ): View {
     val act = requireActivity()
-    Injector.obtainFromActivity<MainComponent>(act).plusLobbyComponent().create().inject(this)
+    Injector.obtainFromActivity<MainComponent>(act).plusCoopComponent().create().inject(this)
 
     val mainVM = mainViewModel.requireNotNull()
     val vm = viewModel.requireNotNull()
@@ -92,12 +86,11 @@ internal class LobbyFragment : Fragment() {
           mainVM.Render { mainState ->
             SplatTrakTheme(themeProvider) {
               CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
-                LobbyScreen(
+                CoopScreen(
                     modifier = Modifier.fillMaxSize(),
                     state = state,
                     mainState = mainState,
                     imageLoader = imageLoader.requireNotNull(),
-                    onItemClicked = { handleOpenBattle(it) },
                     onRefresh = { handleRefresh() },
                 )
               }
@@ -153,7 +146,7 @@ internal class LobbyFragment : Fragment() {
     @JvmStatic
     @CheckResult
     fun newInstance(): Fragment {
-      return LobbyFragment().apply { arguments = Bundle().apply {} }
+      return CoopFragment().apply { arguments = Bundle().apply {} }
     }
   }
 }

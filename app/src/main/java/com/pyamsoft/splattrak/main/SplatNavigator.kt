@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.pyamsoft.pydroid.ui.navigator.FragmentNavigator
 import com.pyamsoft.pydroid.ui.navigator.Navigator
 import com.pyamsoft.splattrak.R
+import com.pyamsoft.splattrak.coop.CoopFragment
 import com.pyamsoft.splattrak.lobby.LobbyFragment
 import com.pyamsoft.splattrak.setting.AppSettings
 import javax.inject.Inject
@@ -36,7 +37,7 @@ internal constructor(
     @IdRes fragmentContainerId: Int,
 ) : FragmentNavigator<MainPage>(activity, fragmentContainerId) {
 
-  override val blankScreen: MainPage = MainPage.Lobby
+  override val blankScreen: MainPage = MainPage.LOBBY
 
   override fun performFragmentTransaction(
       container: Int,
@@ -52,8 +53,9 @@ internal constructor(
 
   override fun provideFragmentTagMap(): Map<MainPage, FragmentTag> {
     return mapOf(
-        MainPage.Lobby to createFragmentTag(LobbyFragment.TAG) { LobbyFragment.newInstance() },
-        MainPage.Settings to createFragmentTag(AppSettings.TAG) { AppSettings.newInstance() },
+        MainPage.LOBBY to createFragmentTag("LobbyFragment") { LobbyFragment.newInstance() },
+        MainPage.COOP to createFragmentTag("CoopFragment") { CoopFragment.newInstance() },
+        MainPage.SETTINGS to createFragmentTag(AppSettings.TAG) { AppSettings.newInstance() },
     )
   }
 
@@ -78,17 +80,26 @@ internal constructor(
     ) {
       val animations =
           when (newPage) {
-            is MainPage.Lobby ->
+            MainPage.LOBBY ->
                 when (oldPage) {
                   null -> R.anim.fragment_open_enter to R.anim.fragment_open_exit
-                  is MainPage.Settings -> R.anim.slide_in_left to R.anim.slide_out_right
-                  is MainPage.Lobby -> null
+                  MainPage.SETTINGS -> R.anim.slide_in_left to R.anim.slide_out_right
+                  MainPage.COOP -> R.anim.slide_in_left to R.anim.slide_out_right
+                  MainPage.LOBBY -> null
                 }
-            is MainPage.Settings ->
+            MainPage.SETTINGS ->
                 when (oldPage) {
                   null -> R.anim.fragment_open_enter to R.anim.fragment_open_exit
-                  is MainPage.Lobby -> R.anim.slide_in_right to R.anim.slide_out_left
-                  is MainPage.Settings -> null
+                  MainPage.LOBBY -> R.anim.slide_in_right to R.anim.slide_out_left
+                  MainPage.COOP -> R.anim.slide_in_right to R.anim.slide_out_left
+                  MainPage.SETTINGS -> null
+                }
+            MainPage.COOP ->
+                when (oldPage) {
+                  null -> R.anim.fragment_open_enter to R.anim.fragment_open_exit
+                  MainPage.SETTINGS -> R.anim.slide_in_left to R.anim.slide_out_right
+                  MainPage.LOBBY -> R.anim.slide_in_right to R.anim.slide_out_left
+                  MainPage.COOP -> null
                 }
           }
 

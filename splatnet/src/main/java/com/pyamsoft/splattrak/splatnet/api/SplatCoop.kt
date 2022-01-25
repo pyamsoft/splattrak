@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.main
+package com.pyamsoft.splattrak.splatnet.api
 
-import android.os.Bundle
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.navigator.Navigator
 
-enum class MainPage(val display: String) {
-  LOBBY("Lobby"),
-  COOP("Co-Op"),
-  SETTINGS("Settings");
+interface SplatCoop {
 
-  @CheckResult
-  fun asScreen(): Navigator.Screen<MainPage> {
-    val self = this
-    return object : Navigator.Screen<MainPage> {
-      override val arguments: Bundle? = null
-      override val screen: MainPage = self
-    }
-  }
+  @CheckResult fun name(): String
 
+  @CheckResult fun sessions(): List<SplatCoopSession>
 }

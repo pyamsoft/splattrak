@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.main
+package com.pyamsoft.splattrak.splatnet.api
 
-import android.os.Bundle
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.navigator.Navigator
+import java.time.LocalDateTime
 
-enum class MainPage(val display: String) {
-  LOBBY("Lobby"),
-  COOP("Co-Op"),
-  SETTINGS("Settings");
+interface SplatCoopSession {
 
-  @CheckResult
-  fun asScreen(): Navigator.Screen<MainPage> {
-    val self = this
-    return object : Navigator.Screen<MainPage> {
-      override val arguments: Bundle? = null
-      override val screen: MainPage = self
-    }
-  }
+  @CheckResult fun start(): LocalDateTime
 
+  @CheckResult fun end(): LocalDateTime
+
+  @CheckResult fun map(): SplatMap?
 }

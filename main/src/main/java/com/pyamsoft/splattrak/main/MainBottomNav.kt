@@ -32,10 +32,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsPadding
+import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 
 @Composable
 fun MainBottomNav(
@@ -43,8 +45,7 @@ fun MainBottomNav(
     page: MainPage,
     imageLoader: ImageLoader,
     onHeightMeasured: (Int) -> Unit,
-    onLoadLobby: () -> Unit,
-    onLoadSettings: () -> Unit,
+    onLoadPage: (MainPage) -> Unit,
 ) {
   // Can't use BottomAppBar since we can't modify its Shape
   Surface(
@@ -61,18 +62,14 @@ fun MainBottomNav(
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = Color.White,
     ) {
-      Item(
-          current = page,
-          target = MainPage.Lobby,
-          imageLoader = imageLoader,
-          onClick = onLoadLobby,
-      )
-      Item(
-          current = page,
-          target = MainPage.Settings,
-          imageLoader = imageLoader,
-          onClick = onLoadSettings,
-      )
+      for (p in MainPage.values()) {
+        Item(
+            current = page,
+            target = p,
+            imageLoader = imageLoader,
+            onClick = { onLoadPage(p) },
+        )
+      }
     }
   }
 }
@@ -97,18 +94,32 @@ private fun RowScope.Item(
                   rememberImagePainter(
                       data =
                           when (target) {
-                            is MainPage.Lobby -> R.drawable.ic_lobby_24dp
-                            is MainPage.Settings -> R.drawable.ic_settings_24dp
+                            MainPage.LOBBY -> R.drawable.ic_lobby_24dp
+                            MainPage.COOP -> R.drawable.ic_lobby_24dp
+                            MainPage.SETTINGS -> R.drawable.ic_settings_24dp
                           },
                       imageLoader = imageLoader,
                   ),
-              contentDescription = target.name,
+              contentDescription = target.display,
           )
           Text(
-              text = target.name,
+              text = target.display,
               style = MaterialTheme.typography.body2,
           )
         }
       },
   )
+}
+
+@Preview
+@Composable
+private fun PreviewMainBottomNav() {
+  Surface {
+    MainBottomNav(
+        page = MainPage.LOBBY,
+        imageLoader = createNewTestImageLoader(),
+        onHeightMeasured = {},
+        onLoadPage = {},
+    )
+  }
 }

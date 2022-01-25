@@ -51,7 +51,8 @@ internal class MainActivity : PYDroidActivity() {
   override val applicationIcon = R.mipmap.ic_launcher
 
   override val changelog: ChangeLogBuilder = buildChangeLog {
-    feature("Convert to Jetpack Compose")
+    feature("Add support for Salmon Run Co-Op mode")
+    bugfix("Fix accidentally caching bad  schedule data")
   }
 
   private var viewBinding: ActivityMainBinding? = null
@@ -120,8 +121,7 @@ internal class MainActivity : PYDroidActivity() {
               MainBottomNav(
                   page = page,
                   imageLoader = imageLoader.requireNotNull(),
-                  onLoadLobby = { navigate(MainPage.Lobby) },
-                  onLoadSettings = { navigate(MainPage.Settings) },
+                  onLoadPage = { navigate(it) },
                   onHeightMeasured = { vm.handleMeasureBottomNavHeight(it) },
               )
               RatingScreen(
@@ -141,7 +141,7 @@ internal class MainActivity : PYDroidActivity() {
     vm.handleSyncDarkTheme(this)
 
     navigator.requireNotNull().restore {
-      if (it.select(MainPage.Lobby.asScreen())) {
+      if (it.select(MainPage.LOBBY.asScreen())) {
         Timber.d("Default lobby screen loaded")
       }
     }

@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.main
+package com.pyamsoft.splattrak.coop
 
-import android.os.Bundle
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.navigator.Navigator
+import dagger.Subcomponent
 
-enum class MainPage(val display: String) {
-  LOBBY("Lobby"),
-  COOP("Co-Op"),
-  SETTINGS("Settings");
+@Subcomponent
+internal interface CoopComponent {
 
-  @CheckResult
-  fun asScreen(): Navigator.Screen<MainPage> {
-    val self = this
-    return object : Navigator.Screen<MainPage> {
-      override val arguments: Bundle? = null
-      override val screen: MainPage = self
-    }
+  fun inject(fragment: CoopFragment)
+
+  @Subcomponent.Factory
+  interface Factory {
+
+    @CheckResult fun create(): CoopComponent
   }
-
 }

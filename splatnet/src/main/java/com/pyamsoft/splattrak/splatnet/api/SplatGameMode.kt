@@ -29,6 +29,6 @@ interface SplatGameMode {
   enum class Mode {
     REGULAR,
     LEAGUE,
-    RANKED
+    RANKED,
   }
 }
