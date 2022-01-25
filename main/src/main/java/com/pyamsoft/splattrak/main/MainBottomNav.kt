@@ -27,6 +27,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,16 +36,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
-import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsPadding
+import com.pyamsoft.splattrak.ui.icons.Group
+import com.pyamsoft.splattrak.ui.icons.MeetingRoom
 import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 
 @Composable
 fun MainBottomNav(
     modifier: Modifier = Modifier,
     page: MainPage,
-    imageLoader: ImageLoader,
     onHeightMeasured: (Int) -> Unit,
     onLoadPage: (MainPage) -> Unit,
 ) {
@@ -66,7 +67,6 @@ fun MainBottomNav(
         Item(
             current = page,
             target = p,
-            imageLoader = imageLoader,
             onClick = { onLoadPage(p) },
         )
       }
@@ -75,12 +75,7 @@ fun MainBottomNav(
 }
 
 @Composable
-private fun RowScope.Item(
-    current: MainPage,
-    target: MainPage,
-    imageLoader: ImageLoader,
-    onClick: () -> Unit
-) {
+private fun RowScope.Item(current: MainPage, target: MainPage, onClick: () -> Unit) {
   BottomNavigationItem(
       selected = current == target,
       onClick = onClick,
@@ -90,16 +85,12 @@ private fun RowScope.Item(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
           Icon(
-              painter =
-                  rememberImagePainter(
-                      data =
-                          when (target) {
-                            MainPage.LOBBY -> R.drawable.ic_lobby_24dp
-                            MainPage.COOP -> R.drawable.ic_lobby_24dp
-                            MainPage.SETTINGS -> R.drawable.ic_settings_24dp
-                          },
-                      imageLoader = imageLoader,
-                  ),
+              imageVector =
+                  when (target) {
+                    MainPage.LOBBY -> Icons.Filled.MeetingRoom
+                    MainPage.COOP -> Icons.Filled.Group
+                    MainPage.SETTINGS -> Icons.Filled.Settings
+                  },
               contentDescription = target.display,
           )
           Text(
@@ -117,7 +108,6 @@ private fun PreviewMainBottomNav() {
   Surface {
     MainBottomNav(
         page = MainPage.LOBBY,
-        imageLoader = createNewTestImageLoader(),
         onHeightMeasured = {},
         onLoadPage = {},
     )

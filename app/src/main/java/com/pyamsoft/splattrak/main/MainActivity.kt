@@ -28,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
@@ -59,7 +58,6 @@ internal class MainActivity : PYDroidActivity() {
 
   private var injector: MainComponent? = null
 
-  @JvmField @Inject internal var imageLoader: ImageLoader? = null
   @JvmField @Inject internal var viewModel: MainViewModeler? = null
   @JvmField @Inject internal var navigator: Navigator<MainPage>? = null
 
@@ -120,7 +118,6 @@ internal class MainActivity : PYDroidActivity() {
             ) {
               MainBottomNav(
                   page = page,
-                  imageLoader = imageLoader.requireNotNull(),
                   onLoadPage = { navigate(it) },
                   onHeightMeasured = { vm.handleMeasureBottomNavHeight(it) },
               )
@@ -193,7 +190,6 @@ internal class MainActivity : PYDroidActivity() {
     super.onDestroy()
     viewBinding?.apply { this.mainComposeBottom.dispose() }
     viewBinding = null
-    imageLoader = null
     navigator = null
 
     injector = null
