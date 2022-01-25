@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.util.ifNotCancellation
 import com.pyamsoft.splattrak.splatnet.api.*
 import com.pyamsoft.splattrak.splatnet.data.*
+import com.pyamsoft.splattrak.splatnet.network.NetworkCoopSession
 import com.pyamsoft.splattrak.splatnet.network.NetworkSplatMatch
 import com.pyamsoft.splattrak.splatnet.service.Splatnet
 import java.time.Instant
@@ -62,7 +63,61 @@ internal constructor(
         }
       }
 
+  override suspend fun coopSchedule(force: Boolean): ResultWrapper<SplatCoop> =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        return@withContext try {
+          val networkSchedule = splatnet.coopSchedule()
+
+          ResultWrapper.success(
+              SplatCoopImpl(
+                  name = "Salmon Run",
+                  sessions =
+                      networkSchedule.schedules.map { sched ->
+                        val matchingDetails =
+                            networkSchedule.details.firstOrNull {
+                              it.startTime == sched.startTime && it.endTime == sched.endTime
+                            }
+
+                        val map =
+                            if (matchingDetails == null) null
+                            else createCoopSessionMap(matchingDetails)
+                        return@map SplatCoopSessionImpl(
+                            start = sched.startTime.toLocalDateTime(),
+                            end = sched.endTime.toLocalDateTime(),
+                            map = map,
+                        )
+                      },
+              ))
+        } catch (e: Throwable) {
+          e.ifNotCancellation {
+            Timber.e(e, "Failed to get Lobby schedule")
+            ResultWrapper.failure(e)
+          }
+        }
+      }
+
   companion object {
+
+    @JvmStatic
+    @CheckResult
+    private fun createCoopSessionMap(details: NetworkCoopSession.Details): SplatCoopSession.Map {
+      return SplatCoopMapImpl(
+          map =
+              SplatMapImpl(
+                  name = details.stage.name,
+                  image = details.stage.image,
+              ),
+          weapons =
+              details.weapons.map { w ->
+                SplatCoopWeaponImpl(
+                    name = w.weapon.name,
+                    image = w.weapon.image,
+                )
+              },
+      )
+    }
 
     @JvmStatic
     @CheckResult
@@ -78,11 +133,12 @@ internal constructor(
         list: List<NetworkSplatMatch>,
     ): SplatBattle {
       val mode = list.first().gameMode
-      val battleMode = SplatGameModeImpl(
-          key = mode.key,
-          name = mode.name,
-          mode = gameMode,
-      )
+      val battleMode =
+          SplatGameModeImpl(
+              key = mode.key,
+              name = mode.name,
+              mode = gameMode,
+          )
 
       return SplatBattleImpl(
           mode = battleMode,

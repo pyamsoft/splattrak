@@ -18,6 +18,7 @@ package com.pyamsoft.splattrak.ui.test
 
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatCoop
+import com.pyamsoft.splattrak.splatnet.api.SplatCoopSession
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 import com.pyamsoft.splattrak.splatnet.api.SplatMap
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
@@ -132,16 +133,12 @@ object TestData {
 
   val coop =
       object : SplatCoop {
-        override fun start(): LocalDateTime {
-          return LocalDateTime.now()
+        override fun name(): String {
+          return "test"
         }
 
-        override fun end(): LocalDateTime {
-          return LocalDateTime.now().plusHours(2L)
-        }
-
-        override fun map(): SplatMap? {
-          return null
+        override fun sessions(): List<SplatCoopSession> {
+          return emptyList()
         }
       }
 

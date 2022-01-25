@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Peter Kenji Yamanaka
+ * Copyright 2022 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.splattrak.splatnet.service
+package com.pyamsoft.splattrak.splatnet.data
 
-import androidx.annotation.CheckResult
-import com.pyamsoft.splattrak.splatnet.network.NetworkCoopSession
-import com.pyamsoft.splattrak.splatnet.network.NetworkSplatSchedule
-import retrofit2.http.GET
+import com.pyamsoft.splattrak.splatnet.api.SplatCoopSession
+import java.time.LocalDateTime
 
-internal interface Splatnet {
+internal data class SplatCoopSessionImpl
+internal constructor(
+    private val start: LocalDateTime,
+    private val end: LocalDateTime,
+    private val map: SplatCoopSession.Map?
+) : SplatCoopSession {
+  override fun start(): LocalDateTime {
+    return start
+  }
 
-  @CheckResult @GET("data/schedules.json") suspend fun lobbySchedule(): NetworkSplatSchedule
+  override fun end(): LocalDateTime {
+    return end
+  }
 
-  @CheckResult @GET("data/coop-schedules.json") suspend fun coopSchedule(): NetworkCoopSession
+  override fun map(): SplatCoopSession.Map? {
+    return map
+  }
 }

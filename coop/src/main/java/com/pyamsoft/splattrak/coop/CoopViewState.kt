@@ -20,18 +20,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatCoop
 import javax.inject.Inject
 
 interface CoopViewState : UiViewState {
-  val schedule: List<SplatCoop>
+  val coop: SplatCoop?
   val error: Throwable?
   val loading: Boolean
 }
 
-internal class MutableCoopViewState @Inject internal constructor(): CoopViewState {
-  override var schedule by mutableStateOf(emptyList<SplatCoop>())
+internal class MutableCoopViewState @Inject internal constructor() : CoopViewState {
+  override var coop by mutableStateOf<SplatCoop?>(null)
   override var error by mutableStateOf<Throwable?>(null)
   override var loading by mutableStateOf(false)
 }

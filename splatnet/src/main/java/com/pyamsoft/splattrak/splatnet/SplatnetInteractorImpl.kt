@@ -44,6 +44,12 @@ internal constructor(
         interactor.schedule(true)
       }
 
+  private val coopCache =
+      cachify<ResultWrapper<SplatCoop>>(
+          storage = { listOf(MemoryCacheStorage.create(24, TimeUnit.HOURS)) }) {
+        interactor.coopSchedule(true)
+      }
+
   override suspend fun schedule(force: Boolean): ResultWrapper<SplatSchedule> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
@@ -54,6 +60,8 @@ internal constructor(
 
         return@withContext scheduleCache
             .call()
+            .onFailure { scheduleCache.clear() }
+            .onFailure { Timber.e(it, "Error fetching splat lobby schedule") }
             .map<SplatSchedule> { s ->
               val now = LocalDateTime.now()
               val validRotations =
@@ -65,20 +73,42 @@ internal constructor(
                                 .rotation()
                                 .asSequence()
                                 .filter { filterPastMatches(it, now) }
-                                .sortedWith(SORTER)
+                                .sortedWith(SCHEDULE_SORTER)
                                 .toList(),
                     )
                   }
 
               return@map SplatScheduleImpl(validRotations)
             }
-            .onFailure { scheduleCache.clear() }
-            .onFailure { Timber.e(it, "Error fetching splat lobby schedule") }
+      }
+
+  override suspend fun coopSchedule(force: Boolean): ResultWrapper<SplatCoop> =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        if (force) {
+          coopCache.clear()
+        }
+
+        return@withContext coopCache
+            .call()
+            .onFailure { coopCache.clear() }
+            .onFailure { Timber.e(it, "Error fetching splat coop schedule") }
+            .map<SplatCoop> { coop ->
+              return@map SplatCoopImpl(
+                  name = coop.name(),
+                  sessions = coop.sessions().sortedWith(COOP_SORTER),
+              )
+            }
       }
 
   companion object {
 
-    private val SORTER = Comparator<SplatMatch> { o1, o2 -> o1.start().compareTo(o2.start()) }
+    private val SCHEDULE_SORTER =
+        Comparator<SplatMatch> { o1, o2 -> o1.start().compareTo(o2.start()) }
+
+    private val COOP_SORTER =
+        Comparator<SplatCoopSession> { o1, o2 -> o1.start().compareTo(o2.start()) }
 
     @CheckResult
     private fun filterPastMatches(match: SplatMatch, now: LocalDateTime): Boolean {

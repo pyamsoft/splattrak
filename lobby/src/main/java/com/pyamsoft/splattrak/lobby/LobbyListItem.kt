@@ -23,9 +23,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -43,7 +43,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
-import com.pyamsoft.splattrak.ui.test.TestData
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.ui.SplatCountdownTimer
@@ -51,9 +50,10 @@ import com.pyamsoft.splattrak.ui.card.BackgroundDarkWrapper
 import com.pyamsoft.splattrak.ui.card.BackgroundStripeWrapper
 import com.pyamsoft.splattrak.ui.card.BattleInfo
 import com.pyamsoft.splattrak.ui.card.BigBattleMaps
+import com.pyamsoft.splattrak.ui.card.Label
 import com.pyamsoft.splattrak.ui.card.SmallBattleMaps
 import com.pyamsoft.splattrak.ui.card.decideBackgroundColor
-import com.pyamsoft.splattrak.ui.R as R2
+import com.pyamsoft.splattrak.ui.test.TestData
 import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -68,8 +68,9 @@ internal fun LobbyListItem(
     onClick: (SplatBattle) -> Unit,
     onCountdownCompleted: (SplatBattle) -> Unit,
 ) {
-  val name = battle.mode().name()
-  val mode = battle.mode().mode()
+  val b = battle.mode()
+  val name = b.name()
+  val mode = b.mode()
   val rotation = battle.rotation()
   val backgroundColorResource = remember(mode) { decideBackgroundColor(mode) }
   val backgroundColor = colorResource(backgroundColorResource)
@@ -172,18 +173,9 @@ private fun LobbyUpNext(
       modifier = modifier,
       verticalAlignment = Alignment.CenterVertically,
   ) {
-    Surface(
-        color = colorResource(R2.color.splatNext),
-        contentColor = Color.White,
-        shape = MaterialTheme.shapes.medium,
-    ) {
-      Text(
-          modifier = Modifier.padding(8.dp),
-          text = stringResource(R.string.up_next),
-          style = MaterialTheme.typography.body1,
-          textAlign = TextAlign.Center,
-      )
-    }
+    Label(
+        text = stringResource(R.string.up_next),
+    )
     Spacer(
         modifier = Modifier.weight(1F),
     )
@@ -221,7 +213,7 @@ private fun Countdown(
   }
 
   Text(
-      modifier = modifier,
+      modifier = modifier.width(88.dp),
       text = text,
       style = MaterialTheme.typography.body1,
   )

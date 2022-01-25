@@ -21,6 +21,7 @@ import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.splattrak.splatnet.SplatnetInteractor
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
+import com.pyamsoft.splattrak.splatnet.api.SplatCoop
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,28 +35,27 @@ internal constructor(
     splatnetInteractor: SplatnetInteractor,
 ) : AbstractViewModeler<CoopViewState>(state) {
 
-  private val scheduleRunner =
-      highlander<ResultWrapper<List<SplatBattle>>, Boolean> { force ->
-        splatnetInteractor.schedule(force).map { it.battles() }
+  private val coopRunner =
+      highlander<ResultWrapper<SplatCoop>, Boolean> { force ->
+        splatnetInteractor.coopSchedule(force)
       }
 
   fun handleRefresh(scope: CoroutineScope, force: Boolean) {
     scope.launch(context = Dispatchers.Main) {
       state.loading = true
-      scheduleRunner
+      coopRunner
           .call(force)
           .onSuccess {
             state.apply {
               error = null
-                // TODO
-//              schedule = it
+              coop = it
             }
           }
-          .onFailure { Timber.e(it, "Failed to load Splatoon2.ink lobby list") }
+          .onFailure { Timber.e(it, "Failed to load Splatoon2.ink coop list") }
           .onFailure {
             state.apply {
               error = it
-              schedule = emptyList()
+              coop = null
             }
           }
           .onFinally { state.loading = false }

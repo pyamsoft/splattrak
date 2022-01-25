@@ -16,13 +16,18 @@
 
 package com.pyamsoft.splattrak.coop
 
+import android.text.format.DateFormat
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -35,22 +40,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
+import coil.compose.rememberImagePainter
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.splattrak.splatnet.api.SplatCoop
 import com.pyamsoft.splattrak.splatnet.api.SplatCoopSession
 import com.pyamsoft.splattrak.ui.R as R2
 import com.pyamsoft.splattrak.ui.SplatCountdownTimer
+import com.pyamsoft.splattrak.ui.card.BackgroundDarkWrapper
 import com.pyamsoft.splattrak.ui.card.BackgroundStripeWrapper
+import com.pyamsoft.splattrak.ui.card.BattleMap
+import com.pyamsoft.splattrak.ui.card.Label
 import com.pyamsoft.splattrak.ui.test.TestData
 import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -63,6 +73,11 @@ internal fun CoopListItem(
     onCountdownCompleted: (SplatCoop) -> Unit,
 ) {
   val backgroundColor = colorResource(R2.color.splatRanked)
+
+  val context = LocalContext.current
+  val is24Hour = DateFormat.is24HourFormat(context)
+  val localFormatter = remember(is24Hour) { if (is24Hour) formatter24 else formatter12 }
+  val formatter = localFormatter.get().requireNotNull()
 
   Card(
       modifier = modifier,
@@ -78,25 +93,44 @@ internal fun CoopListItem(
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
             coop = coop,
         )
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-          itemsIndexed(
-              items = coop.sessions(),
-              key = { _, item -> item.start().toInstant(ZoneOffset.UTC).epochSecond },
-          ) { index, item ->
-            if (index <= 0) {
-              CurrentBattle(
-                  modifier = Modifier.fillMaxWidth().padding(8.dp),
-                  imageLoader = imageLoader,
-                  coop = item,
-                  onCountdownCompleted = { onCountdownCompleted(coop) },
-              )
-            } else {
+
+        val sessions = coop.sessions()
+        val current = remember(sessions) { sessions.getOrNull(0) }
+
+        // If there is no first session, there are no remaining sessions either
+        if (current != null) {
+
+          BackgroundDarkWrapper(
+              modifier = Modifier.fillMaxWidth().padding(8.dp),
+              imageLoader = imageLoader,
+          ) {
+            CurrentBattle(
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                formatter = formatter,
+                imageLoader = imageLoader,
+                coop = current,
+                onCountdownCompleted = { onCountdownCompleted(coop) },
+            )
+          }
+
+          val remaining = remember(sessions) { sessions.subList(1, sessions.size) }
+          Column(
+              modifier = Modifier.fillMaxWidth(),
+          ) {
+            for (index in remaining.indices) {
+              val isFirst = remember(index) { index <= 0 }
               NextBattle(
                   modifier = Modifier.fillMaxWidth().padding(8.dp),
+                  formatter = formatter,
                   imageLoader = imageLoader,
-                  coop = item,
+                  coop = remaining[index],
+                  isFirst = isFirst,
+              )
+
+              Divider(
+                  // DividerAlpha is a private const so we copy it here
+                  // DividerAlpha is a little too light, use hardcoded instead
+                  color = Color.Black.copy(alpha = 0.2F),
               )
             }
           }
@@ -109,43 +143,224 @@ internal fun CoopListItem(
 @Composable
 private fun NextBattle(
     modifier: Modifier = Modifier,
+    formatter: DateTimeFormatter,
     imageLoader: ImageLoader,
     coop: SplatCoopSession,
-) {}
-
-@Composable
-private fun CurrentBattle(
-    modifier: Modifier = Modifier,
-    imageLoader: ImageLoader,
-    coop: SplatCoopSession,
-    onCountdownCompleted: () -> Unit
+    isFirst: Boolean,
 ) {
-  val start =
-      remember(coop.start()) {
-        coop.start().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
-      }
-  val end =
-      remember(coop.end()) {
-        coop.end().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
-      }
+  val start = remember(coop.start()) { coop.start().format(formatter) }
+  val end = remember(coop.end()) { coop.end().format(formatter) }
+  val map = coop.map()
 
   Column(
       modifier = modifier,
   ) {
+    if (isFirst) {
+      Label(
+          modifier = Modifier.padding(bottom = 8.dp),
+          text = "Soon!",
+      )
+    }
+
     Text(
         text = "$start - $end",
         style = MaterialTheme.typography.body1,
     )
+    if (map != null) {
+      Row(
+          modifier = Modifier.height(100.dp).padding(top = 8.dp),
+          verticalAlignment = Alignment.CenterVertically,
+      ) {
+        BattleMap(
+            modifier = Modifier.weight(1F),
+            map = map.map(),
+            imageLoader = imageLoader,
+        )
+        Weapons(
+            modifier = Modifier.weight(1F),
+            weapons = map.weapons(),
+            imageLoader = imageLoader,
+            small = true,
+        )
+      }
+    }
+  }
+}
+
+@Composable
+private fun CurrentCountdown(
+    modifier: Modifier = Modifier,
+    coop: SplatCoopSession,
+    onCountdownCompleted: () -> Unit,
+) {
+  Row(
+      modifier = modifier,
+      verticalAlignment = Alignment.CenterVertically,
+  ) {
     Countdown(
         coop = coop,
         onCountdownCompleted = onCountdownCompleted,
+        style = MaterialTheme.typography.body1,
     )
+    Text(
+        modifier = Modifier.padding(start = 8.dp),
+        text = "remaining",
+        style = MaterialTheme.typography.body1,
+    )
+  }
+}
+
+private val formatter24 =
+    object : ThreadLocal<DateTimeFormatter>() {
+
+      private val formatter by
+          lazy(LazyThreadSafetyMode.NONE) { DateTimeFormatter.ofPattern("EE M/dd, kk:mm") }
+
+      override fun get(): DateTimeFormatter {
+        return formatter
+      }
+    }
+
+private val formatter12 =
+    object : ThreadLocal<DateTimeFormatter>() {
+
+      private val formatter by
+          lazy(LazyThreadSafetyMode.NONE) { DateTimeFormatter.ofPattern("EE M/dd, hh:mm a") }
+
+      override fun get(): DateTimeFormatter {
+        return formatter
+      }
+    }
+
+@Composable
+private fun CurrentBattle(
+    modifier: Modifier = Modifier,
+    formatter: DateTimeFormatter,
+    imageLoader: ImageLoader,
+    coop: SplatCoopSession,
+    onCountdownCompleted: () -> Unit
+) {
+  val s = coop.start()
+  val e = coop.end()
+
+  val isOpen =
+      remember(s, e) {
+        val now = LocalDateTime.now()
+        val isAfter = now.isAfter(s) || now == s
+        val isBefore = now.isBefore(e) || now == e
+        return@remember isAfter && isBefore
+      }
+
+  val start = remember(s) { s.format(formatter) }
+  val end = remember(e) { e.format(formatter) }
+  val map = coop.map()
+
+  Column(
+      modifier = modifier,
+  ) {
+    Label(
+        modifier = Modifier.padding(bottom = 8.dp),
+        text = if (isOpen) "Now Open!" else "Closed",
+    )
+    Text(
+        modifier = Modifier.padding(bottom = 8.dp),
+        text = "$start - $end",
+        style = MaterialTheme.typography.body1,
+    )
+    CurrentCountdown(
+        modifier = Modifier.padding(bottom = 8.dp),
+        coop = coop,
+        onCountdownCompleted = onCountdownCompleted,
+    )
+    if (map != null) {
+      Column(
+          horizontalAlignment = Alignment.CenterHorizontally,
+      ) {
+        BattleMap(
+            modifier = Modifier.height(160.dp),
+            map = map.map(),
+            imageLoader = imageLoader,
+        )
+
+        Column(
+            modifier = Modifier.height(100.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+          Text(
+              text = "Supplied Weapons",
+              style = MaterialTheme.typography.body1,
+          )
+
+          Weapons(
+              modifier = Modifier.fillMaxWidth(),
+              weapons = map.weapons(),
+              imageLoader = imageLoader,
+              small = false,
+          )
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun Weapons(
+    modifier: Modifier = Modifier,
+    weapons: List<SplatCoopSession.Map.Weapon>,
+    imageLoader: ImageLoader,
+    small: Boolean,
+) {
+  val weaponList =
+      remember(small, weapons) {
+        if (small) {
+          val middle = weapons.size / 2
+          listOf(
+              weapons.subList(0, middle),
+              weapons.subList(middle, weapons.size),
+          )
+        } else {
+          listOf(weapons)
+        }
+      }
+
+  val weaponSize = remember(small) { if (small) 40.dp else 64.dp }
+
+  Column(
+      modifier = modifier,
+  ) {
+    for (group in weaponList) {
+      Row(
+          modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.SpaceEvenly,
+          verticalAlignment = Alignment.CenterVertically,
+      ) {
+        for (weapon in group) {
+          val image = weapon.imageUrl()
+          val name = weapon.name()
+          Box(
+              modifier = Modifier.width(weaponSize),
+              contentAlignment = Alignment.BottomEnd,
+          ) {
+            Image(
+                painter =
+                    rememberImagePainter(
+                        data = image,
+                        imageLoader = imageLoader,
+                    ),
+                contentDescription = name,
+            )
+          }
+        }
+      }
+    }
   }
 }
 
 @Composable
 private fun Countdown(
     modifier: Modifier = Modifier,
+    style: TextStyle,
     coop: SplatCoopSession,
     onCountdownCompleted: () -> Unit
 ) {
@@ -170,9 +385,9 @@ private fun Countdown(
   }
 
   Text(
-      modifier = modifier,
+      modifier = modifier.width(88.dp),
       text = text,
-      style = MaterialTheme.typography.body1,
+      style = style,
   )
 }
 

@@ -18,9 +18,12 @@ package com.pyamsoft.splattrak.splatnet
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.splattrak.splatnet.api.SplatCoop
 import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
 
 interface SplatnetInteractor {
 
   @CheckResult suspend fun schedule(force: Boolean): ResultWrapper<SplatSchedule>
+
+  @CheckResult suspend fun coopSchedule(force: Boolean): ResultWrapper<SplatCoop>
 }

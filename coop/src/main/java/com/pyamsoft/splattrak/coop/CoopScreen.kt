@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -61,7 +60,6 @@ fun CoopScreen(
     onRefresh: () -> Unit,
 ) {
   val isLoading = state.loading
-  val schedule = state.schedule
   val error = state.error
 
   Surface(
@@ -77,9 +75,9 @@ fun CoopScreen(
         if (err == null) {
           CoopList(
               mainState = mainState,
-              schedule = schedule,
+              state = state,
               imageLoader = imageLoader,
-              onItemCountdownCompleted = { onRefresh },
+              onItemCountdownCompleted = { onRefresh() },
           )
         } else {
           Error(
@@ -134,10 +132,11 @@ private fun Error(
 @Composable
 private fun CoopList(
     mainState: MainViewState,
-    schedule: List<SplatCoop>,
+    state: CoopViewState,
     imageLoader: ImageLoader,
     onItemCountdownCompleted: (SplatCoop) -> Unit,
 ) {
+  val coop = state.coop
   val bottomNavHeight = mainState.bottomNavHeight
   val density = LocalDensity.current
   val bottomNavHeightDp = remember(bottomNavHeight) { density.run { bottomNavHeight.toDp() } }
@@ -152,15 +151,14 @@ private fun CoopList(
       )
     }
 
-    items(
-        items = schedule,
-        key = { it.name() },
-    ) { item ->
-      CoopListItem(
-          coop = item,
-          imageLoader = imageLoader,
-          onCountdownCompleted = onItemCountdownCompleted,
-      )
+    if (coop != null) {
+      item {
+        CoopListItem(
+            coop = coop,
+            imageLoader = imageLoader,
+            onCountdownCompleted = onItemCountdownCompleted,
+        )
+      }
     }
 
     item {
@@ -190,7 +188,7 @@ private fun PreviewCoopScreen() {
   CoopScreen(
       state =
           MutableCoopViewState().apply {
-            schedule = emptyList()
+            coop = null
             error = null
             loading = false
           },

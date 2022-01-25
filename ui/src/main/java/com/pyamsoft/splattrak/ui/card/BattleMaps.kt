@@ -135,7 +135,7 @@ private fun BattleMaps(
 }
 
 @Composable
-private fun BattleMap(
+fun BattleMap(
     modifier: Modifier = Modifier,
     map: SplatMap,
     imageLoader: ImageLoader,
@@ -190,6 +190,17 @@ private fun BattleMap(
         )
       }
     }
+  }
+}
+
+@Preview
+@Composable
+private fun PreviewBigBattleMaps() {
+  Surface {
+    BigBattleMaps(
+        match = TestData.currentMatch,
+        imageLoader = createNewTestImageLoader(),
+    )
   }
 }
 

@@ -53,7 +53,7 @@ class SplatCountdownTimer(
                     val hours = totalSeconds / 3600
                     val minutes = (totalSeconds % 3600) / 60
                     val seconds = totalSeconds % 60
-                    val formattedString = "%d:%02d:%02d".format(hours, minutes, seconds)
+                    val formattedString = "%dh %02dm %02ds".format(hours, minutes, seconds)
                     updater?.invoke(formattedString, false)
                   }
                 }

@@ -25,5 +25,20 @@ interface SplatCoopSession {
 
   @CheckResult fun end(): LocalDateTime
 
-  @CheckResult fun map(): SplatMap?
+  @CheckResult fun map(): Map?
+
+  interface Map {
+
+    @CheckResult fun map(): SplatMap
+
+    @CheckResult fun weapons(): List<Weapon>
+
+    interface Weapon {
+
+      @CheckResult fun name(): String
+
+      @CheckResult fun imageUrl(): String
+
+    }
+  }
 }
