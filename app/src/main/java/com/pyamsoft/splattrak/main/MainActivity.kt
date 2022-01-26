@@ -20,14 +20,8 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
@@ -99,15 +93,8 @@ internal class MainActivity : PYDroidActivity() {
     binding.mainComposeBottom.setContent {
       val page by navigator.requireNotNull().currentScreenState()
 
-      val snackbarHostState = remember { SnackbarHostState() }
-
       vm.Render { state ->
         val theme = state.theme
-
-        val density = LocalDensity.current
-        val bottomNavHeight = state.bottomNavHeight
-        val bottomOffset =
-            remember(bottomNavHeight) { density.run { bottomNavHeight.toDp() } + 16.dp }
 
         SystemBars(theme)
         SplatTrakTheme(theme) {
@@ -120,14 +107,6 @@ internal class MainActivity : PYDroidActivity() {
                   page = page,
                   onLoadPage = { navigate(it) },
                   onHeightMeasured = { vm.handleMeasureBottomNavHeight(it) },
-              )
-              RatingScreen(
-                  modifier = Modifier.padding(bottom = bottomOffset),
-                  snackbarHostState = snackbarHostState,
-              )
-              VersionCheckScreen(
-                  modifier = Modifier.padding(bottom = bottomOffset),
-                  snackbarHostState = snackbarHostState,
               )
             }
           }
