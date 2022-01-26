@@ -213,7 +213,7 @@ private fun Countdown(
   }
 
   Text(
-      modifier = modifier.width(88.dp),
+      modifier = modifier.width(96.dp),
       text = text,
       style = MaterialTheme.typography.body1,
   )

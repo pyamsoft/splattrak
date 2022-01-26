@@ -267,11 +267,13 @@ private fun CurrentBattle(
         text = "$start - $end",
         style = MaterialTheme.typography.body1,
     )
-    CurrentCountdown(
-        modifier = Modifier.padding(bottom = 8.dp),
-        coop = coop,
-        onCountdownCompleted = onCountdownCompleted,
-    )
+    if (isOpen) {
+      CurrentCountdown(
+          modifier = Modifier.padding(bottom = 8.dp),
+          coop = coop,
+          onCountdownCompleted = onCountdownCompleted,
+      )
+    }
     if (map != null) {
       Column(
           horizontalAlignment = Alignment.CenterHorizontally,
@@ -385,7 +387,7 @@ private fun Countdown(
   }
 
   Text(
-      modifier = modifier.width(88.dp),
+      modifier = modifier.width(96.dp),
       text = text,
       style = style,
   )
