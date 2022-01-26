@@ -24,38 +24,38 @@ import androidx.compose.ui.graphics.vector.ImageVector
 // Copied from material-icons-extended
 @Suppress("unused")
 val Icons.Filled.MeetingRoom: ImageVector
-    get() {
-        if (_meetingRoom != null) {
-            return _meetingRoom!!
-        }
-        _meetingRoom = materialIcon(name = "Filled.MeetingRoom") {
-            materialPath {
-                moveTo(14.0f, 6.0f)
-                verticalLineToRelative(15.0f)
-                lineTo(3.0f, 21.0f)
-                verticalLineToRelative(-2.0f)
-                horizontalLineToRelative(2.0f)
-                lineTo(5.0f, 3.0f)
-                horizontalLineToRelative(9.0f)
-                verticalLineToRelative(1.0f)
-                horizontalLineToRelative(5.0f)
-                verticalLineToRelative(15.0f)
-                horizontalLineToRelative(2.0f)
-                verticalLineToRelative(2.0f)
-                horizontalLineToRelative(-4.0f)
-                lineTo(17.0f, 6.0f)
-                horizontalLineToRelative(-3.0f)
-                close()
-                moveTo(10.0f, 11.0f)
-                verticalLineToRelative(2.0f)
-                horizontalLineToRelative(2.0f)
-                verticalLineToRelative(-2.0f)
-                horizontalLineToRelative(-2.0f)
-                close()
-            }
-        }
-        return _meetingRoom!!
+  get() {
+    if (_meetingRoom != null) {
+      return _meetingRoom!!
     }
+    _meetingRoom =
+        materialIcon(name = "Filled.MeetingRoom") {
+          materialPath {
+            moveTo(14.0f, 6.0f)
+            verticalLineToRelative(15.0f)
+            lineTo(3.0f, 21.0f)
+            verticalLineToRelative(-2.0f)
+            horizontalLineToRelative(2.0f)
+            lineTo(5.0f, 3.0f)
+            horizontalLineToRelative(9.0f)
+            verticalLineToRelative(1.0f)
+            horizontalLineToRelative(5.0f)
+            verticalLineToRelative(15.0f)
+            horizontalLineToRelative(2.0f)
+            verticalLineToRelative(2.0f)
+            horizontalLineToRelative(-4.0f)
+            lineTo(17.0f, 6.0f)
+            horizontalLineToRelative(-3.0f)
+            close()
+            moveTo(10.0f, 11.0f)
+            verticalLineToRelative(2.0f)
+            horizontalLineToRelative(2.0f)
+            verticalLineToRelative(-2.0f)
+            horizontalLineToRelative(-2.0f)
+            close()
+          }
+        }
+    return _meetingRoom!!
+  }
 
-@Suppress("ObjectPropertyName")
-private var _meetingRoom: ImageVector? = null
+@Suppress("ObjectPropertyName") private var _meetingRoom: ImageVector? = null

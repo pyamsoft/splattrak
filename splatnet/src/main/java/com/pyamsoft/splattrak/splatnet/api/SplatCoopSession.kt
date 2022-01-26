@@ -38,7 +38,6 @@ interface SplatCoopSession {
       @CheckResult fun name(): String
 
       @CheckResult fun imageUrl(): String
-
     }
   }
 }

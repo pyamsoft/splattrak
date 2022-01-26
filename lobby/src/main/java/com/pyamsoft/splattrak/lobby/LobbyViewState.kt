@@ -29,7 +29,7 @@ interface LobbyViewState : UiViewState {
   val loading: Boolean
 }
 
-internal class MutableLobbyViewState @Inject internal constructor(): LobbyViewState {
+internal class MutableLobbyViewState @Inject internal constructor() : LobbyViewState {
   override var schedule by mutableStateOf(emptyList<SplatBattle>())
   override var error by mutableStateOf<Throwable?>(null)
   override var loading by mutableStateOf(false)

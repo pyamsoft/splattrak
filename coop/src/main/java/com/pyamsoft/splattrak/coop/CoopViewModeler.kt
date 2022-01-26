@@ -20,7 +20,6 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.splattrak.splatnet.SplatnetInteractor
-import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatCoop
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope

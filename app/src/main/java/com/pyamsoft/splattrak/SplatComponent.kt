@@ -44,10 +44,10 @@ internal interface SplatComponent {
 
     @CheckResult
     fun create(
-      @BindsInstance application: Application,
-      @Named("debug") @BindsInstance debug: Boolean,
-      @BindsInstance theming: Theming,
-      @BindsInstance imageLoader: () -> ImageLoader,
+        @BindsInstance application: Application,
+        @Named("debug") @BindsInstance debug: Boolean,
+        @BindsInstance theming: Theming,
+        @BindsInstance imageLoader: () -> ImageLoader,
     ): SplatComponent
   }
 
@@ -66,9 +66,7 @@ internal interface SplatComponent {
       @Provides
       @JvmStatic
       @Singleton
-      internal fun provideCoilImageLoader(
-          lazyImageLoader: () -> ImageLoader
-      ): ImageLoader {
+      internal fun provideCoilImageLoader(lazyImageLoader: () -> ImageLoader): ImageLoader {
         return lazyImageLoader()
       }
 

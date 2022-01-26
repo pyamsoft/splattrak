@@ -33,5 +33,4 @@ enum class MainPage(val display: String) {
       override val screen: MainPage = self
     }
   }
-
 }

@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
 import com.pyamsoft.splattrak.ui.icons.Group
 import com.pyamsoft.splattrak.ui.icons.MeetingRoom
-import com.pyamsoft.splattrak.ui.test.createNewTestImageLoader
 
 @Composable
 fun MainBottomNav(
