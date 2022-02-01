@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.splatnet.api.key
 import com.pyamsoft.splattrak.ui.card.BackgroundStripeWrapper
@@ -72,7 +73,7 @@ fun DrilldownScreen(
       modifier = modifier,
       backgroundColor = backgroundColor,
       contentColor = Color.White,
-      elevation = 16.dp,
+      elevation = DialogDefaults.DialogElevation,
   ) {
     BackgroundStripeWrapper(
         imageLoader = imageLoader,
