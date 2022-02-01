@@ -72,6 +72,7 @@ fun DrilldownScreen(
       modifier = modifier,
       backgroundColor = backgroundColor,
       contentColor = Color.White,
+      elevation = 16.dp,
   ) {
     BackgroundStripeWrapper(
         imageLoader = imageLoader,

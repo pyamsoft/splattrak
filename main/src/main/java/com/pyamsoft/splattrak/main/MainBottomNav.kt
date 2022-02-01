@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -57,6 +58,7 @@ fun MainBottomNav(
       shape = RoundedCornerShape(8.dp),
       color = MaterialTheme.colors.primary,
       contentColor = Color.White,
+      elevation = AppBarDefaults.BottomAppBarElevation,
   ) {
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.primary,

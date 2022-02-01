@@ -16,6 +16,7 @@
 
 package com.pyamsoft.splattrak.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -49,7 +50,7 @@ private inline fun AnnotatedString.Builder.withStringAnnotation(
 fun NotNintendo(
     modifier: Modifier = Modifier,
 ) {
-  Surface(
+  Box(
       modifier = modifier,
   ) {
     val text = buildAnnotatedString {

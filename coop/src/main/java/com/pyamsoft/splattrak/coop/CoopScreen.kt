@@ -18,6 +18,7 @@ package com.pyamsoft.splattrak.coop
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -62,7 +63,7 @@ fun CoopScreen(
   val isLoading = state.loading
   val error = state.error
 
-  Surface(
+  Box(
       modifier = modifier,
   ) {
     SwipeRefresh(
