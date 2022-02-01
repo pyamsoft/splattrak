@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.splattrak.splatnet.api.SplatCoop
 import com.pyamsoft.splattrak.splatnet.api.SplatCoopSession
 import com.pyamsoft.splattrak.ui.R as R2
@@ -90,7 +91,7 @@ internal fun CoopListItem(
     ) {
       Column {
         LobbyName(
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            modifier = Modifier.fillMaxWidth().padding(top = MaterialTheme.keylines.baseline),
             coop = coop,
         )
 
@@ -101,11 +102,11 @@ internal fun CoopListItem(
         if (current != null) {
 
           BackgroundDarkWrapper(
-              modifier = Modifier.fillMaxWidth().padding(8.dp),
+              modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.baseline),
               imageLoader = imageLoader,
           ) {
             CurrentBattle(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.baseline),
                 formatter = formatter,
                 imageLoader = imageLoader,
                 coop = current,
@@ -120,7 +121,7 @@ internal fun CoopListItem(
             for (index in remaining.indices) {
               val isFirst = remember(index) { index <= 0 }
               NextBattle(
-                  modifier = Modifier.fillMaxWidth().padding(8.dp),
+                  modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.baseline),
                   formatter = formatter,
                   imageLoader = imageLoader,
                   coop = remaining[index],
@@ -157,7 +158,7 @@ private fun NextBattle(
   ) {
     if (isFirst) {
       Label(
-          modifier = Modifier.padding(bottom = 8.dp),
+          modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
           text = "Soon!",
       )
     }
@@ -168,7 +169,7 @@ private fun NextBattle(
     )
     if (map != null) {
       Row(
-          modifier = Modifier.height(100.dp).padding(top = 8.dp),
+          modifier = Modifier.height(100.dp).padding(top = MaterialTheme.keylines.baseline),
           verticalAlignment = Alignment.CenterVertically,
       ) {
         BattleMap(
@@ -203,7 +204,7 @@ private fun CurrentCountdown(
         style = MaterialTheme.typography.body1,
     )
     Text(
-        modifier = Modifier.padding(start = 8.dp),
+        modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
         text = "remaining",
         style = MaterialTheme.typography.body1,
     )
@@ -259,17 +260,17 @@ private fun CurrentBattle(
       modifier = modifier,
   ) {
     Label(
-        modifier = Modifier.padding(bottom = 8.dp),
+        modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
         text = if (isOpen) "Now Open!" else "Closed",
     )
     Text(
-        modifier = Modifier.padding(bottom = 8.dp),
+        modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
         text = "$start - $end",
         style = MaterialTheme.typography.body1,
     )
     if (isOpen) {
       CurrentCountdown(
-          modifier = Modifier.padding(bottom = 8.dp),
+          modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
           coop = coop,
           onCountdownCompleted = onCountdownCompleted,
       )

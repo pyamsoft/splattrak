@@ -21,13 +21,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.AppBarDefaults
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
@@ -38,6 +32,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.splattrak.ui.icons.Group
 import com.pyamsoft.splattrak.ui.icons.MeetingRoom
 
@@ -48,69 +43,69 @@ fun MainBottomNav(
     onHeightMeasured: (Int) -> Unit,
     onLoadPage: (MainPage) -> Unit,
 ) {
-  // Can't use BottomAppBar since we can't modify its Shape
-  Surface(
-      modifier =
-          modifier
-              .padding(vertical = 16.dp, horizontal = 64.dp)
-              .navigationBarsPadding(bottom = true)
-              .onSizeChanged { onHeightMeasured(it.height) },
-      shape = RoundedCornerShape(8.dp),
-      color = MaterialTheme.colors.primary,
-      contentColor = Color.White,
-      elevation = AppBarDefaults.BottomAppBarElevation,
-  ) {
-    BottomNavigation(
-        backgroundColor = MaterialTheme.colors.primary,
+    // Can't use BottomAppBar since we can't modify its Shape
+    Surface(
+        modifier =
+        modifier
+            .padding(vertical = MaterialTheme.keylines.content, horizontal = 64.dp)
+            .navigationBarsPadding(bottom = true)
+            .onSizeChanged { onHeightMeasured(it.height) },
+        shape = RoundedCornerShape(MaterialTheme.keylines.baseline),
+        color = MaterialTheme.colors.primary,
         contentColor = Color.White,
+        elevation = AppBarDefaults.BottomAppBarElevation,
     ) {
-      for (p in MainPage.values()) {
-        Item(
-            current = page,
-            target = p,
-            onClick = { onLoadPage(p) },
-        )
-      }
+        BottomNavigation(
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = Color.White,
+        ) {
+            for (p in MainPage.values()) {
+                Item(
+                    current = page,
+                    target = p,
+                    onClick = { onLoadPage(p) },
+                )
+            }
+        }
     }
-  }
 }
 
 @Composable
 private fun RowScope.Item(current: MainPage, target: MainPage, onClick: () -> Unit) {
-  BottomNavigationItem(
-      selected = current == target,
-      onClick = onClick,
-      icon = {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-          Icon(
-              imageVector =
-                  when (target) {
-                    MainPage.LOBBY -> Icons.Filled.MeetingRoom
-                    MainPage.COOP -> Icons.Filled.Group
-                    MainPage.SETTINGS -> Icons.Filled.Settings
-                  },
-              contentDescription = target.display,
-          )
-          Text(
-              text = target.display,
-              style = MaterialTheme.typography.body2,
-          )
-        }
-      },
-  )
+    BottomNavigationItem(
+        selected = current == target,
+        onClick = onClick,
+        icon = {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Icon(
+                    imageVector =
+                    when (target) {
+                        MainPage.LOBBY -> Icons.Filled.MeetingRoom
+                        MainPage.COOP -> Icons.Filled.Group
+                        MainPage.SETTINGS -> Icons.Filled.Settings
+                    },
+                    contentDescription = target.display,
+                )
+                Text(
+                    text = target.display,
+                    style = MaterialTheme.typography.body2,
+                )
+            }
+        },
+    )
 }
 
 @Preview
 @Composable
 private fun PreviewMainBottomNav() {
-  Surface {
-    MainBottomNav(
-        page = MainPage.LOBBY,
-        onHeightMeasured = {},
-        onLoadPage = {},
-    )
-  }
+    Surface {
+        MainBottomNav(
+            page = MainPage.LOBBY,
+            onHeightMeasured = {},
+            onLoadPage = {},
+        )
+    }
 }

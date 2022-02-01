@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.splattrak.splatnet.api.SplatMap
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.ui.R
@@ -69,9 +70,9 @@ fun BigBattleMaps(
               modifier =
                   Modifier.run {
                     if (isPortrait) {
-                      height(16.dp).fillMaxWidth()
+                      height(MaterialTheme.keylines.content).fillMaxWidth()
                     } else {
-                      width(16.dp).fillMaxHeight()
+                      width(MaterialTheme.keylines.content).fillMaxHeight()
                     }
                   },
           )
@@ -105,7 +106,7 @@ fun SmallBattleMaps(
         imageLoader = imageLoader,
     ) {
       Spacer(
-          modifier = Modifier.width(8.dp).fillMaxHeight(),
+          modifier = Modifier.width(MaterialTheme.keylines.baseline).fillMaxHeight(),
       )
     }
   }
@@ -164,7 +165,7 @@ fun BattleMap(
     }
 
     Box(
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier.padding(MaterialTheme.keylines.baseline),
     ) {
       Surface(
           color = Color.Transparent,
@@ -181,7 +182,7 @@ fun BattleMap(
             contentDescription = name,
         )
         Text(
-            modifier = Modifier.padding(4.dp),
+            modifier = Modifier.padding(MaterialTheme.keylines.typography),
             text = name,
             style = MaterialTheme.typography.body2,
             color = Color.White,

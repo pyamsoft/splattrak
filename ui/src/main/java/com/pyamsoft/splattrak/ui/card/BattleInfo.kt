@@ -27,8 +27,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.ui.getCurrentLocale
 import java.time.format.DateTimeFormatter
@@ -71,7 +71,7 @@ fun BattleInfo(
   val formatter = localFormatter.get().requireNotNull()
 
   Row(
-      modifier = modifier.padding(bottom = 8.dp),
+      modifier = modifier.padding(bottom = MaterialTheme.keylines.baseline),
       verticalAlignment = Alignment.CenterVertically,
   ) {
     Text(
@@ -88,8 +88,8 @@ fun BattleInfo(
     Text(
         modifier =
             Modifier.padding(
-                start = 4.dp,
-                end = 4.dp,
+                start = MaterialTheme.keylines.typography,
+                end = MaterialTheme.keylines.typography,
             ),
         text = "-",
         style = MaterialTheme.typography.body1,

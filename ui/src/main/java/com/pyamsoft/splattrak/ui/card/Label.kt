@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.splattrak.ui.R
 
 @Composable
@@ -40,7 +40,7 @@ fun Label(
       shape = MaterialTheme.shapes.medium,
   ) {
     Text(
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier.padding(MaterialTheme.keylines.baseline),
         text = text,
         style = MaterialTheme.typography.body1,
         textAlign = TextAlign.Center,

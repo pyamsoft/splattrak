@@ -41,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.pyamsoft.pydroid.theme.ZeroSize
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.splatnet.api.key
@@ -120,12 +122,12 @@ private fun BattleList(
     imageLoader: ImageLoader,
 ) {
   LazyColumn(
-      modifier = Modifier.padding(horizontal = 16.dp),
-      verticalArrangement = Arrangement.spacedBy(16.dp),
+      modifier = Modifier.padding(horizontal = MaterialTheme.keylines.content),
+      verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.content),
   ) {
     item {
       Spacer(
-          modifier = Modifier.fillMaxWidth().height(0.dp),
+          modifier = Modifier.fillMaxWidth().height(ZeroSize),
       )
     }
 
@@ -141,7 +143,7 @@ private fun BattleList(
 
     item {
       Spacer(
-          modifier = Modifier.fillMaxWidth().height(0.dp),
+          modifier = Modifier.fillMaxWidth().height(ZeroSize),
       )
     }
   }
