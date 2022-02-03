@@ -94,7 +94,7 @@ internal class DrilldownDialog : AppCompatDialogFragment() {
       val vm = viewModel.requireNotNull()
       setContent {
         vm.Render { state ->
-          SplatTrakTheme(themeProvider) {
+          act.SplatTrakTheme(themeProvider) {
             CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
               DrilldownScreen(
                   modifier = Modifier.fillMaxSize(),

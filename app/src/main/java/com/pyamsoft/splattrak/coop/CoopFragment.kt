@@ -84,7 +84,7 @@ internal class CoopFragment : Fragment() {
       setContent {
         vm.Render { state ->
           mainVM.Render { mainState ->
-            SplatTrakTheme(themeProvider) {
+            act.SplatTrakTheme(themeProvider) {
               CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
                 CoopScreen(
                     modifier = Modifier.fillMaxSize(),

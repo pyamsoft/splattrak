@@ -16,12 +16,14 @@
 
 package com.pyamsoft.splattrak
 
+import android.app.Activity
 import androidx.annotation.CheckResult
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -30,15 +32,25 @@ import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.theme.PYDroidTheme
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.splattrak.ui.R as R2
+import com.pyamsoft.pydroid.util.valuesFromCurrentTheme
+import com.google.android.material.R as R2
 
 @Composable
 @CheckResult
-private fun themeColors(isDarkMode: Boolean): Colors {
-    val primary = colorResource(R2.color.colorPrimary)
-    val onPrimary = colorResource(R2.color.colorOnPrimary)
-    val secondary = colorResource(R2.color.colorSecondary)
-    val onSecondary = colorResource(R2.color.colorOnSecondary)
+private fun themeColors(activity: Activity, isDarkMode: Boolean): Colors {
+    val colors =
+        remember(isDarkMode) {
+            activity.valuesFromCurrentTheme(
+                R2.attr.colorPrimary,
+                R2.attr.colorOnPrimary,
+                R2.attr.colorSecondary,
+                R2.attr.colorOnSecondary,
+            )
+        }
+    val primary = colorResource(colors[0])
+    val onPrimary = colorResource(colors[1])
+    val secondary = colorResource(colors[2])
+    val onSecondary = colorResource(colors[3])
     return if (isDarkMode)
         darkColors(
             primary = primary,
@@ -90,18 +102,18 @@ private fun themeShapes(): Shapes {
 }
 
 @Composable
-fun SplatTrakTheme(
+fun Activity.SplatTrakTheme(
     themeProvider: ThemeProvider,
     content: @Composable () -> Unit,
 ) {
-    SplatTrakTheme(
+    this.SplatTrakTheme(
         theme = if (themeProvider.isDarkTheme()) Theming.Mode.DARK else Theming.Mode.LIGHT,
         content = content,
     )
 }
 
 @Composable
-fun SplatTrakTheme(
+fun Activity.SplatTrakTheme(
     theme: Theming.Mode,
     content: @Composable () -> Unit,
 ) {
@@ -113,7 +125,7 @@ fun SplatTrakTheme(
         }
 
     PYDroidTheme(
-        colors = themeColors(isDarkMode),
+        colors = themeColors(this, isDarkMode),
         typography = themeTypography(),
         shapes = themeShapes(),
     ) {

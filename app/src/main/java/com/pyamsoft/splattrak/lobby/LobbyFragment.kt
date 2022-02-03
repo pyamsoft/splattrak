@@ -90,7 +90,7 @@ internal class LobbyFragment : Fragment() {
       setContent {
         vm.Render { state ->
           mainVM.Render { mainState ->
-            SplatTrakTheme(themeProvider) {
+            act.SplatTrakTheme(themeProvider) {
               CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
                 LobbyScreen(
                     modifier = Modifier.fillMaxSize(),

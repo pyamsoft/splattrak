@@ -41,8 +41,8 @@ class SplatTrak : Application() {
             termsConditionsUrl = TERMS_CONDITIONS_URL,
             version = BuildConfig.VERSION_CODE,
             logger = createLogger(),
-            theme = { themeProvider, content ->
-              SplatTrakTheme(
+            theme = { activity, themeProvider, content ->
+              activity.SplatTrakTheme(
                   themeProvider = themeProvider,
                   content = content,
               )
