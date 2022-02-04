@@ -30,9 +30,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.theme.PYDroidTheme
+import com.pyamsoft.pydroid.theme.attributesFromCurrentTheme
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.util.valuesFromCurrentTheme
 import com.google.android.material.R as R2
 
 @Composable
@@ -40,7 +40,7 @@ import com.google.android.material.R as R2
 private fun themeColors(activity: Activity, isDarkMode: Boolean): Colors {
     val colors =
         remember(isDarkMode) {
-            activity.valuesFromCurrentTheme(
+            activity.attributesFromCurrentTheme(
                 R2.attr.colorPrimary,
                 R2.attr.colorOnPrimary,
                 R2.attr.colorSecondary,

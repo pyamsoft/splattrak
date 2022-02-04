@@ -75,7 +75,7 @@ fun DrilldownScreen(
       modifier = modifier,
       backgroundColor = backgroundColor,
       contentColor = Color.White,
-      elevation = DialogDefaults.DialogElevation,
+      elevation = DialogDefaults.Elevation,
   ) {
     BackgroundStripeWrapper(
         imageLoader = imageLoader,
