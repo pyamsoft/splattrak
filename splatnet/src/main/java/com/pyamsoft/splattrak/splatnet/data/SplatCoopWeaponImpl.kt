@@ -21,17 +21,24 @@ import com.pyamsoft.splattrak.splatnet.api.SplatCoopSession
 
 internal data class SplatCoopWeaponImpl
 internal constructor(
-    private val name: String,
-    private val image: String,
+    private val name: String?,
+    private val image: String?,
 ) : SplatCoopSession.Map.Weapon {
 
-  private val imageUrl = "$SPLATNET_ASSET_URL${image}"
+    private val weaponName = name ?: "Mystery"
+    private val imageUrl = "$SPLATNET_ASSET_URL${image ?: MYSTERY_WEAPON}"
 
-  override fun name(): String {
-    return name
-  }
+    override fun name(): String {
+        return weaponName
+    }
 
-  override fun imageUrl(): String {
-    return imageUrl
-  }
+    override fun imageUrl(): String {
+        return imageUrl
+    }
+
+    companion object {
+
+        private const val MYSTERY_WEAPON =
+            "/images/coop_weapons/7076c8181ab5c49d2ac91e43a2d945a46a99c17d.png"
+    }
 }

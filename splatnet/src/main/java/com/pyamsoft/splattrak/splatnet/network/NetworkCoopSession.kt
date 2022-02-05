@@ -42,7 +42,7 @@ internal constructor(
 
     @JsonClass(generateAdapter = true)
     internal data class WeaponData(
-        internal val weapon: Weapon,
+        internal val weapon: Weapon?,
     ) {
 
       @JsonClass(generateAdapter = true)

@@ -112,8 +112,8 @@ internal constructor(
           weapons =
               details.weapons.map { w ->
                 SplatCoopWeaponImpl(
-                    name = w.weapon.name,
-                    image = w.weapon.image,
+                    name = w.weapon?.name,
+                    image = w.weapon?.image,
                 )
               },
       )
