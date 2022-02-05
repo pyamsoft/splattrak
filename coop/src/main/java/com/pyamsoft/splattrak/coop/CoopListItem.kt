@@ -50,6 +50,7 @@ import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.defaults.CardDefaults
 import com.pyamsoft.splattrak.splatnet.api.SplatCoop
 import com.pyamsoft.splattrak.splatnet.api.SplatCoopSession
 import com.pyamsoft.splattrak.ui.R as R2
@@ -84,6 +85,7 @@ internal fun CoopListItem(
       modifier = modifier,
       backgroundColor = backgroundColor,
       contentColor = Color.White,
+      elevation = CardDefaults.Elevation,
   ) {
     BackgroundStripeWrapper(
         modifier = Modifier.fillMaxWidth(),

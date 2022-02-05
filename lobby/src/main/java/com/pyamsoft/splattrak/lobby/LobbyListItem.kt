@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.defaults.CardDefaults
 import com.pyamsoft.splattrak.splatnet.api.SplatBattle
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.ui.SplatCountdownTimer
@@ -62,6 +63,7 @@ internal fun LobbyListItem(
         modifier = modifier.clickable { onClick(battle) },
         backgroundColor = backgroundColor,
         contentColor = Color.White,
+        elevation = CardDefaults.Elevation,
     ) {
         BackgroundStripeWrapper(
             modifier = Modifier.fillMaxWidth(),
