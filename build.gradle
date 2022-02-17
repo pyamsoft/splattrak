@@ -60,7 +60,7 @@ buildscript {
     timber = "5.0.1"
 
     // Dagger
-    dagger = "2.40.5"
+    dagger = "2.41"
 
     moshi = "1.13.0"
     retrofit = "2.9.0"
