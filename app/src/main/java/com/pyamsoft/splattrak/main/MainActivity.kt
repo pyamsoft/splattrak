@@ -37,7 +37,6 @@ import com.pyamsoft.splattrak.SplatComponent
 import com.pyamsoft.splattrak.SplatTrakTheme
 import com.pyamsoft.splattrak.databinding.ActivityMainBinding
 import javax.inject.Inject
-import timber.log.Timber
 
 internal class MainActivity : PYDroidActivity() {
 
@@ -84,6 +83,7 @@ internal class MainActivity : PYDroidActivity() {
     stableLayoutHideNavigation()
 
     val vm = viewModel.requireNotNull()
+    val navi = navigator.requireNotNull()
 
     vm.restoreState(savedInstanceState)
 
@@ -91,7 +91,7 @@ internal class MainActivity : PYDroidActivity() {
     // Because these are not in a nice Scaffold, we cannot take advantage of Coordinator style
     // actions (a FAB will not move out of the way for example)
     binding.mainComposeBottom.setContent {
-      val page by navigator.requireNotNull().currentScreenState()
+      val page by navi.currentScreenState()
 
       vm.Render { state ->
         val theme = state.theme
@@ -103,11 +103,13 @@ internal class MainActivity : PYDroidActivity() {
             Box(
                 contentAlignment = Alignment.BottomCenter,
             ) {
-              MainBottomNav(
-                  page = page,
-                  onLoadPage = { navigate(it) },
-                  onHeightMeasured = { vm.handleMeasureBottomNavHeight(it) },
-              )
+              page?.let { p ->
+                MainBottomNav(
+                    page = p,
+                    onLoadPage = { navi.navigateTo(it.asScreen()) },
+                    onHeightMeasured = { vm.handleMeasureBottomNavHeight(it) },
+                )
+              }
             }
           }
         }
@@ -116,19 +118,7 @@ internal class MainActivity : PYDroidActivity() {
 
     vm.handleSyncDarkTheme(this)
 
-    navigator.requireNotNull().restore {
-      if (it.select(MainPage.LOBBY.asScreen())) {
-        Timber.d("Default lobby screen loaded")
-      }
-    }
-  }
-
-  private fun navigate(page: MainPage) {
-    if (navigator.requireNotNull().select(page.asScreen())) {
-      Timber.d("Navigated to $page")
-    } else {
-      Timber.w("Did not navigate to $page")
-    }
+    navi.restore { MainPage.LOBBY.asScreen() }
   }
 
   override fun onNewIntent(intent: Intent) {

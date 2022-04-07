@@ -56,6 +56,6 @@ internal interface MainComponent {
 
     @Binds
     @CheckResult
-    internal abstract fun bindNavigator(impl: SplatNavigator): Navigator<MainPage>
+    internal abstract fun bindNavigator(impl: MainNavigator): Navigator<MainPage>
   }
 }

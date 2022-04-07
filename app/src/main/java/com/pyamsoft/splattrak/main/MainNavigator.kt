@@ -30,14 +30,12 @@ import com.pyamsoft.splattrak.lobby.LobbyFragment
 import com.pyamsoft.splattrak.setting.AppSettings
 import javax.inject.Inject
 
-class SplatNavigator
+class MainNavigator
 @Inject
 internal constructor(
     activity: FragmentActivity,
     @IdRes fragmentContainerId: Int,
 ) : FragmentNavigator<MainPage>(activity, fragmentContainerId) {
-
-  override val blankScreen: MainPage = MainPage.LOBBY
 
   override fun performFragmentTransaction(
       container: Int,
