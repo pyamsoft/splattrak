@@ -118,7 +118,8 @@ internal class MainActivity : PYDroidActivity() {
 
     vm.handleSyncDarkTheme(this)
 
-    navi.restore { MainPage.LOBBY.asScreen() }
+    navi.restoreState(savedInstanceState)
+    navi.loadIfEmpty { MainPage.LOBBY.asScreen() }
   }
 
   override fun onNewIntent(intent: Intent) {
@@ -153,6 +154,7 @@ internal class MainActivity : PYDroidActivity() {
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     viewModel?.saveState(outState)
+    navigator?.saveState(outState)
   }
 
   override fun onDestroy() {
