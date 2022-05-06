@@ -72,7 +72,7 @@ buildscript {
     appCompat = "1.4.1"
 
     // Material Design
-    materialDesign = "1.5.0"
+    materialDesign = "1.6.0"
 
     // Compose images
     accompanist = "0.23.1"
