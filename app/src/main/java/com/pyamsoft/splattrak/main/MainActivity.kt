@@ -43,8 +43,8 @@ internal class MainActivity : PYDroidActivity() {
   override val applicationIcon = R.mipmap.ic_launcher
 
   override val changelog: ChangeLogBuilder = buildChangeLog {
-    feature("Add support for Salmon Run Co-Op mode")
-    bugfix("Fix accidentally caching bad  schedule data")
+    bugfix("Improve UI performance")
+    bugfix("Fix rotation causing incorrect layouts")
   }
 
   private var viewBinding: ActivityMainBinding? = null

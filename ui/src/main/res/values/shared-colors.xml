@@ -16,6 +16,8 @@
 
 <resources>
     <!-- If primary and secondary are the same, so are their On colors -->
+    <color name="white">#FFFFFFFF</color>
+
     <color name="colorPrimary">#9400DB</color>
     <color name="colorOnPrimary">@color/white</color>
 
