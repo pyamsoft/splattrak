@@ -17,7 +17,6 @@
 package com.pyamsoft.splattrak.ui.card
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,7 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.splattrak.splatnet.api.SplatMap
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
@@ -152,14 +151,11 @@ fun BattleMap(
         contentColor = Color.White,
         shape = MaterialTheme.shapes.medium,
     ) {
-      Image(
+      AsyncImage(
+          model = imageUrl,
+          imageLoader = imageLoader,
           contentScale = ContentScale.Crop,
           modifier = Modifier.fillMaxSize(),
-          painter =
-              rememberImagePainter(
-                  data = imageUrl,
-                  imageLoader = imageLoader,
-              ),
           contentDescription = name,
       )
     }
@@ -172,13 +168,10 @@ fun BattleMap(
           contentColor = Color.White,
           shape = MaterialTheme.shapes.small,
       ) {
-        Image(
+        AsyncImage(
             modifier = Modifier.matchParentSize(),
-            painter =
-                rememberImagePainter(
-                    data = R.drawable.map_name_chip,
-                    imageLoader = imageLoader,
-                ),
+            model = R.drawable.map_name_chip,
+            imageLoader = imageLoader,
             contentDescription = name,
         )
         Text(

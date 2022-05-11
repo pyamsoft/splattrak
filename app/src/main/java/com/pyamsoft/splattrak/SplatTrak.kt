@@ -29,82 +29,84 @@ import timber.log.Timber
 
 class SplatTrak : Application() {
 
-  private val component by lazy {
-    val url = "https://github.com/pyamsoft/splattrak"
-    val lazyImageLoader = { ImageLoader(this) }
-    val parameters =
-        PYDroid.Parameters(
-            imageLoader = lazyImageLoader,
-            viewSourceUrl = url,
-            bugReportUrl = "$url/issues",
-            privacyPolicyUrl = PRIVACY_POLICY_URL,
-            termsConditionsUrl = TERMS_CONDITIONS_URL,
-            version = BuildConfig.VERSION_CODE,
-            logger = createLogger(),
-            theme = { activity, themeProvider, content ->
-              activity.SplatTrakTheme(
-                  themeProvider = themeProvider,
-                  content = content,
-              )
-            },
+    private val component by lazy {
+        val url = "https://github.com/pyamsoft/splattrak"
+        val lazyImageLoader = lazy(LazyThreadSafetyMode.NONE) { ImageLoader(this) }
+        val parameters =
+            PYDroid.Parameters(
+                // Must be lazy since Coil calls getSystemService() internally, leading to SO exception
+                lazyImageLoader = lazyImageLoader,
+                viewSourceUrl = url,
+                bugReportUrl = "$url/issues",
+                privacyPolicyUrl = PRIVACY_POLICY_URL,
+                termsConditionsUrl = TERMS_CONDITIONS_URL,
+                version = BuildConfig.VERSION_CODE,
+                logger = createLogger(),
+                theme = { activity, themeProvider, content ->
+                    activity.SplatTrakTheme(
+                        themeProvider = themeProvider,
+                        content = content,
+                    )
+                },
+            )
+
+        return@lazy createComponent(
+            PYDroid.init(
+                this,
+                parameters,
+            ),
+            lazyImageLoader,
         )
-
-    return@lazy createComponent(
-        PYDroid.init(
-            this,
-            parameters,
-        ),
-        lazyImageLoader,
-    )
-  }
-
-  @CheckResult
-  private fun createComponent(
-      provider: ModuleProvider,
-      imageLoader: () -> ImageLoader,
-  ): SplatComponent {
-    return DaggerSplatComponent.factory()
-        .create(
-            application = this,
-            debug = isDebugMode(),
-            theming = provider.get().theming(),
-            imageLoader = imageLoader,
-        )
-        .also { addLibraries() }
-  }
-
-  override fun onCreate() {
-    super.onCreate()
-    component.also { Timber.d("Component injected: $it") }
-  }
-
-  override fun getSystemService(name: String): Any? {
-    // Use component here in a weird way to guarantee the lazy is initialized.
-    return component.run { PYDroid.getSystemService(name) } ?: fallbackGetSystemService(name)
-  }
-
-  @CheckResult
-  private fun fallbackGetSystemService(name: String): Any? {
-    return if (name == SplatComponent::class.java.name) component
-    else {
-      super.getSystemService(name)
     }
-  }
 
-  companion object {
-
-    @JvmStatic
-    private fun addLibraries() {
-      // We are using pydroid-notify
-      OssLibraries.usingNotify = true
-
-      // We are using pydroid-autopsy
-      OssLibraries.usingAutopsy = true
-
-      OssLibraries.add(
-          "Dagger",
-          "https://github.com/google/dagger",
-          "A fast dependency injector for Android and Java.")
+    @CheckResult
+    private fun createComponent(
+        provider: ModuleProvider,
+        imageLoader: Lazy<ImageLoader>,
+    ): SplatComponent {
+        return DaggerSplatComponent.factory()
+            .create(
+                application = this,
+                debug = isDebugMode(),
+                theming = provider.get().theming(),
+                imageLoader = imageLoader,
+            )
+            .also { addLibraries() }
     }
-  }
+
+    override fun onCreate() {
+        super.onCreate()
+        component.also { Timber.d("Component injected: $it") }
+    }
+
+    override fun getSystemService(name: String): Any? {
+        // Use component here in a weird way to guarantee the lazy is initialized.
+        return component.run { PYDroid.getSystemService(name) } ?: fallbackGetSystemService(name)
+    }
+
+    @CheckResult
+    private fun fallbackGetSystemService(name: String): Any? {
+        return if (name == SplatComponent::class.java.name) component
+        else {
+            super.getSystemService(name)
+        }
+    }
+
+    companion object {
+
+        @JvmStatic
+        private fun addLibraries() {
+            // We are using pydroid-notify
+            OssLibraries.usingNotify = true
+
+            // We are using pydroid-autopsy
+            OssLibraries.usingAutopsy = true
+
+            OssLibraries.add(
+                "Dagger",
+                "https://github.com/google/dagger",
+                "A fast dependency injector for Android and Java."
+            )
+        }
+    }
 }

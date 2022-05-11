@@ -19,7 +19,6 @@ package com.pyamsoft.splattrak.ui.card
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -28,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import coil.ImageLoader
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 import com.pyamsoft.splattrak.ui.R
 
@@ -58,15 +57,12 @@ private fun BackgroundWrapper(
         contentColor = Color.White,
         shape = MaterialTheme.shapes.medium,
     ) {
-      Image(
+      AsyncImage(
           modifier = Modifier.matchParentSize(),
+          model = backgroundRes,
+          imageLoader = imageLoader,
           contentScale = contentScale,
-          painter =
-              rememberImagePainter(
-                  data = backgroundRes,
-                  imageLoader = imageLoader,
-              ),
-          contentDescription = null,
+          contentDescription = "Background",
       )
 
       content()

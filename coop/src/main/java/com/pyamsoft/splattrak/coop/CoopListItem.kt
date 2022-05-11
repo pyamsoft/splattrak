@@ -17,7 +17,6 @@
 package com.pyamsoft.splattrak.coop
 
 import android.text.format.DateFormat
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,7 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.CardDefaults
@@ -347,12 +346,9 @@ private fun Weapons(
               modifier = Modifier.width(weaponSize),
               contentAlignment = Alignment.BottomEnd,
           ) {
-            Image(
-                painter =
-                    rememberImagePainter(
-                        data = image,
-                        imageLoader = imageLoader,
-                    ),
+            AsyncImage(
+                model = image,
+                imageLoader = imageLoader,
                 contentDescription = name,
             )
           }
