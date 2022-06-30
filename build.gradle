@@ -46,7 +46,7 @@ buildscript {
     maxSdk = 32
 
     // Compose
-    composeActivity = "1.4.0"
+    composeActivity = "1.5.0"
 
     // Us
     pydroid = "25.0.0-SNAPSHOT"
