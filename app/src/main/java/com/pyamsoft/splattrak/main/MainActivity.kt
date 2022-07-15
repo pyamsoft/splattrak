@@ -21,6 +21,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.pyamsoft.pydroid.core.requireNotNull
@@ -91,7 +92,8 @@ internal class MainActivity : PYDroidActivity() {
     // Because these are not in a nice Scaffold, we cannot take advantage of Coordinator style
     // actions (a FAB will not move out of the way for example)
     binding.mainComposeBottom.setContent {
-      val page by navi.currentScreenState()
+      val screen by navi.currentScreenState()
+      val page = remember(screen) { screen as? TopLevelMainPage}
 
       vm.Render { state ->
         val theme = state.theme
@@ -106,7 +108,7 @@ internal class MainActivity : PYDroidActivity() {
               page?.let { p ->
                 MainBottomNav(
                     page = p,
-                    onLoadPage = { navi.navigateTo(it.asScreen()) },
+                    onLoadPage = { navi.navigateTo(it) },
                     onHeightMeasured = { vm.handleMeasureBottomNavHeight(it) },
                 )
               }
@@ -119,7 +121,7 @@ internal class MainActivity : PYDroidActivity() {
     vm.handleSyncDarkTheme(this)
 
     navi.restoreState(savedInstanceState)
-    navi.loadIfEmpty { MainPage.LOBBY.asScreen() }
+    navi.loadIfEmpty { TopLevelMainPage.Lobby }
   }
 
   override fun onNewIntent(intent: Intent) {

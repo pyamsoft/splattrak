@@ -149,7 +149,7 @@ internal class DrilldownDialog : AppCompatDialogFragment() {
 
   companion object {
 
-    private const val TAG = "DrilldownDialog"
+    private val TAG = DrilldownDialog::class.java.name
     private const val KEY_GAME_MODE = "key_game_mode"
 
     @JvmStatic

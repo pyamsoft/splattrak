@@ -33,6 +33,7 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ViewWindowInsetObserver
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
+import com.pyamsoft.pydroid.ui.navigator.FragmentNavigator
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.dispose
@@ -40,10 +41,12 @@ import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.splattrak.R
 import com.pyamsoft.splattrak.SplatTrakTheme
 import com.pyamsoft.splattrak.main.MainComponent
+import com.pyamsoft.splattrak.main.MainPage
 import com.pyamsoft.splattrak.main.MainViewModeler
+import com.pyamsoft.splattrak.main.TopLevelMainPage
 import javax.inject.Inject
 
-internal class CoopFragment : Fragment() {
+internal class CoopFragment : Fragment(), FragmentNavigator.Screen<MainPage> {
 
   @JvmField @Inject internal var viewModel: CoopViewModeler? = null
   @JvmField @Inject internal var mainViewModel: MainViewModeler? = null
@@ -139,6 +142,10 @@ internal class CoopFragment : Fragment() {
 
     viewModel = null
     mainViewModel = null
+  }
+
+  override fun getScreenId(): MainPage {
+    return TopLevelMainPage.Coop
   }
 
   companion object {

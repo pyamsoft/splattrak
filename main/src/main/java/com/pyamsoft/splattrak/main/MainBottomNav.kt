@@ -36,76 +36,87 @@ import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.splattrak.ui.icons.Group
 import com.pyamsoft.splattrak.ui.icons.MeetingRoom
 
+private val ALL_TOP_LEVEL_PAGES =
+    listOf(
+        TopLevelMainPage.Lobby,
+        TopLevelMainPage.Coop,
+        TopLevelMainPage.Settings,
+    )
+
 @Composable
 fun MainBottomNav(
     modifier: Modifier = Modifier,
-    page: MainPage,
+    page: TopLevelMainPage,
     onHeightMeasured: (Int) -> Unit,
-    onLoadPage: (MainPage) -> Unit,
+    onLoadPage: (TopLevelMainPage) -> Unit,
 ) {
-    // Can't use BottomAppBar since we can't modify its Shape
-    Surface(
-        modifier =
-        modifier
-            .padding(vertical = MaterialTheme.keylines.content, horizontal = 64.dp)
-            .navigationBarsPadding(bottom = true)
-            .onSizeChanged { onHeightMeasured(it.height) },
-        shape = RoundedCornerShape(MaterialTheme.keylines.baseline),
-        color = MaterialTheme.colors.primary,
+  // Can't use BottomAppBar since we can't modify its Shape
+  Surface(
+      modifier =
+          modifier
+              .padding(vertical = MaterialTheme.keylines.content, horizontal = 64.dp)
+              .navigationBarsPadding(bottom = true)
+              .onSizeChanged { onHeightMeasured(it.height) },
+      shape = RoundedCornerShape(MaterialTheme.keylines.baseline),
+      color = MaterialTheme.colors.primary,
+      contentColor = Color.White,
+      elevation = AppBarDefaults.BottomAppBarElevation,
+  ) {
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colors.primary,
         contentColor = Color.White,
-        elevation = AppBarDefaults.BottomAppBarElevation,
     ) {
-        BottomNavigation(
-            backgroundColor = MaterialTheme.colors.primary,
-            contentColor = Color.White,
-        ) {
-            for (p in MainPage.values()) {
-                Item(
-                    current = page,
-                    target = p,
-                    onClick = { onLoadPage(p) },
-                )
-            }
-        }
+      for (p in ALL_TOP_LEVEL_PAGES) {
+        Item(
+            current = page,
+            target = p,
+            onClick = { onLoadPage(p) },
+        )
+      }
     }
+  }
 }
 
 @Composable
-private fun RowScope.Item(current: MainPage, target: MainPage, onClick: () -> Unit) {
-    BottomNavigationItem(
-        selected = current == target,
-        onClick = onClick,
-        icon = {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Icon(
-                    imageVector =
-                    when (target) {
-                        MainPage.LOBBY -> Icons.Filled.MeetingRoom
-                        MainPage.COOP -> Icons.Filled.Group
-                        MainPage.SETTINGS -> Icons.Filled.Settings
-                    },
-                    contentDescription = target.display,
-                )
-                Text(
-                    text = target.display,
-                    style = MaterialTheme.typography.body2,
-                )
-            }
-        },
-    )
+private fun RowScope.Item(
+    current: TopLevelMainPage,
+    target: TopLevelMainPage,
+    onClick: () -> Unit
+) {
+  BottomNavigationItem(
+      selected = current == target,
+      onClick = onClick,
+      icon = {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+          Icon(
+              imageVector =
+                  when (target) {
+                    TopLevelMainPage.Lobby -> Icons.Filled.MeetingRoom
+                    TopLevelMainPage.Coop -> Icons.Filled.Group
+                    TopLevelMainPage.Settings -> Icons.Filled.Settings
+                  },
+              contentDescription = target.display,
+          )
+          Text(
+              text = target.display,
+              style = MaterialTheme.typography.body2,
+          )
+        }
+      },
+  )
 }
 
 @Preview
 @Composable
 private fun PreviewMainBottomNav() {
-    Surface {
-        MainBottomNav(
-            page = MainPage.LOBBY,
-            onHeightMeasured = {},
-            onLoadPage = {},
-        )
-    }
+  Surface {
+    MainBottomNav(
+        page = TopLevelMainPage.Lobby,
+        onHeightMeasured = {},
+        onLoadPage = {},
+    )
+  }
 }

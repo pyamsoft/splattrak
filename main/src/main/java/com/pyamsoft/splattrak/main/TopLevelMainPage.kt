@@ -16,21 +16,10 @@
 
 package com.pyamsoft.splattrak.main
 
-import android.os.Bundle
-import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.navigator.Navigator
+interface MainPage
 
-enum class MainPage(val display: String) {
-  LOBBY("Lobby"),
-  COOP("Co-Op"),
-  SETTINGS("Settings");
-
-  @CheckResult
-  fun asScreen(): Navigator.Screen<MainPage> {
-    val self = this
-    return object : Navigator.Screen<MainPage> {
-      override val arguments: Bundle? = null
-      override val screen: MainPage = self
-    }
-  }
+sealed class TopLevelMainPage(val display: String) : MainPage {
+  object Lobby : TopLevelMainPage("Lobby")
+  object Coop : TopLevelMainPage("Co-Op")
+  object Settings : TopLevelMainPage("Settings")
 }

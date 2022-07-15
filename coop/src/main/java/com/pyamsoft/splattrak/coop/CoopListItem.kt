@@ -35,7 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -368,16 +368,24 @@ private fun Countdown(
   val scope = rememberCoroutineScope()
 
   // Countdown text
-  var text by remember(coop.end()) { mutableStateOf("") }
+  val (text, setText) = remember { mutableStateOf("") }
 
-  DisposableEffect(coop.end()) {
+  // Hold callback here to avoid recompose
+  val handleCountdownCompleted by rememberUpdatedState(onCountdownCompleted)
+
+  DisposableEffect(
+      coop,
+      setText,
+      handleCountdownCompleted,
+      scope,
+  ) {
     val nextStartTime = coop.end()
     val timeUntilEnd = LocalDateTime.now().until(nextStartTime, ChronoUnit.SECONDS)
     val countdown =
         SplatCountdownTimer(timeUntilEnd) { display, isComplete ->
-          text = display
+          setText(display)
           if (isComplete) {
-            onCountdownCompleted()
+            handleCountdownCompleted()
           }
         }
 

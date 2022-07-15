@@ -32,87 +32,88 @@ import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.theme.ZeroSize
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.navigator.FragmentNavigator
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.customPreference
 import com.pyamsoft.pydroid.ui.settings.SettingsFragment
 import com.pyamsoft.splattrak.main.MainComponent
+import com.pyamsoft.splattrak.main.MainPage
 import com.pyamsoft.splattrak.main.MainViewModeler
+import com.pyamsoft.splattrak.main.TopLevelMainPage
 import com.pyamsoft.splattrak.ui.NotNintendo
 import javax.inject.Inject
 
-internal class AppSettings : SettingsFragment() {
+internal class AppSettings : SettingsFragment(), FragmentNavigator.Screen<MainPage> {
 
-    override val hideClearAll: Boolean = false
+  override val hideClearAll: Boolean = false
 
-    override val hideUpgradeInformation: Boolean = false
+  override val hideUpgradeInformation: Boolean = false
 
-    @JvmField
-    @Inject
-    internal var mainViewModel: MainViewModeler? = null
+  @JvmField @Inject internal var mainViewModel: MainViewModeler? = null
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        Injector.obtainFromActivity<MainComponent>(requireActivity())
-            .plusSettingsComponent()
-            .create()
-            .inject(this)
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    Injector.obtainFromActivity<MainComponent>(requireActivity())
+        .plusSettingsComponent()
+        .create()
+        .inject(this)
 
-        val mainVM = mainViewModel.requireNotNull()
-        mainVM.restoreState(savedInstanceState)
+    val mainVM = mainViewModel.requireNotNull()
+    mainVM.restoreState(savedInstanceState)
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    mainViewModel?.saveState(outState)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    mainViewModel = null
+  }
+
+  @Composable
+  override fun customTopItemMargin(): Dp {
+    return ZeroSize
+  }
+
+  @Composable
+  override fun customBottomItemMargin(): Dp {
+    // Additional top padding based on the size of the measured Bottom App Bar
+    val state = mainViewModel.requireNotNull().state()
+
+    val density = LocalDensity.current
+    val bottomNavHeight = state.bottomNavHeight
+    val contentSpacing = MaterialTheme.keylines.content
+    return remember(bottomNavHeight) { density.run { bottomNavHeight.toDp() } + contentSpacing }
+  }
+
+  @Composable
+  override fun customPrePreferences(): List<Preferences> {
+    return emptyList()
+  }
+
+  @Composable
+  override fun customPostPreferences(): List<Preferences> {
+    return listOf(
+        customPreference {
+          NotNintendo(
+              modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
+          )
+        },
+    )
+  }
+
+  override fun getScreenId(): MainPage {
+    return TopLevelMainPage.Settings
+  }
+
+  companion object {
+
+    @JvmStatic
+    @CheckResult
+    fun newInstance(): Fragment {
+      return AppSettings().apply { arguments = Bundle().apply {} }
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        mainViewModel?.saveState(outState)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mainViewModel = null
-    }
-
-    @Composable
-    override fun customTopItemMargin(): Dp {
-        return ZeroSize
-    }
-
-    @Composable
-    override fun customBottomItemMargin(): Dp {
-        // Additional top padding based on the size of the measured Bottom App Bar
-        val state = mainViewModel.requireNotNull().state()
-
-        val density = LocalDensity.current
-        val bottomNavHeight = state.bottomNavHeight
-        val contentSpacing = MaterialTheme.keylines.content
-        return remember(bottomNavHeight) { density.run { bottomNavHeight.toDp() } + contentSpacing }
-    }
-
-    @Composable
-    override fun customPrePreferences(): List<Preferences> {
-        return emptyList()
-    }
-
-    @Composable
-    override fun customPostPreferences(): List<Preferences> {
-        return listOf(
-            customPreference {
-                NotNintendo(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(MaterialTheme.keylines.content),
-                )
-            },
-        )
-    }
-
-    companion object {
-
-        const val TAG = "SettingsFragment"
-
-        @JvmStatic
-        @CheckResult
-        fun newInstance(): Fragment {
-            return AppSettings().apply { arguments = Bundle().apply {} }
-        }
-    }
+  }
 }

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.splattrak.main
 
-import android.os.Bundle
+import androidx.annotation.AnimRes
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
@@ -25,7 +25,6 @@ import androidx.fragment.app.FragmentTransaction
 import com.pyamsoft.pydroid.arch.UiSavedStateReader
 import com.pyamsoft.pydroid.arch.UiSavedStateWriter
 import com.pyamsoft.pydroid.ui.navigator.FragmentNavigator
-import com.pyamsoft.pydroid.ui.navigator.Navigator
 import com.pyamsoft.splattrak.R
 import com.pyamsoft.splattrak.coop.CoopFragment
 import com.pyamsoft.splattrak.lobby.LobbyFragment
@@ -39,93 +38,72 @@ internal constructor(
     @IdRes fragmentContainerId: Int,
 ) : FragmentNavigator<MainPage>(activity, fragmentContainerId) {
 
-  override fun restoreState(savedInstanceState: UiSavedStateReader) {
-    val s = savedInstanceState.get<String>(KEY_SCREEN_ID)
-    if (s != null) {
-      val restored =
-          when (s) {
-            MainPage.LOBBY::class.java.name -> MainPage.LOBBY
-            MainPage.COOP::class.java.name -> MainPage.COOP
-            MainPage.SETTINGS::class.java.name -> MainPage.SETTINGS
-            else -> throw IllegalArgumentException("Unable to restore screen with id: $s")
-          }
-      updateCurrentScreen(restored)
-    }
-  }
+  override fun onRestoreState(savedInstanceState: UiSavedStateReader) {}
 
-  override fun saveState(outState: UiSavedStateWriter) {
-    val s = currentScreen()
-    if (s != null) {
-      outState.put(KEY_SCREEN_ID, s::class.java.name)
-    } else {
-      outState.remove<String>(KEY_SCREEN_ID)
-    }
-  }
+  override fun onSaveState(outState: UiSavedStateWriter) {}
+
+  override fun produceFragmentForScreen(screen: MainPage): Fragment =
+      when (screen) {
+        is TopLevelMainPage.Lobby -> LobbyFragment.newInstance()
+        is TopLevelMainPage.Coop -> CoopFragment.newInstance()
+        is TopLevelMainPage.Settings -> AppSettings.newInstance()
+          else -> throw IllegalArgumentException("Unhandled screen type: $screen")
+      }
 
   override fun performFragmentTransaction(
       container: Int,
-      data: FragmentTag,
-      newScreen: Navigator.Screen<MainPage>,
-      previousScreen: MainPage?,
+      newScreen: Fragment,
+      previousScreen: Fragment?,
   ) {
     commitNow {
-      decideAnimationForPage(newScreen.screen, previousScreen)
-      replace(container, data.fragment(newScreen.arguments), data.tag)
+      decideAnimationForPage(newScreen, previousScreen)
+      replace(container, newScreen, newScreen::class.java.name)
     }
-  }
-
-  override fun provideFragmentTagMap(): Map<MainPage, FragmentTag> {
-    return mapOf(
-        MainPage.LOBBY to createFragmentTag("LobbyFragment") { LobbyFragment.newInstance() },
-        MainPage.COOP to createFragmentTag("CoopFragment") { CoopFragment.newInstance() },
-        MainPage.SETTINGS to createFragmentTag(AppSettings.TAG) { AppSettings.newInstance() },
-    )
   }
 
   companion object {
 
-    private const val KEY_SCREEN_ID = "key_screen_id"
-
-    @JvmStatic
+    private data class FragmentAnimation(
+        @AnimRes val enter: Int,
+        @AnimRes val exit: Int,
+    )
     @CheckResult
-    private fun createFragmentTag(
-        tag: String,
-        fragment: (arguments: Bundle?) -> Fragment,
-    ): FragmentTag {
-      return object : FragmentTag {
-        override val fragment: (arguments: Bundle?) -> Fragment = fragment
-        override val tag: String = tag
-      }
+    private infix fun Int.then(exit: Int): FragmentAnimation {
+      return FragmentAnimation(
+          enter = this,
+          exit = exit,
+      )
     }
 
     @JvmStatic
     private fun FragmentTransaction.decideAnimationForPage(
-        newPage: MainPage,
-        oldPage: MainPage?,
+        newPage: Fragment,
+        oldPage: Fragment?,
     ) {
       val animations =
           when (newPage) {
-            MainPage.LOBBY ->
+            is LobbyFragment ->
                 when (oldPage) {
-                  null -> R.anim.fragment_open_enter to R.anim.fragment_open_exit
-                  MainPage.SETTINGS -> R.anim.slide_in_left to R.anim.slide_out_right
-                  MainPage.COOP -> R.anim.slide_in_left to R.anim.slide_out_right
-                  MainPage.LOBBY -> null
+                  null -> R.anim.fragment_open_enter then R.anim.fragment_open_exit
+                  is AppSettings -> R.anim.slide_in_left then R.anim.slide_out_right
+                  is CoopFragment -> R.anim.slide_in_left then R.anim.slide_out_right
+                  else -> null
                 }
-            MainPage.SETTINGS ->
+            is AppSettings ->
                 when (oldPage) {
-                  null -> R.anim.fragment_open_enter to R.anim.fragment_open_exit
-                  MainPage.LOBBY -> R.anim.slide_in_right to R.anim.slide_out_left
-                  MainPage.COOP -> R.anim.slide_in_right to R.anim.slide_out_left
-                  MainPage.SETTINGS -> null
+                  null -> R.anim.fragment_open_enter then R.anim.fragment_open_exit
+                  is LobbyFragment -> R.anim.slide_in_right then R.anim.slide_out_left
+                  is CoopFragment -> R.anim.slide_in_right then R.anim.slide_out_left
+                  else -> null
                 }
-            MainPage.COOP ->
+            is CoopFragment ->
                 when (oldPage) {
-                  null -> R.anim.fragment_open_enter to R.anim.fragment_open_exit
-                  MainPage.SETTINGS -> R.anim.slide_in_left to R.anim.slide_out_right
-                  MainPage.LOBBY -> R.anim.slide_in_right to R.anim.slide_out_left
-                  MainPage.COOP -> null
+                  null -> R.anim.fragment_open_enter then R.anim.fragment_open_exit
+                  is AppSettings -> R.anim.slide_in_left then R.anim.slide_out_right
+                  is LobbyFragment -> R.anim.slide_in_right then R.anim.slide_out_left
+                  else -> null
                 }
+            else -> null
           }
 
       if (animations != null) {
