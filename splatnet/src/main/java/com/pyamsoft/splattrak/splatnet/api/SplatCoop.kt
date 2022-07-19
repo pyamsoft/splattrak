@@ -20,7 +20,7 @@ import androidx.annotation.CheckResult
 
 interface SplatCoop {
 
-  @CheckResult fun name(): String
+  @get:CheckResult val name: String
 
-  @CheckResult fun sessions(): List<SplatCoopSession>
+  @get:CheckResult val sessions: List<SplatCoopSession>
 }

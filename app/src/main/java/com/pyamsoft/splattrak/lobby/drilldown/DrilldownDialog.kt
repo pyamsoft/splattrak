@@ -156,7 +156,7 @@ internal class DrilldownDialog : AppCompatDialogFragment() {
     @CheckResult
     private fun newInstance(mode: SplatGameMode): DialogFragment {
       return DrilldownDialog().apply {
-        arguments = Bundle().apply { putString(KEY_GAME_MODE, mode.mode().name) }
+        arguments = Bundle().apply { putString(KEY_GAME_MODE, mode.mode.name) }
       }
     }
 

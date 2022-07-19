@@ -21,8 +21,13 @@ import com.pyamsoft.cachify.MemoryCacheStorage
 import com.pyamsoft.cachify.cachify
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.ResultWrapper
-import com.pyamsoft.splattrak.splatnet.api.*
-import com.pyamsoft.splattrak.splatnet.data.*
+import com.pyamsoft.splattrak.splatnet.api.SplatCoop
+import com.pyamsoft.splattrak.splatnet.api.SplatCoopSession
+import com.pyamsoft.splattrak.splatnet.api.SplatMatch
+import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
+import com.pyamsoft.splattrak.splatnet.data.SplatBattleImpl
+import com.pyamsoft.splattrak.splatnet.data.SplatCoopImpl
+import com.pyamsoft.splattrak.splatnet.data.SplatScheduleImpl
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -65,12 +70,12 @@ internal constructor(
             .map<SplatSchedule> { s ->
               val now = LocalDateTime.now()
               val validRotations =
-                  s.battles().map { entry ->
+                  s.battles.map { entry ->
                     SplatBattleImpl(
-                        mode = entry.mode(),
+                        mode = entry.mode,
                         rotation =
                             entry
-                                .rotation()
+                                .rotation
                                 .asSequence()
                                 .filter { filterPastMatches(it, now) }
                                 .sortedWith(SCHEDULE_SORTER)
@@ -96,23 +101,22 @@ internal constructor(
             .onFailure { Timber.e(it, "Error fetching splat coop schedule") }
             .map<SplatCoop> { coop ->
               return@map SplatCoopImpl(
-                  name = coop.name(),
-                  sessions = coop.sessions().sortedWith(COOP_SORTER),
+                  name = coop.name,
+                  sessions = coop.sessions.sortedWith(COOP_SORTER),
               )
             }
       }
 
   companion object {
 
-    private val SCHEDULE_SORTER =
-        Comparator<SplatMatch> { o1, o2 -> o1.start().compareTo(o2.start()) }
+    private val SCHEDULE_SORTER = Comparator<SplatMatch> { o1, o2 -> o1.start.compareTo(o2.start) }
 
     private val COOP_SORTER =
-        Comparator<SplatCoopSession> { o1, o2 -> o1.start().compareTo(o2.start()) }
+        Comparator<SplatCoopSession> { o1, o2 -> o1.start.compareTo(o2.start) }
 
     @CheckResult
     private fun filterPastMatches(match: SplatMatch, now: LocalDateTime): Boolean {
-      val time = match.end()
+      val time = match.end
       return time.isAfter(now) || time.isEqual(now)
     }
   }

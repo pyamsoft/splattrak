@@ -70,10 +70,10 @@ internal fun LobbyListItem(
     onClick: (SplatBattle) -> Unit,
     onCountdownCompleted: (SplatBattle) -> Unit,
 ) {
-  val b = battle.mode()
-  val name = b.name()
-  val mode = b.mode()
-  val rotation = battle.rotation()
+  val b = battle.mode
+  val name = b.name
+  val mode = b.mode
+  val rotation = battle.rotation
   val backgroundColorResource = remember(mode) { decideBackgroundColor(mode) }
   val backgroundColor = colorResource(backgroundColorResource)
 
@@ -209,7 +209,7 @@ private fun Countdown(
       handleCountdownCompleted,
       scope,
   ) {
-    val nextStartTime = match.start()
+    val nextStartTime = match.start
     val timeUntilStart = LocalDateTime.now().until(nextStartTime, ChronoUnit.SECONDS)
     val countdown =
         SplatCountdownTimer(timeUntilStart) { display, isComplete ->

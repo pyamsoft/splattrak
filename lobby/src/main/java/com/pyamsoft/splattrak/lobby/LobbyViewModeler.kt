@@ -36,7 +36,7 @@ internal constructor(
 
   private val scheduleRunner =
       highlander<ResultWrapper<List<SplatBattle>>, Boolean> { force ->
-        splatnetInteractor.schedule(force).map { it.battles() }
+        splatnetInteractor.schedule(force).map { it.battles }
       }
 
   fun handleRefresh(scope: CoroutineScope, force: Boolean) {

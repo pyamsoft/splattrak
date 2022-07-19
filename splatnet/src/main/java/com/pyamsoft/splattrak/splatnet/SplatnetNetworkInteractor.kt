@@ -20,8 +20,21 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.util.ifNotCancellation
-import com.pyamsoft.splattrak.splatnet.api.*
-import com.pyamsoft.splattrak.splatnet.data.*
+import com.pyamsoft.splattrak.splatnet.api.SplatBattle
+import com.pyamsoft.splattrak.splatnet.api.SplatCoop
+import com.pyamsoft.splattrak.splatnet.api.SplatCoopSession
+import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
+import com.pyamsoft.splattrak.splatnet.api.SplatSchedule
+import com.pyamsoft.splattrak.splatnet.data.SplatBattleImpl
+import com.pyamsoft.splattrak.splatnet.data.SplatCoopImpl
+import com.pyamsoft.splattrak.splatnet.data.SplatCoopMapImpl
+import com.pyamsoft.splattrak.splatnet.data.SplatCoopSessionImpl
+import com.pyamsoft.splattrak.splatnet.data.SplatCoopWeaponImpl
+import com.pyamsoft.splattrak.splatnet.data.SplatGameModeImpl
+import com.pyamsoft.splattrak.splatnet.data.SplatMapImpl
+import com.pyamsoft.splattrak.splatnet.data.SplatMatchImpl
+import com.pyamsoft.splattrak.splatnet.data.SplatRulesetImpl
+import com.pyamsoft.splattrak.splatnet.data.SplatScheduleImpl
 import com.pyamsoft.splattrak.splatnet.network.NetworkCoopSession
 import com.pyamsoft.splattrak.splatnet.network.NetworkSplatMatch
 import com.pyamsoft.splattrak.splatnet.service.Splatnet
@@ -112,8 +125,8 @@ internal constructor(
           weapons =
               details.weapons.map { w ->
                 SplatCoopWeaponImpl(
-                    name = w.weapon?.name,
-                    image = w.weapon?.image,
+                    weaponName = w.weapon?.name,
+                    weaponImage = w.weapon?.image,
                 )
               },
       )
@@ -146,8 +159,8 @@ internal constructor(
               list.map { match ->
                 SplatMatchImpl(
                     id = match.id,
-                    startTime = match.startTime.toLocalDateTime(),
-                    endTime = match.endTime.toLocalDateTime(),
+                    start = match.startTime.toLocalDateTime(),
+                    end = match.endTime.toLocalDateTime(),
                     stageA =
                         SplatMapImpl(
                             name = match.stageA.name,
@@ -158,13 +171,7 @@ internal constructor(
                             name = match.stageB.name,
                             image = match.stageB.image,
                         ),
-                    gameMode =
-                        SplatGameModeImpl(
-                            key = match.gameMode.key,
-                            name = match.gameMode.name,
-                            mode = gameMode,
-                        ),
-                    rule =
+                    rules =
                         SplatRulesetImpl(
                             key = match.rule.key,
                             name = match.rule.name,

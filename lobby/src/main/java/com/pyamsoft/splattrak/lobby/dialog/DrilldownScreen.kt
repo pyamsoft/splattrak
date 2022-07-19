@@ -37,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -45,7 +44,6 @@ import com.pyamsoft.pydroid.theme.ZeroSize
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
-import com.pyamsoft.splattrak.splatnet.api.key
 import com.pyamsoft.splattrak.ui.card.BackgroundStripeWrapper
 import com.pyamsoft.splattrak.ui.card.decideBackgroundColor
 import com.pyamsoft.splattrak.ui.test.TestData
@@ -62,7 +60,7 @@ fun DrilldownScreen(
   val battle = state.battle
   val error = state.error
 
-  val mode = battle?.mode()?.mode()
+  val mode = battle?.mode?.mode
   val backgroundColor =
       if (mode != null) {
         val backgroundColorResource = remember(mode) { decideBackgroundColor(mode) }
@@ -90,7 +88,7 @@ fun DrilldownScreen(
           )
         } else {
           BattleList(
-              rotation = battle.rotation(),
+              rotation = battle.rotation,
               imageLoader = imageLoader,
           )
         }
@@ -133,7 +131,7 @@ private fun BattleList(
 
     items(
         items = rotation,
-        key = { it.key() },
+        key = { it.key },
     ) { item ->
       DrilldownListItem(
           match = item,

@@ -21,15 +21,6 @@ import com.pyamsoft.splattrak.splatnet.api.SplatCoopSession
 
 internal data class SplatCoopImpl
 internal constructor(
-    private val name: String,
-    private val sessions: List<SplatCoopSession>,
-) : SplatCoop {
-
-  override fun name(): String {
-    return name
-  }
-
-  override fun sessions(): List<SplatCoopSession> {
-    return sessions
-  }
-}
+    override val name: String,
+    override val sessions: List<SplatCoopSession>,
+) : SplatCoop

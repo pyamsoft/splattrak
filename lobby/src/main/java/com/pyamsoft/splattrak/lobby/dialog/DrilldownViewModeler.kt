@@ -39,7 +39,7 @@ internal constructor(
   private val scheduleRunner =
       highlander<ResultWrapper<LobbyData>, Boolean> { force ->
         splatnetInteractor.schedule(force).map { schedule ->
-          val entry = schedule.battles().find { it.mode().mode() == expectedMode }
+          val entry = schedule.battles.find { it.mode.mode == expectedMode }
           return@map if (entry != null) {
             LobbyData.Battle(entry)
           } else {

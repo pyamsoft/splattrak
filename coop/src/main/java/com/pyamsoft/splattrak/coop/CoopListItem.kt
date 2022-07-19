@@ -96,8 +96,7 @@ internal fun CoopListItem(
             coop = coop,
         )
 
-        val sessions = coop.sessions()
-        val current = remember(sessions) { sessions.getOrNull(0) }
+        val current = remember(coop) { coop.sessions.getOrNull(0) }
 
         // If there is no first session, there are no remaining sessions either
         if (current != null) {
@@ -115,7 +114,7 @@ internal fun CoopListItem(
             )
           }
 
-          val remaining = remember(sessions) { sessions.subList(1, sessions.size) }
+          val remaining = remember(coop) { coop.sessions.subList(1, coop.sessions.size) }
           Column(
               modifier = Modifier.fillMaxWidth(),
           ) {
@@ -150,9 +149,9 @@ private fun NextBattle(
     coop: SplatCoopSession,
     isFirst: Boolean,
 ) {
-  val start = remember(coop.start()) { coop.start().format(formatter) }
-  val end = remember(coop.end()) { coop.end().format(formatter) }
-  val map = coop.map()
+  val start = remember(coop) { coop.start.format(formatter) }
+  val end = remember(coop) { coop.end.format(formatter) }
+  val map = coop.map
 
   Column(
       modifier = modifier,
@@ -175,12 +174,12 @@ private fun NextBattle(
       ) {
         BattleMap(
             modifier = Modifier.weight(1F),
-            map = map.map(),
+            map = map.map,
             imageLoader = imageLoader,
         )
         Weapons(
             modifier = Modifier.weight(1F),
-            weapons = map.weapons(),
+            weapons = map.weapons,
             imageLoader = imageLoader,
             small = true,
         )
@@ -242,11 +241,14 @@ private fun CurrentBattle(
     coop: SplatCoopSession,
     onCountdownCompleted: () -> Unit
 ) {
-  val s = coop.start()
-  val e = coop.end()
+  val s = coop.start
+  val e = coop.end
 
   val isOpen =
-      remember(s, e) {
+      remember(
+          s,
+          e,
+      ) {
         val now = LocalDateTime.now()
         val isAfter = now.isAfter(s) || now == s
         val isBefore = now.isBefore(e) || now == e
@@ -255,7 +257,7 @@ private fun CurrentBattle(
 
   val start = remember(s) { s.format(formatter) }
   val end = remember(e) { e.format(formatter) }
-  val map = coop.map()
+  val map = coop.map
 
   Column(
       modifier = modifier,
@@ -282,7 +284,7 @@ private fun CurrentBattle(
       ) {
         BattleMap(
             modifier = Modifier.height(160.dp),
-            map = map.map(),
+            map = map.map,
             imageLoader = imageLoader,
         )
 
@@ -298,7 +300,7 @@ private fun CurrentBattle(
 
           Weapons(
               modifier = Modifier.fillMaxWidth(),
-              weapons = map.weapons(),
+              weapons = map.weapons,
               imageLoader = imageLoader,
               small = false,
           )
@@ -340,8 +342,8 @@ private fun Weapons(
           verticalAlignment = Alignment.CenterVertically,
       ) {
         for (weapon in group) {
-          val image = weapon.imageUrl()
-          val name = weapon.name()
+          val image = weapon.imageUrl
+          val name = weapon.name
           Box(
               modifier = Modifier.width(weaponSize),
               contentAlignment = Alignment.BottomEnd,
@@ -379,7 +381,7 @@ private fun Countdown(
       handleCountdownCompleted,
       scope,
   ) {
-    val nextStartTime = coop.end()
+    val nextStartTime = coop.end
     val timeUntilEnd = LocalDateTime.now().until(nextStartTime, ChronoUnit.SECONDS)
     val countdown =
         SplatCountdownTimer(timeUntilEnd) { display, isComplete ->
@@ -405,7 +407,7 @@ private fun LobbyName(
     modifier: Modifier = Modifier,
     coop: SplatCoop,
 ) {
-  val name = coop.name()
+  val name = coop.name
 
   Box(
       modifier = modifier,

@@ -118,8 +118,8 @@ private fun BattleMaps(
     imageLoader: ImageLoader,
     spacer: @Composable () -> Unit,
 ) {
-  val mapA = match.stageA()
-  val mapB = match.stageB()
+  val mapA = match.stageA
+  val mapB = match.stageB
 
   BattleMap(
       modifier = modifier,
@@ -140,8 +140,8 @@ fun BattleMap(
     map: SplatMap,
     imageLoader: ImageLoader,
 ) {
-  val name = map.name()
-  val imageUrl = map.imageUrl()
+  val name = map.name
+  val imageUrl = map.imageUrl
   Box(
       modifier = modifier,
       contentAlignment = Alignment.BottomEnd,

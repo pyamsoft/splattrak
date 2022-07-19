@@ -21,23 +21,23 @@ import java.time.LocalDateTime
 
 interface SplatCoopSession {
 
-  @CheckResult fun start(): LocalDateTime
+  @get:CheckResult val start: LocalDateTime
 
-  @CheckResult fun end(): LocalDateTime
+  @get:CheckResult val end: LocalDateTime
 
-  @CheckResult fun map(): Map?
+  @get:CheckResult val map: Map?
 
   interface Map {
 
-    @CheckResult fun map(): SplatMap
+    @get:CheckResult val map: SplatMap
 
-    @CheckResult fun weapons(): List<Weapon>
+    @get:CheckResult val weapons: List<Weapon>
 
     interface Weapon {
 
-      @CheckResult fun name(): String
+      @get:CheckResult val name: String
 
-      @CheckResult fun imageUrl(): String
+      @get:CheckResult val imageUrl: String
     }
   }
 }

@@ -60,9 +60,9 @@ fun BattleInfo(
     modifier: Modifier = Modifier,
     match: SplatMatch,
 ) {
-  val name = match.rules().name()
-  val start = match.start()
-  val end = match.end()
+  val name = match.rules.name
+  val start = match.start
+  val end = match.end
 
   val locale = getCurrentLocale()
   val context = LocalContext.current

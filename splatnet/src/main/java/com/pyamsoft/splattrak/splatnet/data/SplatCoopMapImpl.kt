@@ -21,15 +21,6 @@ import com.pyamsoft.splattrak.splatnet.api.SplatMap
 
 internal data class SplatCoopMapImpl
 internal constructor(
-    private val map: SplatMap,
-    private val weapons: List<SplatCoopSession.Map.Weapon>,
-) : SplatCoopSession.Map {
-
-  override fun map(): SplatMap {
-    return map
-  }
-
-  override fun weapons(): List<SplatCoopSession.Map.Weapon> {
-    return weapons
-  }
-}
+    override val map: SplatMap,
+    override val weapons: List<SplatCoopSession.Map.Weapon>,
+) : SplatCoopSession.Map

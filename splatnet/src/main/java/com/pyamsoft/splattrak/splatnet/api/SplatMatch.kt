@@ -18,25 +18,20 @@ package com.pyamsoft.splattrak.splatnet.api
 
 import androidx.annotation.CheckResult
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 interface SplatMatch {
 
-  @CheckResult fun id(): Long
+  @get:CheckResult val id: Long
 
-  @CheckResult fun start(): LocalDateTime
+  @get:CheckResult val key: String
 
-  @CheckResult fun end(): LocalDateTime
+  @get:CheckResult val start: LocalDateTime
 
-  @CheckResult fun stageA(): SplatMap
+  @get:CheckResult val end: LocalDateTime
 
-  @CheckResult fun stageB(): SplatMap
+  @get:CheckResult val stageA: SplatMap
 
-  @CheckResult fun rules(): SplatRuleset
-}
+  @get:CheckResult val stageB: SplatMap
 
-@CheckResult
-fun SplatMatch.key(): String {
-  val formatter = DateTimeFormatter.ISO_DATE_TIME
-  return "${this.id()}@${this.start().format(formatter)}-${this.end().format(formatter)}"
+  @get:CheckResult val rules: SplatRuleset
 }

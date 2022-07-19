@@ -22,15 +22,6 @@ import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 
 internal data class SplatBattleImpl
 internal constructor(
-    private val mode: SplatGameMode,
-    private val rotation: List<SplatMatch>,
-) : SplatBattle {
-
-  override fun mode(): SplatGameMode {
-    return mode
-  }
-
-  override fun rotation(): List<SplatMatch> {
-    return rotation
-  }
-}
+    override val mode: SplatGameMode,
+    override val rotation: List<SplatMatch>,
+) : SplatBattle

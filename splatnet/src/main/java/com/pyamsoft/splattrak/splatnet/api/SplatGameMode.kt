@@ -20,11 +20,11 @@ import androidx.annotation.CheckResult
 
 interface SplatGameMode {
 
-  @CheckResult fun key(): String
+  @get:CheckResult val key: String
 
-  @CheckResult fun name(): String
+  @get:CheckResult val name: String
 
-  @CheckResult fun mode(): Mode
+  @get:CheckResult val mode: Mode
 
   enum class Mode {
     REGULAR,

@@ -16,44 +16,26 @@
 
 package com.pyamsoft.splattrak.splatnet.data
 
-import com.pyamsoft.splattrak.splatnet.api.SplatGameMode
 import com.pyamsoft.splattrak.splatnet.api.SplatMap
 import com.pyamsoft.splattrak.splatnet.api.SplatMatch
 import com.pyamsoft.splattrak.splatnet.api.SplatRuleset
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 internal data class SplatMatchImpl
 internal constructor(
-    private val id: Long,
-    private val startTime: LocalDateTime,
-    private val endTime: LocalDateTime,
-    private val stageA: SplatMap,
-    private val stageB: SplatMap,
-    private val gameMode: SplatGameMode,
-    private val rule: SplatRuleset,
+    override val id: Long,
+    override val start: LocalDateTime,
+    override val end: LocalDateTime,
+    override val stageA: SplatMap,
+    override val stageB: SplatMap,
+    override val rules: SplatRuleset,
 ) : SplatMatch {
 
-  override fun id(): Long {
-    return id
-  }
+  override val key: String
 
-  override fun start(): LocalDateTime {
-    return startTime
-  }
-
-  override fun end(): LocalDateTime {
-    return endTime
-  }
-
-  override fun stageA(): SplatMap {
-    return stageA
-  }
-
-  override fun stageB(): SplatMap {
-    return stageB
-  }
-
-  override fun rules(): SplatRuleset {
-    return rule
+  init {
+    val formatter = DateTimeFormatter.ISO_DATE_TIME
+    key = "${id}@${start.format(formatter)}-${end.format(formatter)}"
   }
 }

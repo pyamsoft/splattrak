@@ -59,7 +59,7 @@ internal class LobbyFragment : Fragment(), FragmentNavigator.Screen<MainPage> {
   private var windowInsetObserver: ViewWindowInsetObserver? = null
 
   private fun handleOpenBattle(battle: SplatBattle) {
-    DrilldownDialog.show(requireActivity(), battle.mode())
+    DrilldownDialog.show(requireActivity(), battle.mode)
   }
 
   private fun handleRefresh() {

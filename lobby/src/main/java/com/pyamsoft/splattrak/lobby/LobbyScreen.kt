@@ -154,7 +154,7 @@ private fun BattleList(
 
         items(
             items = schedule,
-            key = { it.mode().key() },
+            key = { it.mode.key },
         ) { item ->
             LobbyListItem(
                 battle = item,

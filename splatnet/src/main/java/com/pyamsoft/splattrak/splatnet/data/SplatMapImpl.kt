@@ -21,17 +21,9 @@ import com.pyamsoft.splattrak.splatnet.api.SplatMap
 
 internal data class SplatMapImpl
 internal constructor(
-    private val name: String,
+    override val name: String,
     private val image: String,
 ) : SplatMap {
 
-  private val imageUrl = "${SPLATNET_ASSET_URL}${image}"
-
-  override fun name(): String {
-    return name
-  }
-
-  override fun imageUrl(): String {
-    return imageUrl
-  }
+  override val imageUrl: String = "${SPLATNET_ASSET_URL}${image}"
 }

@@ -21,19 +21,7 @@ import java.time.LocalDateTime
 
 internal data class SplatCoopSessionImpl
 internal constructor(
-    private val start: LocalDateTime,
-    private val end: LocalDateTime,
-    private val map: SplatCoopSession.Map?
-) : SplatCoopSession {
-  override fun start(): LocalDateTime {
-    return start
-  }
-
-  override fun end(): LocalDateTime {
-    return end
-  }
-
-  override fun map(): SplatCoopSession.Map? {
-    return map
-  }
-}
+    override val start: LocalDateTime,
+    override val end: LocalDateTime,
+    override val map: SplatCoopSession.Map?
+) : SplatCoopSession
