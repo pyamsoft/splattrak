@@ -377,8 +377,6 @@ private fun Countdown(
 
   DisposableEffect(
       coop,
-      setText,
-      handleCountdownCompleted,
       scope,
   ) {
     val nextStartTime = coop.end

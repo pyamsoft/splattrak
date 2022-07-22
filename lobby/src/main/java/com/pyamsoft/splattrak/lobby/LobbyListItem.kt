@@ -205,8 +205,6 @@ private fun Countdown(
 
   DisposableEffect(
       match,
-      setText,
-      handleCountdownCompleted,
       scope,
   ) {
     val nextStartTime = match.start
