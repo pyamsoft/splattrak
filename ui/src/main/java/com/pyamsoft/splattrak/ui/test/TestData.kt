@@ -30,138 +30,64 @@ object TestData {
 
   val currentMatch =
       object : SplatMatch {
-        override fun id(): Long {
-          return 1
-        }
-
-        override fun start(): LocalDateTime {
-          return LocalDateTime.now()
-        }
-
-        override fun end(): LocalDateTime {
-          return LocalDateTime.now().plusHours(1)
-        }
-
-        override fun stageA(): SplatMap {
-          return object : SplatMap {
-
-            override fun name(): String {
-              return "Stage A"
+        override val id: Long = 1
+        override val key: String = "1"
+        override val start: LocalDateTime = LocalDateTime.now()
+        override val end: LocalDateTime = LocalDateTime.now().plusMinutes(1)
+        override val stageA: SplatMap =
+            object : SplatMap {
+              override val name: String = "Map A"
+              override val imageUrl: String = ""
             }
-
-            override fun imageUrl(): String {
-              return ""
+        override val stageB: SplatMap =
+            object : SplatMap {
+              override val name: String = "Map B"
+              override val imageUrl: String = ""
             }
-          }
-        }
-
-        override fun stageB(): SplatMap {
-          return object : SplatMap {
-            override fun name(): String {
-              return "Stage B"
+        override val rules: SplatRuleset =
+            object : SplatRuleset {
+              override val key: String = "Now"
+              override val name: String = "Turf War"
             }
-
-            override fun imageUrl(): String {
-              return ""
-            }
-          }
-        }
-
-        override fun rules(): SplatRuleset {
-          return object : SplatRuleset {
-            override fun key(): String {
-              return "Current"
-            }
-
-            override fun name(): String {
-              return "Turf War"
-            }
-          }
-        }
       }
 
   val nextMatch =
       object : SplatMatch {
-        override fun id(): Long {
-          return 2
-        }
-
-        override fun start(): LocalDateTime {
-          return LocalDateTime.now()
-        }
-
-        override fun end(): LocalDateTime {
-          return LocalDateTime.now().plusHours(1)
-        }
-
-        override fun stageA(): SplatMap {
-          return object : SplatMap {
-            override fun name(): String {
-              return "Stage A"
+        override val id: Long = 2
+        override val key: String = "2"
+        override val start: LocalDateTime = LocalDateTime.now()
+        override val end: LocalDateTime = LocalDateTime.now().plusMinutes(1)
+        override val stageA: SplatMap =
+            object : SplatMap {
+              override val name: String = "Map C"
+              override val imageUrl: String = ""
             }
-
-            override fun imageUrl(): String {
-              return ""
+        override val stageB: SplatMap =
+            object : SplatMap {
+              override val name: String = "Map D"
+              override val imageUrl: String = ""
             }
-          }
-        }
-
-        override fun stageB(): SplatMap {
-          return object : SplatMap {
-            override fun name(): String {
-              return "Stage B"
+        override val rules: SplatRuleset =
+            object : SplatRuleset {
+              override val key: String = "Next"
+              override val name: String = "Turf War Again"
             }
-
-            override fun imageUrl(): String {
-              return ""
-            }
-          }
-        }
-
-        override fun rules(): SplatRuleset {
-          return object : SplatRuleset {
-            override fun key(): String {
-              return "Next"
-            }
-
-            override fun name(): String {
-              return "Turf War Again"
-            }
-          }
-        }
       }
 
   val coop =
       object : SplatCoop {
-        override fun name(): String {
-          return "test"
-        }
-
-        override fun sessions(): List<SplatCoopSession> {
-          return emptyList()
-        }
+        override val name: String = "Salmon Run"
+        override val sessions: List<SplatCoopSession> = emptyList()
       }
 
   val battle =
       object : SplatBattle {
-        override fun mode(): SplatGameMode {
-          return object : SplatGameMode {
-            override fun key(): String {
-              return "test"
+        override val mode: SplatGameMode =
+            object : SplatGameMode {
+              override val key: String = "mode"
+              override val name: String = "Battle"
+              override val mode: SplatGameMode.Mode = SplatGameMode.Mode.REGULAR
             }
-
-            override fun name(): String {
-              return "TEST"
-            }
-
-            override fun mode(): SplatGameMode.Mode {
-              return SplatGameMode.Mode.REGULAR
-            }
-          }
-        }
-
-        override fun rotation(): List<SplatMatch> {
-          return listOf(currentMatch, nextMatch)
-        }
+        override val rotation: List<SplatMatch> = listOf(currentMatch, nextMatch)
       }
 }

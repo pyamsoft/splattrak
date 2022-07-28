@@ -394,7 +394,7 @@ private fun Countdown(
   }
 
   Text(
-      modifier = modifier.width(96.dp),
+      modifier = modifier.width(108.dp),
       text = text,
       style = style,
   )
