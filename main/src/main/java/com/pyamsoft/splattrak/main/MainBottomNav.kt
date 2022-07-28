@@ -19,9 +19,16 @@ package com.pyamsoft.splattrak.main
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.AppBarDefaults
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
@@ -31,7 +38,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.navigationBarsPadding
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.splattrak.ui.icons.Group
 import com.pyamsoft.splattrak.ui.icons.MeetingRoom
@@ -55,7 +61,7 @@ fun MainBottomNav(
       modifier =
           modifier
               .padding(vertical = MaterialTheme.keylines.content, horizontal = 64.dp)
-              .navigationBarsPadding(bottom = true)
+              .navigationBarsPadding()
               .onSizeChanged { onHeightMeasured(it.height) },
       shape = RoundedCornerShape(MaterialTheme.keylines.baseline),
       color = MaterialTheme.colors.primary,

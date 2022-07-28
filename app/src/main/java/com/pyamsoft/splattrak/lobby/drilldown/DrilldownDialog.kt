@@ -24,15 +24,12 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.ViewWindowInsetObserver
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
@@ -54,9 +51,6 @@ internal class DrilldownDialog : AppCompatDialogFragment() {
   @JvmField @Inject internal var viewModel: DrilldownViewModeler? = null
   @JvmField @Inject internal var imageLoader: ImageLoader? = null
   @JvmField @Inject internal var theming: Theming? = null
-
-  // Watches the window insets
-  private var windowInsetObserver: ViewWindowInsetObserver? = null
 
   private fun handleRefresh() {
     viewModel
@@ -87,22 +81,16 @@ internal class DrilldownDialog : AppCompatDialogFragment() {
     return ComposeView(act).apply {
       id = R.id.screen_lobby
 
-      val observer = ViewWindowInsetObserver(this)
-      val windowInsets = observer.start()
-      windowInsetObserver = observer
-
       val vm = viewModel.requireNotNull()
       setContent {
         vm.Render { state ->
           act.SplatTrakTheme(themeProvider) {
-            CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
-              DrilldownScreen(
-                  modifier = Modifier.fillMaxSize(),
-                  state = state,
-                  imageLoader = imageLoader.requireNotNull(),
-                  onRefresh = { handleRefresh() },
-              )
-            }
+            DrilldownScreen(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                imageLoader = imageLoader.requireNotNull(),
+                onRefresh = { handleRefresh() },
+            )
           }
         }
       }
@@ -138,9 +126,6 @@ internal class DrilldownDialog : AppCompatDialogFragment() {
   override fun onDestroyView() {
     super.onDestroyView()
     dispose()
-
-    windowInsetObserver?.stop()
-    windowInsetObserver = null
 
     viewModel = null
     imageLoader = null

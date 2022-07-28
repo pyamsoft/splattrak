@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import com.google.accompanist.insets.ProvideWindowInsets
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
@@ -93,25 +92,23 @@ internal class MainActivity : PYDroidActivity() {
     // actions (a FAB will not move out of the way for example)
     binding.mainComposeBottom.setContent {
       val screen by navi.currentScreenState()
-      val page = remember(screen) { screen as? TopLevelMainPage}
+      val page = remember(screen) { screen as? TopLevelMainPage }
 
       vm.Render { state ->
         val theme = state.theme
 
         SystemBars(theme)
         SplatTrakTheme(theme) {
-          ProvideWindowInsets {
-            // Need to box or else snackbar pushes bottom nav
-            Box(
-                contentAlignment = Alignment.BottomCenter,
-            ) {
-              page?.let { p ->
-                MainBottomNav(
-                    page = p,
-                    onLoadPage = { navi.navigateTo(it) },
-                    onHeightMeasured = { vm.handleMeasureBottomNavHeight(it) },
-                )
-              }
+          // Need to box or else snackbar pushes bottom nav
+          Box(
+              contentAlignment = Alignment.BottomCenter,
+          ) {
+            page?.let { p ->
+              MainBottomNav(
+                  page = p,
+                  onLoadPage = { navi.navigateTo(it) },
+                  onHeightMeasured = { vm.handleMeasureBottomNavHeight(it) },
+              )
             }
           }
         }

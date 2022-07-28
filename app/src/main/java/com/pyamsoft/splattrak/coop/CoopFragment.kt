@@ -23,14 +23,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.ViewWindowInsetObserver
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.navigator.FragmentNavigator
@@ -52,9 +49,6 @@ internal class CoopFragment : Fragment(), FragmentNavigator.Screen<MainPage> {
   @JvmField @Inject internal var mainViewModel: MainViewModeler? = null
   @JvmField @Inject internal var imageLoader: ImageLoader? = null
   @JvmField @Inject internal var theming: Theming? = null
-
-  // Watches the window insets
-  private var windowInsetObserver: ViewWindowInsetObserver? = null
 
   private fun handleRefresh() {
     viewModel
@@ -80,23 +74,17 @@ internal class CoopFragment : Fragment(), FragmentNavigator.Screen<MainPage> {
     return ComposeView(act).apply {
       id = R.id.screen_lobby
 
-      val observer = ViewWindowInsetObserver(this)
-      val windowInsets = observer.start()
-      windowInsetObserver = observer
-
       setContent {
         vm.Render { state ->
           mainVM.Render { mainState ->
             act.SplatTrakTheme(themeProvider) {
-              CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
-                CoopScreen(
-                    modifier = Modifier.fillMaxSize(),
-                    state = state,
-                    mainState = mainState,
-                    imageLoader = imageLoader.requireNotNull(),
-                    onRefresh = { handleRefresh() },
-                )
-              }
+              CoopScreen(
+                  modifier = Modifier.fillMaxSize(),
+                  state = state,
+                  mainState = mainState,
+                  imageLoader = imageLoader.requireNotNull(),
+                  onRefresh = { handleRefresh() },
+              )
             }
           }
         }
@@ -133,9 +121,6 @@ internal class CoopFragment : Fragment(), FragmentNavigator.Screen<MainPage> {
   override fun onDestroyView() {
     super.onDestroyView()
     dispose()
-
-    windowInsetObserver?.stop()
-    windowInsetObserver = null
 
     imageLoader = null
     theming = null
